@@ -1,5 +1,6 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.exception.UserNotExistsException;
 import com.example.careplus.model.Usuario;
 import com.example.careplus.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +32,10 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> listarPorId(@PathVariable Integer id){
-        try{
+
             Usuario usuario = service.listarPorId(id);
             return ResponseEntity.ok().body(usuario);
-        }catch (RuntimeException e){
-            throw new RuntimeException();
-        }
+
     }
 
     @PostMapping

@@ -1,5 +1,6 @@
 package com.example.careplus.service;
 
+import com.example.careplus.exception.UserNotExistsException;
 import org.springframework.stereotype.Service;
 
 import com.example.careplus.exception.EmailNotExistsException;
@@ -29,7 +30,7 @@ public class UsuarioService {
             return existeUsuario.get();
         }
 
-        throw new RuntimeException("Usuário não encontrado");
+        throw new UserNotExistsException("Usuário não encontrado!");
 
     }
 

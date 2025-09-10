@@ -11,4 +11,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEmailNotExistsException(EmailNotExistsException ex){
         return ResponseEntity.status(404).body(ex.getMessage());
     }
+    @ExceptionHandler
+    public ResponseEntity<String> handleUserNotExistsException(UserNotExistsException e){
+        return ResponseEntity.status(404).body(e.getMessage());
+    }
 }
