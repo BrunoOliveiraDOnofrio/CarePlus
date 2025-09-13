@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class Consulta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // essa anotação associa com outro objeto
     @ManyToOne //muitas consultas podem ser de um usuário
@@ -36,11 +36,11 @@ public class Consulta {
         this.especialista = especialista;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
