@@ -1,10 +1,10 @@
 package com.example.careplus.controller;
 
 import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Usuario;
+import com.example.careplus.service.EspecialistaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -12,9 +12,16 @@ import java.util.ArrayList;
 @RequestMapping("/especialistas")
 public class EspecialistaController {
 
-    @GetMapping
-    public ResponseEntity<ArrayList<Especialista>> listarUsuarios(){
+    public final EspecialistaService especialistaService;
 
+    public EspecialistaController(EspecialistaService especialistaService) {
+        this.especialistaService = especialistaService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Especialista> salvarEspecialista(@RequestBody Especialista especialista){
+        Especialista especialistaSalvo = especialistaService.salvar(especialista);
+        return ResponseEntity.status(201).body(especialistaSalvo);
     }
 
 
