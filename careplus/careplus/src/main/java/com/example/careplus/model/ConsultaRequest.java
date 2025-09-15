@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 // o front deve passar apenas esses parâmetros
 public class ConsultaRequest {
     private Integer usuarioId;
-    private Integer especialistaId;
+    private Long especialistaId;
     private LocalDateTime dataHora;
 
     public ConsultaRequest() {
     }
 
-    public ConsultaRequest(Integer usuarioId, Integer especialistaId, LocalDateTime dataHora) {
+    public ConsultaRequest(Integer usuarioId, Long especialistaId, LocalDateTime dataHora) {
         this.usuarioId = usuarioId;
         this.especialistaId = especialistaId;
         this.dataHora = dataHora;
@@ -25,11 +25,11 @@ public class ConsultaRequest {
         this.usuarioId = usuarioId;
     }
 
-    public Integer getEspecialistaId() {
+    public Long getEspecialistaId() {
         return especialistaId;
     }
 
-    public void setEspecialistaId(Integer especialistaId) {
+    public void setEspecialistaId(Long especialistaId) {
         this.especialistaId = especialistaId;
     }
 

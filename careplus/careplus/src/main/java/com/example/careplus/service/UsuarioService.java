@@ -1,9 +1,8 @@
 package com.example.careplus.service;
 
-import com.example.careplus.exception.UserNotExistsException;
+import com.example.careplus.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.careplus.exception.EmailNotExistsException;
 import com.example.careplus.exception.MissingFieldException;
 import com.example.careplus.model.Usuario;
 import com.example.careplus.repository.UsuarioRepository;
@@ -30,7 +29,7 @@ public class UsuarioService {
             return existeUsuario.get();
         }
 
-        throw new UserNotExistsException("Usuário não encontrado!");
+        throw new ResourceNotFoundException("Usuário não encontrado!");
 
     }
 
@@ -56,7 +55,7 @@ public class UsuarioService {
         boolean existe = repository.existsById(id);
 
         if(!existe){
-            throw new RuntimeException("Usuário não encontrado");
+            throw new ResourceNotFoundException("Usuário não encontrado");
         }
         repository.deleteById(id);
     }
@@ -82,7 +81,7 @@ public class UsuarioService {
         List<Usuario> existeEmail = repository.findByEmailContainsIgnoreCase(email);
 
         if(existeEmail.isEmpty()){
-            throw new EmailNotExistsException("Email não existe");
+            throw new ResourceNotFoundException("Email não existe");
         }
         return existeEmail;
     }

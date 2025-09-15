@@ -9,17 +9,20 @@ import jakarta.persistence.Id;
 public class Especialista {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Long Id;
     private String nome;
     private String email;
     private String cargo;
     private String especialidade;
 
-    public Integer getId() {
+    public Especialista() {
+    }
+
+    public Long getId() {
         return Id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         Id = id;
     }
 
