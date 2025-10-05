@@ -47,6 +47,10 @@ public class ResponsavelService {
         if(selecionar.isEmpty()){
             throw new NoSuchElementException();
         }
+        if(responsavelRepository.existsByEmailAndIdNot(responsavelAtt.getEmail(), id) || responsavelRepository.existsByCpfAndIdNot(responsavelAtt.getCpf(), id)){
+            throw new IllegalArgumentException();
+        }
+
 
         Responsavel selecionado = selecionar.get();
 

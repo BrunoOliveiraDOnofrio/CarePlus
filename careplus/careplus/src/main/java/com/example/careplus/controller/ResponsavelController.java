@@ -45,6 +45,8 @@ public class ResponsavelController {
             return ResponseEntity.status(200).body(responsavelService.atualizar(id, responsavelAtt));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(409).build();
         }
     }
 
