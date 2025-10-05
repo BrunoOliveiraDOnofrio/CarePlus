@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -24,6 +25,9 @@ public class ResponsavelService {
 
     public ResponsavelResponseDto cadastrar(ResponsavelRequestDto responsavelNew){
         Responsavel paraRegistrar = ResponsavelMapper.toEntity(responsavelNew);
+        if(responsavelRepository.existsByEmail(paraRegistrar.getEmail()) || responsavelRepository.existsByCpf(paraRegistrar.getCpf())){
+            throw new IllegalArgumentException();
+        }
         Responsavel responsavelRegistrado = responsavelRepository.save(paraRegistrar);
         ResponsavelResponseDto resposta = ResponsavelMapper.toResponseDto(responsavelRegistrado);
         return resposta;
@@ -31,13 +35,17 @@ public class ResponsavelService {
 
     public List<ResponsavelResponseDto> listar(){
         List<Responsavel> responsaveis = responsavelRepository.findAll();
+        if(responsaveis.isEmpty()){
+            throw new NoSuchElementException();
+        }
+
         return ResponsavelMapper.toResponseDto(responsaveis);
     }
 
     public ResponsavelResponseDto atualizar(Long id, ResponsavelRequestDto responsavelAtt){
         Optional<Responsavel> selecionar = responsavelRepository.findById(id);
         if(selecionar.isEmpty()){
-            return null;
+            throw new NoSuchElementException();
         }
 
         Responsavel selecionado = selecionar.get();
@@ -48,6 +56,10 @@ public class ResponsavelService {
     }
 
     public void deletar(Long id){
+        boolean existe = responsavelRepository.existsById(id);
+        if (!existe) {
+            throw new NoSuchElementException();
+        }
         responsavelRepository.deleteById(id);
     }
 

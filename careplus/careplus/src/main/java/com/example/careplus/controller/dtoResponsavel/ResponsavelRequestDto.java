@@ -1,16 +1,23 @@
 package com.example.careplus.controller.dtoResponsavel;
 
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 public class ResponsavelRequestDto {
 
+    @NotBlank
     private String nome;
+    @NotBlank @Email
     private String email;
+    @NotBlank @Size(min = 11, max = 11) @Pattern(regexp = "\\d+")
     private String telefone;
+    @NotNull
     private LocalDate dtNascimento;
+    @NotBlank @Size(min = 11, max = 11) @Pattern(regexp = "\\d+")
     private String cpf;
+    @NotBlank
     private String convenio;
 
 
