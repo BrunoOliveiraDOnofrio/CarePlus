@@ -1,32 +1,35 @@
-package com.example.careplus.model;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+package com.example.careplus.controller.dtoPaciente;
 
 import java.time.LocalDate;
 
-@Entity
-public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class PacienteResponseDto {
+
+    private Long id;
     private String nome;
     private String email;
+    private String cpf;
     private String cargo;
     private String telefone;
-    private String senha;
     private LocalDate dtNascimento;
 
-    public Usuario() {
+    public PacienteResponseDto() {
     }
 
-    public Integer getId() {
+    public PacienteResponseDto(Long id, String nome, String email, String cpf, String cargo, String telefone, LocalDate dtNascimento) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.cpf = cpf;
+        this.cargo = cargo;
+        this.telefone = telefone;
+        this.dtNascimento = dtNascimento;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,6 +49,14 @@ public class Usuario {
         this.email = email;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public String getCargo() {
         return cargo;
     }
@@ -62,14 +73,6 @@ public class Usuario {
         this.telefone = telefone;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
     public LocalDate getDtNascimento() {
         return dtNascimento;
     }
@@ -78,4 +81,3 @@ public class Usuario {
         this.dtNascimento = dtNascimento;
     }
 }
-

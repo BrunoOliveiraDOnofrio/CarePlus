@@ -1,13 +1,10 @@
 package com.example.careplus.controller;
 
 import com.example.careplus.model.Especialista;
-import com.example.careplus.model.Usuario;
 import com.example.careplus.service.EspecialistaService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

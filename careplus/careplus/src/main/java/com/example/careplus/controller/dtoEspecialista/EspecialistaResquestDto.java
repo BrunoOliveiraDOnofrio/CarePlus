@@ -1,36 +1,21 @@
-package com.example.careplus.model;
+package com.example.careplus.controller.dtoEspecialista;
 
-import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity
-public class Especialista {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+public class EspecialistaResquestDto {
     private String nome;
     private String email;
     private String senha;
-    @ManyToOne
-    @JoinColumn(name = "supervisor_id")
-    private Especialista supervisor;
-
-    @OneToMany(mappedBy = "supervisor")
-    private List<Especialista> subordinados = new ArrayList<>();
+    private SupervisorDto supervisor;
     private String cargo;
     private String especialidade;
 
-    public Especialista() {
-    }
-
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long id) {
-        Id = id;
+    public EspecialistaResquestDto(String nome, String email, String senha, SupervisorDto supervisor, String cargo, String especialidade) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.supervisor = supervisor;
+        this.cargo = cargo;
+        this.especialidade = especialidade;
     }
 
     public String getNome() {
@@ -45,25 +30,24 @@ public class Especialista {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getSenha() {
         return senha;
     }
-
 
     public void setSenha(String senha) {
         this.senha = senha;
     }
 
-    public Especialista getSupervisor() {
+    public SupervisorDto getSupervisor() {
         return supervisor;
     }
 
-    public void setSupervisor(Especialista supervisor) {
+    public void setSupervisor(SupervisorDto supervisor) {
         this.supervisor = supervisor;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getCargo() {
@@ -81,6 +65,4 @@ public class Especialista {
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
     }
-
-
 }
