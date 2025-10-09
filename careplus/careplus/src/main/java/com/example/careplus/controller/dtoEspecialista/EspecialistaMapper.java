@@ -14,19 +14,28 @@ public class EspecialistaMapper {
             return null;
         }
 
-//        private String nome;
-//        private String email;
-//        private String senha;
-//        private Especialista supervisor;
-//        private String cargo;
-//        private String especialidade;
-
 
         Especialista entity = new Especialista();
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
         entity.setSenha(dto.getSenha());
         entity.setSupervisor(supervisor);
+        entity.setCargo(dto.getCargo());
+        entity.setEspecialidade(dto.getEspecialidade());
+
+
+        return entity;
+    }
+
+    public static Especialista toEntity(EspecialistaResquestDto dto){
+        if (dto == null){
+            return null;
+        }
+
+        Especialista entity = new Especialista();
+        entity.setNome(dto.getNome());
+        entity.setEmail(dto.getEmail());
+        entity.setSenha(dto.getSenha());
         entity.setCargo(dto.getCargo());
         entity.setEspecialidade(dto.getEspecialidade());
 
@@ -46,7 +55,9 @@ public class EspecialistaMapper {
                     entity.getSupervisor().getId(),
                     entity.getSupervisor().getNome()
             );
-        }
+        }//else{
+//            supervisorDto = new SupervisorDto(null, "Nenhum");
+//        }
 
         return new EspecialistaResponseDto(
                 entity.getId(),

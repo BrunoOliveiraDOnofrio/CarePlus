@@ -1,5 +1,7 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
+import com.example.careplus.controller.dtoEspecialista.EspecialistaResquestDto;
 import com.example.careplus.model.Especialista;
 import com.example.careplus.service.EspecialistaService;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,8 @@ public class EspecialistaController {
     }
 
     @PostMapping
-    public ResponseEntity<Especialista> salvarEspecialista(@RequestBody Especialista especialista){
-        Especialista especialistaSalvo = especialistaService.salvar(especialista);
+    public ResponseEntity<EspecialistaResponseDto> salvarEspecialista(@RequestBody EspecialistaResquestDto especialista){
+        EspecialistaResponseDto especialistaSalvo = especialistaService.salvar(especialista);
         return ResponseEntity.status(201).body(especialistaSalvo);
     }
 

@@ -1,10 +1,14 @@
 package com.example.careplus.controller.dtoEspecialista;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class EspecialistaResponseDto {
     private Long id;
     private String nome;
     private String email;
+    @JsonInclude(JsonInclude.Include.NON_NULL) // Anotação usada para não incluir o atributo abaixo caso o campo seja
+    // nulo
     private SupervisorDto supervisor;
     private String cargo;
     private String especialidade;
