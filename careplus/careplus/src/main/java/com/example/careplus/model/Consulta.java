@@ -15,17 +15,17 @@ public class Consulta {
     private Especialista especialista;
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    private Paciente paciente;
 
     private LocalDateTime dataHora;
     private String status;
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Paciente getUsuario() {
+        return paciente;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setUsuario(Paciente paciente) {
+        this.paciente = paciente;
     }
 
     public Especialista getEspecialista() {
