@@ -4,11 +4,8 @@ import com.example.careplus.controller.dtoResponsavel.ResponsavelMapper;
 import com.example.careplus.controller.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.controller.dtoResponsavel.ResponsavelResponseDto;
 import com.example.careplus.model.Responsavel;
-import com.example.careplus.model.Usuario;
 import com.example.careplus.repository.ResponsavelRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.NoSuchElementException;
