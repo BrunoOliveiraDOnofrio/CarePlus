@@ -3,8 +3,10 @@ package com.example.careplus.service;
 import com.example.careplus.controller.dtoResponsavel.ResponsavelMapper;
 import com.example.careplus.controller.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.controller.dtoResponsavel.ResponsavelResponseDto;
+import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.repository.ResponsavelRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class ResponsavelService {
     public ResponsavelService(ResponsavelRepository responsavelRepository){
         this.responsavelRepository = responsavelRepository;
     }
-
+    // CRUD SIMPLES
     public ResponsavelResponseDto cadastrar(ResponsavelRequestDto responsavelNew){
         Responsavel paraRegistrar = ResponsavelMapper.toEntity(responsavelNew);
         if(responsavelRepository.existsByEmail(paraRegistrar.getEmail()) || responsavelRepository.existsByCpf(paraRegistrar.getCpf())){
@@ -39,10 +41,19 @@ public class ResponsavelService {
         return ResponsavelMapper.toResponseDto(responsaveis);
     }
 
+    public List<ResponsavelResponseDto> buscarPorEmail(String email){
+        List<Responsavel> responsaveisEncontrador = responsavelRepository.findByEmailStartingWith(email);
+        if (!responsaveisEncontrador.isEmpty()){
+            return ResponsavelMapper.toResponseDto(responsaveisEncontrador);
+        }else{
+            throw new ResourceNotFoundException("Usuário não encontrado!");
+        }
+    }
+
     public ResponsavelResponseDto atualizar(Long id, ResponsavelRequestDto responsavelAtt){
         Optional<Responsavel> selecionar = responsavelRepository.findById(id);
         if(selecionar.isEmpty()){
-            throw new NoSuchElementException();
+            throw new EntityNotFoundException();
         }
         if(responsavelRepository.existsByEmailAndIdNot(responsavelAtt.getEmail(), id) || responsavelRepository.existsByCpfAndIdNot(responsavelAtt.getCpf(), id)){
             throw new IllegalArgumentException();
@@ -63,6 +74,9 @@ public class ResponsavelService {
         }
         responsavelRepository.deleteById(id);
     }
+    // CRUD SIMPLES
+    // "ORDENAÇÃO" DE RESPONSÁVEL
+
 
 }
 

@@ -11,7 +11,6 @@ public class ResponsavelResponseDto {
     private String email;
     private String telefone;
     private LocalDate dtNascimento;
-    @JsonIgnore // tira do json para restar apenas o mascarado
     private String cpf;
     private String convenio;
 
@@ -32,8 +31,12 @@ public class ResponsavelResponseDto {
         this.email = email;
     }
 
+    // Forma de apresentar o telefone
     public String getTelefone() {
-        return telefone;
+        if (telefone == null || telefone.length() != 11){
+            return null;
+        }
+        return "("+telefone.substring(0, 2)+")"+telefone.substring(2,6)+"-"+telefone.substring(6, 11);
     }
 
     public void setTelefone(String telefone) {
@@ -48,8 +51,7 @@ public class ResponsavelResponseDto {
         this.dtNascimento = dtNascimento;
     }
     // Forma de proteger o dado do responsável
-    @JsonProperty("cpf")
-    public String getCpfMascarado() {
+    public String getCpf() {
         if (cpf == null || cpf.length() != 11){
             return null;
         }

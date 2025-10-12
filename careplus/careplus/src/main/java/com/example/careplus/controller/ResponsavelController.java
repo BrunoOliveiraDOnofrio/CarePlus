@@ -39,6 +39,15 @@ public class ResponsavelController {
 
     }
 
+    @GetMapping("/por-email")
+    public ResponseEntity<List<ResponsavelResponseDto>> buscarPorEmail(@RequestParam String email){
+        try {
+            return ResponseEntity.status(200).body(responsavelService.buscarPorEmail(email));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ResponsavelResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
         try {
