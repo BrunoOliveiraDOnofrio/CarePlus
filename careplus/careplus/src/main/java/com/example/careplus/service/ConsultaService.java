@@ -18,11 +18,13 @@ public class ConsultaService {
     private final ConsultaRepository consultaRepository;
     private final PacienteRepository pacienteRepository;
     private final EspecialistaRepository especialistaRepository;
+    private final EmailService emailService;
 
-    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, EspecialistaRepository especialistaRepository) {
+    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, EspecialistaRepository especialistaRepository, EmailService emailService) {
         this.consultaRepository = consultaRepository;
         this.pacienteRepository = pacienteRepository;
         this.especialistaRepository = especialistaRepository;
+        this.emailService = emailService;
     }
 
     //montando a Consulta a partir do ConsultaRequest
@@ -48,6 +50,8 @@ public class ConsultaService {
         consulta.setUsuario(paciente);
         consulta.setDataHora(request.getDataHora());
         consulta.setStatus("Pendente");
+
+        emailService.EnviarNotificacao(especialista, consulta, paciente);
         return consultaRepository.save(consulta);
     }
 
