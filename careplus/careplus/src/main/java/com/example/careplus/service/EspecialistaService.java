@@ -1,5 +1,8 @@
 package com.example.careplus.service;
 
+import com.example.careplus.controller.dtoEspecialista.EspecialistaMapper;
+import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
+import com.example.careplus.controller.dtoEspecialista.EspecialistaResquestDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Especialista;
 import com.example.careplus.repository.EspecialistaRepository;
@@ -20,13 +23,34 @@ public class EspecialistaService {
         return repository.findAll();
     }
 
-    public Especialista salvar(Especialista especialista){
+    public EspecialistaResponseDto salvar(EspecialistaResquestDto dto){
 
-        if(especialista.getEmail().isEmpty() && especialista.getNome().isEmpty()){
-            throw new ResourceNotFoundException("Preencha o nome e email");
+// Modelo de JSON
+//        {
+//            "id": 2,
+//                "nome": "Dra. Ana Souza",
+//                "email": "ana.souza@clinica.com",
+//                "senha": "12322",
+//                "cargo": "Residente",
+//                "especialidade": "Cardiologia",
+//                "supervisor": {
+//                 "id": 1
+//                 }
+//        }
+// Caso não tiver o especialista não tiver um supervisor, basta não enviar o campo
+
+        Especialista supervisor = null;
+
+        if (dto.getSupervisor() != null && dto.getSupervisor().getId() != null) {
+            supervisor = repository.findById(dto.getSupervisor().getId())
+                    .orElseThrow(() -> new RuntimeException("Supervisor não encontrado"));
         }
 
-        return repository.save(especialista);
+        Especialista novoEspecialista = EspecialistaMapper.toEntity(dto, supervisor);
+
+        Especialista salvo = repository.save(novoEspecialista);
+
+        return EspecialistaMapper.toResponseDto(salvo);
     }
 
     public List<Especialista> buscarPorEmail(String email){
