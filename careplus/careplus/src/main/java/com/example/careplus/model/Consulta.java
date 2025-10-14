@@ -1,5 +1,6 @@
 package com.example.careplus.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,10 @@ public class Consulta {
     @JoinColumn(name = "usuario_id")
     private Paciente paciente;
 
+    @Schema(description = "2025-10-14T01:09:31.734Z")
     private LocalDateTime dataHora;
+
+    @Schema(description = "Pendente")
     private String status;
 
     public Paciente getUsuario() {

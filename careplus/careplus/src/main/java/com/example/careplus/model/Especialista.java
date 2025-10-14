@@ -1,5 +1,6 @@
 package com.example.careplus.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -7,19 +8,31 @@ import java.util.List;
 
 @Entity
 public class Especialista {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+
+    @Schema(description = "Brenda Stefany")
     private String nome;
+
+    @Schema(description = "geraldo_dossantos@vbrasildigital.net")
     private String email;
+
+    @Schema(description = "bRuurpXL9n")
     private String senha;
+
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
     private Especialista supervisor;
 
     @OneToMany(mappedBy = "supervisor")
     private List<Especialista> subordinados = new ArrayList<>();
+
+    @Schema(description = "Supervisora")
     private String cargo;
+
+    @Schema(description = "Fonoaudiolgia")
     private String especialidade;
 
     public Especialista() {

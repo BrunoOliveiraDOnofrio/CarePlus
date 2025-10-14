@@ -2,15 +2,24 @@ package com.example.careplus.controller.dtoEspecialista;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class EspecialistaResponseDto {
     private Long id;
+
+    @Schema(description = "Iago Benedito Barbosa")
     private String nome;
+
+    @Schema(description = "iago_benedito_barbosa@navescorat.com.br")
     private String email;
     @JsonInclude(JsonInclude.Include.NON_NULL) // Anotação usada para não incluir o atributo abaixo caso o campo seja
     // nulo
     private SupervisorDto supervisor;
+
+    @Schema(description = "Estagiaria")
     private String cargo;
+
+    @Schema(description = "Fonoaudiologa")
     private String especialidade;
 
     public EspecialistaResponseDto(Long id, String nome, String email, SupervisorDto supervisor, String cargo, String especialidade) {

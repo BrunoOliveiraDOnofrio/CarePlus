@@ -1,12 +1,25 @@
 package com.example.careplus.controller.dtoEspecialista;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class EspecialistaResquestDto {
+
+    @Schema(description = "Iago Benedito Barbosa")
     private String nome;
+
+    @Schema(description = "iago_benedito_barbosa@navescorat.com.br")
     private String email;
+
+    @Schema(description = "olgyT0E7nH")
     private String senha;
+
     private SupervisorDto supervisor;
+
+    @Schema(description = "Estagiaria")
     private String cargo;
+
+    @Schema(description = "Fonoaudiologa")
     private String especialidade;
 
     public EspecialistaResquestDto(String nome, String email, String senha, SupervisorDto supervisor, String cargo, String especialidade) {

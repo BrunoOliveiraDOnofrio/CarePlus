@@ -1,11 +1,17 @@
 package com.example.careplus.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
 
 // o front deve passar apenas esses parâmetros
 public class ConsultaRequest {
+
     private Long pacienteId;
     private Long especialistaId;
+
+    @Schema(description = "2025-10-14")
     private LocalDateTime dataHora;
 
     public ConsultaRequest() {

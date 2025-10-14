@@ -1,15 +1,30 @@
 package com.example.careplus.controller.dtoPaciente;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 
 public class PacienteRequestDto {
 
+    @Schema(description = "Vitor Miguel Raimundo Ribeiro")
     private String nome;
+
+    @Schema(description = "vitor_ribeiro@performa.com.br")
     private String email;
+
+    @Schema(description = "191.644.388-56")
     private String cpf;
+
+    @Schema(description = "Estagirario")
     private String cargo;
+
+    @Schema(description = "(11) 99182-8249")
     private String telefone;
+
+    @Schema(description = "qhcPkyyKB1")
     private String senha;
+
+    @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 
     public PacienteRequestDto(String nome, String email, String cpf, String cargo, String telefone, String senha, LocalDate dtNascimento) {
