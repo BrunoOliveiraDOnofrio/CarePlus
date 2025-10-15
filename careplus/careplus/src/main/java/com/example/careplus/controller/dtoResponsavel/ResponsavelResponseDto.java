@@ -20,7 +20,6 @@ public class ResponsavelResponseDto {
     @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 
-    @JsonIgnore // tira do json para restar apenas o mascarado
     private String cpf;
 
     @Schema(description = "Sul America")
@@ -44,7 +43,11 @@ public class ResponsavelResponseDto {
     }
 
     public String getTelefone() {
-        return telefone;
+        if(this.telefone == null || this.telefone.length() != 11){
+            return null;
+        }
+
+        return "(" + telefone.substring(0,2) + ")" + " " + telefone.substring(2,7) + "-" + telefone.substring(7, 11);
     }
 
     public void setTelefone(String telefone) {
@@ -58,9 +61,8 @@ public class ResponsavelResponseDto {
     public void setDtNascimento(LocalDate dtNascimento) {
         this.dtNascimento = dtNascimento;
     }
-    // Forma de proteger o dado do responsável
-    @JsonProperty("cpf")
-    public String getCpfMascarado() {
+
+    public String getCpf() {
         if (cpf == null || cpf.length() != 11){
             return null;
         }
