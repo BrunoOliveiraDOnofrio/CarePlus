@@ -14,6 +14,7 @@ public class Consulta {
     @ManyToOne //muitas consultas podem ser de um usuário
     @JoinColumn(name = "especialista_id") // define o nome no banco
     private Especialista especialista;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Paciente paciente;

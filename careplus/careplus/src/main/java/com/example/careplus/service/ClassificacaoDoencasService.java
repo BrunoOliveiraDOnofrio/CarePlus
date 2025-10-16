@@ -1,7 +1,11 @@
 package com.example.careplus.service;
 
+import com.example.careplus.controller.dtoCid.ClassificacaoDoencasRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
+import com.example.careplus.model.Prontuario;
 import com.example.careplus.repository.ClassificacaoDoencasRepository;
+import com.example.careplus.repository.PacienteRepository;
+import com.example.careplus.repository.ProntuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,14 +19,32 @@ import static java.time.LocalTime.now;
 public class ClassificacaoDoencasService {
 
     private final ClassificacaoDoencasRepository classificacaoDoencasRepository;
+    private final ProntuarioRepository prontuarioRepository;
 
-    public ClassificacaoDoencasService(ClassificacaoDoencasRepository classificacaoDoencasRepository){
+
+    public ClassificacaoDoencasService(ClassificacaoDoencasRepository classificacaoDoencasRepository, ProntuarioRepository prontuarioRepository){
         this.classificacaoDoencasRepository = classificacaoDoencasRepository;
+        this.prontuarioRepository = prontuarioRepository;
     }
 
-    public ClassificacaoDoencas cadastrar(ClassificacaoDoencas doencaNew){
-        doencaNew.setDtModificacao(LocalDate.now());
-        return classificacaoDoencasRepository.save(doencaNew);
+
+
+    public ClassificacaoDoencas cadastrar(ClassificacaoDoencasRequestDto doencaNew){
+
+        Optional<Prontuario> existe = prontuarioRepository.findById(doencaNew.getIdProntuario());
+
+        if(existe.isPresent()){
+            ClassificacaoDoencas cidNovo = new ClassificacaoDoencas();
+            cidNovo.setCid(doencaNew.getCid());
+            cidNovo.setDtModificacao(LocalDate.now());
+            cidNovo.setProntuario(existe.get());
+
+            return classificacaoDoencasRepository.save(cidNovo);
+
+        } else {
+            throw new RuntimeException("Prontuário não encontrado");
+        }
+
     }
 
     public List<ClassificacaoDoencas> listar() {

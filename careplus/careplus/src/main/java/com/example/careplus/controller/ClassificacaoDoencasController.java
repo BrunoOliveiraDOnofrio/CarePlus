@@ -1,5 +1,6 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.controller.dtoCid.ClassificacaoDoencasRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.service.ClassificacaoDoencasService;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class ClassificacaoDoencasController {
     }
 
     @PostMapping
-    public ResponseEntity<ClassificacaoDoencas> cadastrar(@RequestBody ClassificacaoDoencas doencaNew) {
+    public ResponseEntity<ClassificacaoDoencas> cadastrar(@RequestBody ClassificacaoDoencasRequestDto doencaNew) {
         ClassificacaoDoencas criada = classificacaoDoencasService.cadastrar(doencaNew);
         return ResponseEntity.status(201).body(criada);
     }

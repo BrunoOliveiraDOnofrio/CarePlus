@@ -1,6 +1,7 @@
 package com.example.careplus.controller;
 
 
+import com.example.careplus.controller.dtoTratamento.TratamentoRequestDto;
 import com.example.careplus.model.Tratamento;
 import com.example.careplus.repository.TratamentoRepository;
 import com.example.careplus.service.TratamentoService;
@@ -27,7 +28,7 @@ public class TratamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<Tratamento> cadastrarTratamento(@Valid @RequestBody Tratamento tratamento){
+    public ResponseEntity<Tratamento> cadastrarTratamento(@Valid @RequestBody TratamentoRequestDto tratamento){
         try{
             return ResponseEntity.status(201).body(tratamentoService.cadastrar(tratamento));
         } catch (Exception e) {
