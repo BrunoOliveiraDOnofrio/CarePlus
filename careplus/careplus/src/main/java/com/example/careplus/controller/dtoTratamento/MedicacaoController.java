@@ -1,4 +1,4 @@
-package com.example.careplus.controller.dtoResponsavel;
+package com.example.careplus.controller.dtoTratamento;
 
 import com.example.careplus.model.Medicacao;
 import com.example.careplus.service.MedicacaoService;
@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/medicacacoes")
+@RequestMapping("/medicacoes")
 public class MedicacaoController {
 
-    private final MedicacaoService service = new MedicacaoService();
+    private final MedicacaoService service;
 
+    public MedicacaoController(MedicacaoService service) {
+        this.service = service;
+    }
     @PostMapping
     public void adicionar(@RequestBody Medicacao medicacao) {
         service.adicionar(medicacao);

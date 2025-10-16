@@ -1,15 +1,26 @@
 package com.example.careplus.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.Duration;
 import java.time.LocalDate;
 
+@Entity
 public class Medicacao implements Comparable<Medicacao> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMedicacao;
     private String nomeMedicacao;
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private boolean ativo;
+
+    public Medicacao() {
+    }
 
     public Medicacao(Long idMedicacao, String nomeMedicacao, LocalDate dataInicio, LocalDate dataFim, boolean ativo) {
         this.idMedicacao = idMedicacao;
