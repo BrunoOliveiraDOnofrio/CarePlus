@@ -6,6 +6,15 @@ public class AtividadeRequestDto {
     private String item;
     private Integer tempoExposicao;
     private LocalDate dataImplementacao;
+    private Long idProntuario;
+
+    public Long getIdProntuario() {
+        return idProntuario;
+    }
+
+    public void setIdProntuario(Long idProntuario) {
+        this.idProntuario = idProntuario;
+    }
 
     public String getItem() { return item; }
     public void setItem(String item) { this.item = item; }
@@ -15,4 +24,5 @@ public class AtividadeRequestDto {
 
     public LocalDate getDataImplementacao() { return dataImplementacao; }
     public void setDataImplementacao(LocalDate dataImplementacao) { this.dataImplementacao = dataImplementacao; }
+
 }

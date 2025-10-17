@@ -44,6 +44,10 @@ public class Prontuario {
     @JsonManagedReference
     private List<Tratamento> tratamentos;
 
+    @OneToMany(mappedBy = "prontuario", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Atividade> atividades;
+
 
     public Prontuario() {
     }
@@ -89,4 +93,11 @@ public class Prontuario {
 
     public List<Tratamento> getTratamentos() { return tratamentos; }
     public void setTratamentos(List<Tratamento> tratamentos) { this.tratamentos = tratamentos; }
+
+    public List<Atividade> getAtividades() {
+        return atividades;
+    }
+    public void setAtividades(List<Atividade> atividades) {
+        this.atividades = atividades;
+    }
 }

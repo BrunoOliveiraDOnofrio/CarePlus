@@ -2,24 +2,45 @@ package com.example.careplus.service;
 
 import com.example.careplus.controller.dtoAtividade.*;
 import com.example.careplus.model.Atividade;
+import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.Tratamento;
 import com.example.careplus.repository.AtividadeRepository;
+import com.example.careplus.repository.ProntuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AtividadeService {
 
     private final AtividadeRepository atividadeRepository;
+    private final ProntuarioRepository prontuarioRepository;
 
-    public AtividadeService(AtividadeRepository atividadeRepository) {
+    public AtividadeService(AtividadeRepository atividadeRepository, ProntuarioRepository prontuarioRepository) {
         this.atividadeRepository = atividadeRepository;
+        this.prontuarioRepository = prontuarioRepository;
     }
 
     public AtividadeResponseDto cadastrar(AtividadeRequestDto dto) {
         Atividade atividade = AtividadeMapper.toEntity(dto);
-        atividade = atividadeRepository.save(atividade);
-        return AtividadeMapper.toResponseDto(atividade);
+
+        Optional<Prontuario> existe = prontuarioRepository.findById(dto.getIdProntuario());
+
+        if(existe.isPresent()){
+            atividade.setProntuario(existe.get());
+
+            atividade = atividadeRepository.save(atividade);
+            return AtividadeMapper.toResponseDto(atividade);
+
+        } else {
+            throw new RuntimeException("Prontuário não encontrado");
+        }
+
+
+
     }
 
     public List<AtividadeResponseDto> listar() {

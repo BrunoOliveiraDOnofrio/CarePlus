@@ -21,7 +21,7 @@ public class Tratamento {
     @Schema(description = "Última data de modificação do tratamento")
     private LocalDateTime dataModificacao;
 
-    // 🔹 Vários tratamentos pertencem a um prontuário
+    // vários tratamentos pertencem a um prontuário
     @ManyToOne
     @JoinColumn(name = "prontuario_id")
     @JsonBackReference
@@ -37,8 +37,12 @@ public class Tratamento {
         this.prontuario = prontuario;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTipoDeTratamento() { return tipoDeTratamento; }
     public void setTipoDeTratamento(String tipoDeTratamento) { this.tipoDeTratamento = tipoDeTratamento; }

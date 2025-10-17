@@ -1,5 +1,6 @@
 package com.example.careplus.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -13,6 +14,19 @@ public class Atividade {
     private String item;
     private Integer tempoExposicao; // minutos
     private LocalDate dataImplementacao;
+
+    @ManyToOne
+    @JoinColumn(name = "prontuario_id")
+    @JsonBackReference
+    private Prontuario prontuario;
+
+    public Prontuario getProntuario() {
+        return prontuario;
+    }
+
+    public void setProntuario(Prontuario prontuario) {
+        this.prontuario = prontuario;
+    }
 
     public Long getIdAtividade() {
         return idAtividade;
@@ -45,4 +59,5 @@ public class Atividade {
     public void setDataImplementacao(LocalDate dataImplementacao) {
         this.dataImplementacao = dataImplementacao;
     }
+
 }
