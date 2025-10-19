@@ -22,8 +22,14 @@ public class Consulta {
     @Schema(description = "2025-10-14T01:09:31.734Z")
     private LocalDateTime dataHora;
 
-    @Schema(description = "Pendente")
-    private String status;
+    @Schema(description = "Retorno")
+    private String tipo;
+
+    @Schema(description = "Anotacoes sobre o paciente")
+    private String anotacoes;
+
+    @Schema(description = "Sim")
+    private Boolean presenca;
 
     public Paciente getUsuario() {
         return paciente;
@@ -57,11 +63,28 @@ public class Consulta {
         this.dataHora = dataHora;
     }
 
-    public String getStatus() {
-        return status;
+
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getAnotacoes() {
+        return anotacoes;
+    }
+
+    public void setAnotacoes(String anotacoes) {
+        this.anotacoes = anotacoes;
+    }
+
+    public Boolean getPresenca() {
+        return presenca;
+    }
+
+    public void setPresenca(Boolean presenca) {
+        this.presenca = presenca;
     }
 }

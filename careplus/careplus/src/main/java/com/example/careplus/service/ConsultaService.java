@@ -1,5 +1,6 @@
 package com.example.careplus.service;
 
+import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.ConsultaRequest;
 import com.example.careplus.model.Especialista;
@@ -7,6 +8,7 @@ import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.ConsultaRepository;
 import com.example.careplus.repository.EspecialistaRepository;
 import com.example.careplus.repository.PacienteRepository;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +21,14 @@ public class ConsultaService {
     private final PacienteRepository pacienteRepository;
     private final EspecialistaRepository especialistaRepository;
     private final EmailService emailService;
+    private final ResourcePatternResolver resourcePatternResolver;
 
-    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, EspecialistaRepository especialistaRepository, EmailService emailService) {
+    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, EspecialistaRepository especialistaRepository, EmailService emailService, ResourcePatternResolver resourcePatternResolver) {
         this.consultaRepository = consultaRepository;
         this.pacienteRepository = pacienteRepository;
         this.especialistaRepository = especialistaRepository;
         this.emailService = emailService;
+        this.resourcePatternResolver = resourcePatternResolver;
     }
 
     //montando a Consulta a partir do ConsultaRequest
@@ -49,7 +53,7 @@ public class ConsultaService {
         consulta.setEspecialista(especialista);
         consulta.setUsuario(paciente);
         consulta.setDataHora(request.getDataHora());
-        consulta.setStatus("Pendente");
+        consulta.setTipo("Pendente");
 
         emailService.EnviarNotificacao(especialista, consulta, paciente);
         return consultaRepository.save(consulta);
@@ -68,20 +72,44 @@ public class ConsultaService {
         return consultaRepository.findAll();
     }
 
+    public List<Consulta> listarPorData(){
+        List<Consulta> consultas = consultaRepository.buscarPorData();
+
+        if (consultas.isEmpty()){
+            throw new ResourceNotFoundException("Nenhuma consulta cadastrada!");
+        }
+
+        return consultas;
+
+    }
+
+    public List<Consulta> listarPorPaciente(Long idPaciente){
+        List<Consulta> consultas = consultaRepository.buscarPorPaciente(idPaciente);
+
+        if (consultas.isEmpty()){
+            throw new ResourceNotFoundException("Nenhuma consulta cadastrada para esse paciente!");
+        }
+
+        return consultas;
+
+    }
+
+
+
     public Consulta editarConsulta(Long consultaId, ConsultaRequest request) {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
         Especialista especialista = especialistaRepository.findById(request.getEspecialistaId())
-                .orElseThrow(() -> new RuntimeException("Especialista não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Especialista não encontrado"));
 
         Consulta consulta = consultaRepository.findById(consultaId)
-                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
 
         consulta.setUsuario(paciente);
         consulta.setEspecialista(especialista);
         consulta.setDataHora(request.getDataHora());
-        consulta.setStatus("Pendente");
+        consulta.setTipo("Retorno");
 
         return consultaRepository.save(consulta);
     }

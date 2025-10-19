@@ -38,7 +38,7 @@ public class EmailService implements Notification {
 
             contexto.setVariable("dataHoraConsulta", dataFormatada);
             contexto.setVariable("paciente", paciente.getNome());
-            contexto.setVariable("status", consulta.getStatus());
+            contexto.setVariable("status", consulta.getTipo());
             contexto.setVariable("nomeEspecialista", especialista.getNome());
 
             String htmlBody = templateEngine.process("notificacao", contexto);

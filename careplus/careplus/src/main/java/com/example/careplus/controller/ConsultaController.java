@@ -3,6 +3,8 @@ package com.example.careplus.controller;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.ConsultaRequest;
 import com.example.careplus.service.ConsultaService;
+import org.apache.commons.lang3.concurrent.ConcurrentUtils;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,7 @@ public class ConsultaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletarConsulta(@PathVariable Long id){
+    public ResponseEntity<?> deletarConsulta(@PathVariable Long id){
         try{
             service.removerConsulta(id);
             return ResponseEntity.status(204).build();
@@ -42,6 +44,32 @@ public class ConsultaController {
             return ResponseEntity.status(200).body(consultas);
         }
     }
+
+    @GetMapping("/por-data")
+    public ResponseEntity<List<Consulta>> listarPorData(){
+        List<Consulta> consultas = service.listarPorData();
+
+        if (consultas.isEmpty()){
+            return ResponseEntity.status(404).build();
+        } else {
+            return ResponseEntity.status(200).body(consultas);
+        }
+
+    }
+
+    @GetMapping("/por-paciente")
+    public ResponseEntity<List<Consulta>> listarPorPaciente(@RequestParam Long idPaciente){
+        List<Consulta> consultas = service.listarPorPaciente(idPaciente);
+
+        if (consultas.isEmpty()){
+            return ResponseEntity.status(404).build();
+        } else {
+            return ResponseEntity.status(200).body(consultas);
+        }
+
+    }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Consulta> editarConsulta(

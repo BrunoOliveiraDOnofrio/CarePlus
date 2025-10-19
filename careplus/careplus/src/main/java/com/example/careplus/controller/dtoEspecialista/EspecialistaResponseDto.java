@@ -12,8 +12,8 @@ public class EspecialistaResponseDto {
 
     @Schema(description = "iago_benedito_barbosa@navescorat.com.br")
     private String email;
-    @JsonInclude(JsonInclude.Include.NON_NULL) // Anotação usada para não incluir o atributo abaixo caso o campo seja
-    // nulo
+    @JsonInclude(JsonInclude.Include.NON_NULL) // Anotação usada para não incluir o atributo abaixo no JSON caso o
+    // campo seja nulo
     private SupervisorDto supervisor;
 
     @Schema(description = "Estagiaria")
