@@ -1,7 +1,9 @@
-package com.example.careplus.controller.dtoTratamento;
+package com.example.careplus.controller;
 
+import com.example.careplus.controller.dtoMedicacao.MedicacaoRequestDto;
 import com.example.careplus.model.Medicacao;
 import com.example.careplus.service.MedicacaoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,9 +17,14 @@ public class MedicacaoController {
     public MedicacaoController(MedicacaoService service) {
         this.service = service;
     }
+
     @PostMapping
-    public void adicionar(@RequestBody Medicacao medicacao) {
-        service.adicionar(medicacao);
+    public ResponseEntity<Medicacao> adicionar(@RequestBody MedicacaoRequestDto medicacao) {
+        try{
+            return ResponseEntity.status(201).body(service.adicionar(medicacao));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/ativas")
