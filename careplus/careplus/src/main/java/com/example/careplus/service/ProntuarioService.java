@@ -4,13 +4,11 @@ import com.example.careplus.controller.dtoProntuario.ProntuarioRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.model.Prontuario;
-import com.example.careplus.repository.ClassificacaoDoencasRepository;
-import com.example.careplus.repository.PacienteRepository;
-import com.example.careplus.repository.ProntuarioRepository;
-import com.example.careplus.repository.TratamentoRepository;
+import com.example.careplus.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -20,12 +18,16 @@ public class ProntuarioService {
     private final PacienteRepository pacienteRepository;
     private final ClassificacaoDoencasRepository cidRepository;
     private final TratamentoRepository tratamentoRepository;
+    private final AtividadeRepository atividadeRepository;
+    private final MedicacaoRepository medicacaoRepository;
 
-    public ProntuarioService(ProntuarioRepository repository, PacienteRepository pacienteRepository, ClassificacaoDoencasRepository cidRepository, TratamentoRepository tratamentoRepository) {
+    public ProntuarioService(ProntuarioRepository repository, PacienteRepository pacienteRepository, ClassificacaoDoencasRepository cidRepository, TratamentoRepository tratamentoRepository, AtividadeRepository atividadeRepository, MedicacaoRepository medicacaoRepository) {
         this.prontuatioRepository = repository;
         this.pacienteRepository = pacienteRepository;
         this.cidRepository = cidRepository;
         this.tratamentoRepository = tratamentoRepository;
+        this.atividadeRepository = atividadeRepository;
+        this.medicacaoRepository = medicacaoRepository;
     }
 
     public Prontuario criarProntuario (ProntuarioRequestDto prontuario){
@@ -58,9 +60,44 @@ public class ProntuarioService {
         for (Prontuario p : prontuarios){
             p.setCid(cidRepository.findByProntuario_Id(p.getId()));
             p.setTratamentos(tratamentoRepository.findByProntuario_Id(p.getId()));
+            p.setAtividades(atividadeRepository.findByProntuario_Id(p.getId()));
+            p.setMedicacoes(medicacaoRepository.findByProntuario_Id(p.getId()));
         }
 
         return prontuarios;
+    }
+
+    public Prontuario buscarProntuarioPorId(Long id){
+        Optional<Prontuario> prontuarioOpt = prontuatioRepository.findById(id);
+
+        if (prontuarioOpt.isPresent()) {
+            return prontuarioOpt.get();
+        } else {
+            throw new RuntimeException("Usuário não encontrado!");
+        }
+
+    }
+
+    public Prontuario buscarProntuarioPorNome(String nome){
+        Optional<Prontuario> prontuario = prontuatioRepository.findByPacienteNomeContainsIgnoreCase(nome);
+
+        if (prontuario.isPresent()){
+            return prontuario.get();
+        } else {
+            throw new RuntimeException("Paciente não encontrado");
+        }
+
+    }
+
+    public Prontuario buscarProntuarioPorCpf(String cpf){
+        Optional<Prontuario> prontuario = prontuatioRepository.findByPacienteCpf(cpf);
+
+        if (prontuario.isPresent()){
+            return prontuario.get();
+        } else {
+            throw new RuntimeException("Paciente não encontrado");
+        }
+
     }
 
     public Prontuario atualizarProntuario(ProntuarioRequestDto prontuario, Long id){
@@ -77,10 +114,18 @@ public class ProntuarioService {
             prontuarioExistente.setResumoClinico(prontuario.getResumoClinico());
             prontuarioExistente.setNivelAgressividade(prontuario.getNivelAgressividade());
 
-            return prontuarioExistente;
+            return prontuatioRepository.save(prontuarioExistente);
         }else {
             throw new RuntimeException("Paciente não encontrado");
         }
+    }
+
+    public void deletarPorId(Long id){
+        boolean existe = prontuatioRepository.existsById(id);
+        if (!existe){
+            throw new NoSuchElementException();
+        }
+        prontuatioRepository.deleteById(id);
     }
 
 }

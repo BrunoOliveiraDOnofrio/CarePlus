@@ -1,9 +1,7 @@
 package com.example.careplus.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -19,6 +17,11 @@ public class Medicacao implements Comparable<Medicacao> {
     private LocalDate dataFim;
     private boolean ativo;
 
+    @ManyToOne
+    @JoinColumn(name = "prontuario_id")
+    @JsonBackReference
+    private Prontuario prontuario;
+
     public Medicacao() {
     }
 
@@ -28,6 +31,14 @@ public class Medicacao implements Comparable<Medicacao> {
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.ativo = ativo;
+    }
+
+    public Prontuario getProntuario() {
+        return prontuario;
+    }
+
+    public void setProntuario(Prontuario prontuario) {
+        this.prontuario = prontuario;
     }
 
     public Long getIdMedicacao() {
@@ -62,7 +73,7 @@ public class Medicacao implements Comparable<Medicacao> {
         this.dataFim = dataFim;
     }
 
-    public boolean isAtivo() {
+    public boolean getAtivo() {
         return ativo;
     }
 
