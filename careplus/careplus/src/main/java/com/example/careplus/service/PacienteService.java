@@ -86,7 +86,8 @@ public class PacienteService {
             pacienteExistente.setDtNascimento(paciente.getDtNascimento());
             pacienteExistente.setTelefone(paciente.getTelefone());
 
-            return PacienteMapper.toResponseDto(pacienteExistente);
+            Paciente atualizado = repository.save(pacienteExistente);
+            return PacienteMapper.toResponseDto(atualizado);
         }else {
             throw new RuntimeException("Paciente não encontrado");
         }

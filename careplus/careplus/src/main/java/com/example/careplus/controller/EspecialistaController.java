@@ -26,14 +26,14 @@ public class EspecialistaController {
     }
 
     @GetMapping("/por-email")
-    public ResponseEntity<List<Especialista>> buscarPorEmail(@RequestParam String email){
-        List<Especialista> especialistas = especialistaService.buscarPorEmail(email);
-        return ResponseEntity.status(404).body(especialistas);
+    public ResponseEntity<List<EspecialistaResponseDto>> buscarPorEmail(@RequestParam String email){
+        List<EspecialistaResponseDto> especialistas = especialistaService.buscarPorEmail(email);
+        return ResponseEntity.status(200).body(especialistas);
     }
 
     @GetMapping
-    public ResponseEntity<List<Especialista>> listarTodos(){
-        List<Especialista> especialistas = especialistaService.listarTodos();
+    public ResponseEntity<List<EspecialistaResponseDto>> listarTodos(){
+        List<EspecialistaResponseDto> especialistas = especialistaService.listarTodos();
         return ResponseEntity.status(200).body(especialistas);
     }
 

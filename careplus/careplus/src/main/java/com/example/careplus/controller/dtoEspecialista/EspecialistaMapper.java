@@ -43,6 +43,21 @@ public class EspecialistaMapper {
         return entity;
     }
 
+    public static Especialista toEntityResponse(EspecialistaResponseDto dto){
+        if (dto == null){
+            return null;
+        }
+
+        Especialista entity = new Especialista();
+        entity.setNome(dto.getNome());
+        entity.setEmail(dto.getEmail());
+        entity.setCargo(dto.getCargo());
+        entity.setEspecialidade(dto.getEspecialidade());
+
+
+        return entity;
+    }
+
     public static EspecialistaResponseDto toResponseDto(Especialista entity){
         if (entity == null){
             return null;

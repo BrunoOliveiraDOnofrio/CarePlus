@@ -1,5 +1,10 @@
 package com.example.careplus.service;
 
+import com.example.careplus.controller.dtoConsulta.ConsultaMapper;
+import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
+import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
+import com.example.careplus.controller.dtoEspecialista.EspecialistaMapper;
+import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.ConsultaRequest;
@@ -32,13 +37,13 @@ public class ConsultaService {
     }
 
     //montando a Consulta a partir do ConsultaRequest
-    public Consulta marcarConsulta(ConsultaRequest request){
+    public ConsultaResponseDto marcarConsulta(ConsultaRequestDto request){
         Optional<Paciente> usuarioOpt = pacienteRepository.findById(request.getPacienteId());
         Paciente paciente;
         if (usuarioOpt.isPresent()) {
             paciente = usuarioOpt.get();
         } else {
-            throw new RuntimeException("Usuário não encontrado!");
+            throw new ResourceNotFoundException("Usuário não encontrado!");
         }
 
         Optional<Especialista> especialistaOpt = especialistaRepository.findById(request.getEspecialistaId());
@@ -46,17 +51,25 @@ public class ConsultaService {
         if (especialistaOpt.isPresent()) {
             especialista = especialistaOpt.get();
         } else {
-            throw new RuntimeException("Especialista não encontrado!");
+            throw new ResourceNotFoundException("Especialista não encontrado!");
         }
 
-        Consulta consulta = new Consulta();
-        consulta.setEspecialista(especialista);
-        consulta.setUsuario(paciente);
-        consulta.setDataHora(request.getDataHora());
-        consulta.setTipo("Pendente");
+//        Consulta consulta = new Consulta();
+//        consulta.setEspecialista(especialista);
+//        consulta.setPaciente(paciente);
+//        consulta.setDataHora(request.getDataHora());
+//        consulta.setTipo("Pendente");
 
-        emailService.EnviarNotificacao(especialista, consulta, paciente);
-        return consultaRepository.save(consulta);
+        Consulta novaConsulta = new Consulta();
+        novaConsulta.setPaciente(paciente);
+        novaConsulta.setEspecialista(especialista);
+        novaConsulta.setDataHora(request.getDataHora());
+
+        Consulta salvo = consultaRepository.save(novaConsulta);
+
+        emailService.EnviarNotificacao(especialista, novaConsulta, paciente);
+
+        return ConsultaMapper.toResponseDto(salvo);
     }
 
     public void removerConsulta(Long consultaId){
@@ -106,7 +119,7 @@ public class ConsultaService {
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
 
-        consulta.setUsuario(paciente);
+        consulta.setPaciente(paciente);
         consulta.setEspecialista(especialista);
         consulta.setDataHora(request.getDataHora());
         consulta.setTipo("Retorno");

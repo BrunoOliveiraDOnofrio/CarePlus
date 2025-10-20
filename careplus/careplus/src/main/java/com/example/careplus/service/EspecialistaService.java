@@ -3,6 +3,7 @@ package com.example.careplus.service;
 import com.example.careplus.controller.dtoEspecialista.EspecialistaMapper;
 import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
 import com.example.careplus.controller.dtoEspecialista.EspecialistaResquestDto;
+import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Especialista;
 import com.example.careplus.repository.EspecialistaRepository;
@@ -53,22 +54,22 @@ public class EspecialistaService {
         return EspecialistaMapper.toResponseDto(salvo);
     }
 
-    public List<Especialista> buscarPorEmail(String email){
+    public List<EspecialistaResponseDto> buscarPorEmail(String email){
 
-        List<Especialista> especialistasEncontrados = repository.findByEmailStartingWith(email);
+        List<Especialista> especialistasEncontrados = repository.findByEmailContainingIgnoreCase(email);
 
         if (!especialistasEncontrados.isEmpty()){
-            return especialistasEncontrados;
+            return EspecialistaMapper.toResponseDto(especialistasEncontrados);
         }else{
             throw new ResourceNotFoundException("Usuário não encontrado!");
         }
     }
 
-    public List<Especialista> listarTodos(){
+    public List<EspecialistaResponseDto> listarTodos(){
         List<Especialista> especialistas = repository.findAll();
 
         if (!especialistas.isEmpty()){
-            return especialistas;
+            return EspecialistaMapper.toResponseDto(especialistas);
         }else{
             throw new RuntimeException("Nenhum usuario cadastrado");
         }
@@ -84,7 +85,7 @@ public class EspecialistaService {
         repository.deleteById(id);
     }
 
-    public Especialista atualizar(Especialista especialista, Long id){
+    public EspecialistaResponseDto atualizar(Especialista especialista, Long id){
         Optional<Especialista> existe = repository.findById(id);
 
         if (existe.isPresent()){
@@ -94,7 +95,9 @@ public class EspecialistaService {
             especExistente.setEmail(especialista.getEmail());
             especExistente.setCargo(especialista.getCargo());
             especExistente.setEspecialidade(especialista.getEspecialidade());
-            return repository.save(especExistente);
+            Especialista atualizado = repository.save(especExistente);
+
+            return EspecialistaMapper.toResponseDto(atualizado);
         }else{
             throw new ResourceNotFoundException("Usuario nao encontrado!");
         }

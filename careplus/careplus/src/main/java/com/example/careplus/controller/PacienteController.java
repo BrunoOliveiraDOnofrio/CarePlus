@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("usuarios")
+@RequestMapping("pacientes")
 public class PacienteController {
 //    List<Usuario> usuarios = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class PacienteController {
     }
 
     @GetMapping // OK
-    public ResponseEntity<List<PacienteResponseDto>> listarUsuarios(){
+    public ResponseEntity<List<PacienteResponseDto>> listarPacientes(){
         List<PacienteResponseDto> pacientes = service.listarTodos();
 
         if(pacientes.isEmpty()){
@@ -41,7 +41,7 @@ public class PacienteController {
     }
 
     @PostMapping // OK
-    public ResponseEntity<PacienteResponseDto> cadastrarUsuario(@RequestBody PacienteRequestDto paciente){
+    public ResponseEntity<PacienteResponseDto> cadastrarPaciente(@RequestBody PacienteRequestDto paciente){
         try {
             PacienteResponseDto pacienteSalvo = service.salvar(paciente);
 
@@ -54,7 +54,7 @@ public class PacienteController {
     }
 
     @DeleteMapping("/{id}") // OK
-    public ResponseEntity deletarUsuario(@PathVariable Long id){
+    public ResponseEntity deletarPaciente(@PathVariable Long id){
         try{
             service.deletar(id);
             return ResponseEntity.status(204).build();
@@ -64,7 +64,7 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}") //OK
-    public ResponseEntity<?> atualizarUsuario(@RequestBody PacienteRequestDto paciente, @PathVariable Long id){
+    public ResponseEntity<?> atualizarPaciente(@RequestBody PacienteRequestDto paciente, @PathVariable Long id){
         try{
             service.atualizar(paciente, id);
             return ResponseEntity.ok().build();

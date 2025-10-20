@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EspecialistaRepository extends JpaRepository<Especialista, Long> {
-    List<Especialista> findByEmailStartingWith(String email);
+    List<Especialista> findByEmailContainingIgnoreCase(String email);
 }

@@ -1,5 +1,7 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
+import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.ConsultaRequest;
 import com.example.careplus.service.ConsultaService;
@@ -20,8 +22,8 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Consulta> marcarConsulta(@RequestBody ConsultaRequest request) {
-        Consulta consulta = service.marcarConsulta(request);
+    public ResponseEntity<ConsultaResponseDto> marcarConsulta(@RequestBody ConsultaRequestDto request) {
+        ConsultaResponseDto consulta = service.marcarConsulta(request);
         return ResponseEntity.ok(consulta);
     }
 

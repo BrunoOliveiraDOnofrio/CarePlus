@@ -1,47 +1,44 @@
-package com.example.careplus.model;
+package com.example.careplus.controller.dtoConsulta;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
+import com.example.careplus.controller.dtoPaciente.PacienteResponseDto;
+import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Paciente;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.time.LocalDateTime;
 
-@Entity
-public class Consulta {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ConsultaResponseDto {
     private Long id;
-
-    // essa anotação associa com outro objeto
-    @ManyToOne //muitas consultas podem ser de um usuário
-    @JoinColumn(name = "especialista_id") // define o nome no banco
-    private Especialista especialista;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
     private Paciente paciente;
-
-    @Schema(description = "2025-10-14T01:09:31.734Z")
+    private Especialista especialista;
     private LocalDateTime dataHora;
-
-    @Schema(description = "Retorno")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tipo;
-
-    @Schema(description = "Anotacoes sobre o paciente")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String anotacoes;
-
-    @Schema(description = "Sim")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean presenca;
 
-    public Consulta() {
+    public ConsultaResponseDto() {
     }
 
-    public Consulta(Long id, Especialista especialista, Paciente paciente, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
+    public ConsultaResponseDto(Long id, Paciente paciente, Especialista especialista, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
         this.id = id;
-        this.especialista = especialista;
         this.paciente = paciente;
+        this.especialista = especialista;
         this.dataHora = dataHora;
         this.tipo = tipo;
         this.anotacoes = anotacoes;
         this.presenca = presenca;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Paciente getPaciente() {
@@ -60,14 +57,6 @@ public class Consulta {
         this.especialista = especialista;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public LocalDateTime getDataHora() {
         return dataHora;
     }
@@ -75,7 +64,6 @@ public class Consulta {
     public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
-
 
     public String getTipo() {
         return tipo;
