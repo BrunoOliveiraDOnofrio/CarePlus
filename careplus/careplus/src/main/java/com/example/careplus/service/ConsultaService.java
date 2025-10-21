@@ -85,31 +85,31 @@ public class ConsultaService {
         return consultaRepository.findAll();
     }
 
-    public List<Consulta> listarPorData(){
+    public List<ConsultaResponseDto> listarPorData(){
         List<Consulta> consultas = consultaRepository.buscarPorData();
 
         if (consultas.isEmpty()){
             throw new ResourceNotFoundException("Nenhuma consulta cadastrada!");
         }
 
-        return consultas;
+        return ConsultaMapper.toResponseDto(consultas);
 
     }
 
-    public List<Consulta> listarPorPaciente(Long idPaciente){
+    public List<ConsultaResponseDto> listarPorPaciente(Long idPaciente){
         List<Consulta> consultas = consultaRepository.buscarPorPaciente(idPaciente);
 
         if (consultas.isEmpty()){
             throw new ResourceNotFoundException("Nenhuma consulta cadastrada para esse paciente!");
         }
 
-        return consultas;
+        return ConsultaMapper.toResponseDto(consultas);
 
     }
 
 
 
-    public Consulta editarConsulta(Long consultaId, ConsultaRequest request) {
+    public ConsultaResponseDto editarConsulta(Long consultaId, ConsultaRequest request) {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
@@ -124,7 +124,9 @@ public class ConsultaService {
         consulta.setDataHora(request.getDataHora());
         consulta.setTipo("Retorno");
 
-        return consultaRepository.save(consulta);
+        Consulta salva = consultaRepository.save(consulta);
+
+        return ConsultaMapper.toResponseDto(salva);
     }
 
 }

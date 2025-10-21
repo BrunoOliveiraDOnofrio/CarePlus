@@ -48,8 +48,8 @@ public class ConsultaController {
     }
 
     @GetMapping("/por-data")
-    public ResponseEntity<List<Consulta>> listarPorData(){
-        List<Consulta> consultas = service.listarPorData();
+    public ResponseEntity<List<ConsultaResponseDto>> listarPorData(){
+        List<ConsultaResponseDto> consultas = service.listarPorData();
 
         if (consultas.isEmpty()){
             return ResponseEntity.status(404).build();
@@ -60,8 +60,8 @@ public class ConsultaController {
     }
 
     @GetMapping("/por-paciente")
-    public ResponseEntity<List<Consulta>> listarPorPaciente(@RequestParam Long idPaciente){
-        List<Consulta> consultas = service.listarPorPaciente(idPaciente);
+    public ResponseEntity<List<ConsultaResponseDto>> listarPorPaciente(@RequestParam Long idPaciente){
+        List<ConsultaResponseDto> consultas = service.listarPorPaciente(idPaciente);
 
         if (consultas.isEmpty()){
             return ResponseEntity.status(404).build();
@@ -74,11 +74,11 @@ public class ConsultaController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Consulta> editarConsulta(
+    public ResponseEntity<ConsultaResponseDto> editarConsulta(
             @PathVariable Long id,
             @RequestBody ConsultaRequest request) {
 
-        Consulta consultaEditada = service.editarConsulta(id, request);
+        ConsultaResponseDto consultaEditada = service.editarConsulta(id, request);
         return ResponseEntity.status(200).body(consultaEditada);
     }
 
