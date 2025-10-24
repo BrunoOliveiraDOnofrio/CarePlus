@@ -26,7 +26,6 @@ public class PacienteMapper {
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
         entity.setCpf(dto.getCpf());
-        entity.setCargo(dto.getCargo());
         entity.setTelefone(dto.getTelefone());
         entity.setSenha(dto.getSenha());
         entity.setDtNascimento(dto.getDtNascimento());
@@ -53,7 +52,6 @@ public class PacienteMapper {
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
         entity.setCpf(dto.getCpf());
-        entity.setCargo(dto.getCargo());
         entity.setTelefone(dto.getTelefone());
         entity.setDtNascimento(dto.getDtNascimento());
 
@@ -68,7 +66,7 @@ public class PacienteMapper {
             return null;
         }
 
-        PacienteResponseDto dto = new PacienteResponseDto(entity.getId(), entity.getNome(), entity.getEmail(), entity.getCpf(), entity.getCargo(), entity.getTelefone(), entity.getDtNascimento());
+        PacienteResponseDto dto = new PacienteResponseDto(entity.getId(), entity.getNome(), entity.getEmail(), entity.getCpf(), entity.getTelefone(), entity.getDtNascimento());
 
         return dto;
     }

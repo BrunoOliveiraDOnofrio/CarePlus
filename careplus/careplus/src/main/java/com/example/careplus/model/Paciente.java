@@ -20,9 +20,6 @@ public class Paciente {
     @Schema(description = "484.356.058-84")
     private String cpf;
 
-    @Schema(description = "Estudante")
-    private String cargo;
-
     @Schema(description = "(11) 98215-0272")
     private String telefone;
 
@@ -67,14 +64,6 @@ public class Paciente {
         this.cpf = cpf;
     }
 
-
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
-    }
 
     public String getTelefone() {
         return telefone;

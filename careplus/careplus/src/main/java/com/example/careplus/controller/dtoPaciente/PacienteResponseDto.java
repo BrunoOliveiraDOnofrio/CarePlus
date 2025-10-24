@@ -18,9 +18,6 @@ public class PacienteResponseDto {
     @Schema(description = "484.356.058-84")
     private String cpf;
 
-    @Schema(description = "Estudante")
-    private String cargo;
-
     @Schema(description = "(11) 98215-0272")
     private String telefone;
 
@@ -30,12 +27,11 @@ public class PacienteResponseDto {
     public PacienteResponseDto() {
     }
 
-    public PacienteResponseDto(Long id, String nome, String email, String cpf, String cargo, String telefone, LocalDate dtNascimento) {
+    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
-        this.cargo = cargo;
         this.telefone = telefone;
         this.dtNascimento = dtNascimento;
     }
@@ -70,14 +66,6 @@ public class PacienteResponseDto {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
     }
 
     public String getTelefone() {

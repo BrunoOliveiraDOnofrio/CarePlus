@@ -82,7 +82,6 @@ public class PacienteService {
 
             pacienteExistente.setNome(paciente.getNome());
             pacienteExistente.setEmail(paciente.getEmail());
-            pacienteExistente.setCargo(paciente.getCargo());
             pacienteExistente.setDtNascimento(paciente.getDtNascimento());
             pacienteExistente.setTelefone(paciente.getTelefone());
 

@@ -15,9 +15,6 @@ public class PacienteRequestDto {
     @Schema(description = "191.644.388-56")
     private String cpf;
 
-    @Schema(description = "Estagirario")
-    private String cargo;
-
     @Schema(description = "(11) 99182-8249")
     private String telefone;
 
@@ -27,11 +24,10 @@ public class PacienteRequestDto {
     @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 
-    public PacienteRequestDto(String nome, String email, String cpf, String cargo, String telefone, String senha, LocalDate dtNascimento) {
+    public PacienteRequestDto(String nome, String email, String cpf, String telefone, String senha, LocalDate dtNascimento) {
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
-        this.cargo = cargo;
         this.telefone = telefone;
         this.senha = senha;
         this.dtNascimento = dtNascimento;
@@ -59,14 +55,6 @@ public class PacienteRequestDto {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
     }
 
     public String getTelefone() {
