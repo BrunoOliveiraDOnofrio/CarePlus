@@ -48,9 +48,42 @@ public class MedicacaoService {
         return repository.countByAtivoTrue();
     }
 
+
     public List<Medicacao> listarOrdenadasPorNome() {
         return repository.findAllByOrderByNomeMedicacaoAsc();
     }
+
+
+    public Medicacao atualizar(Long id, MedicacaoRequestDto dto) {
+        Optional<Medicacao> medicacaoExistente = repository.findById(id);
+
+        if (medicacaoExistente.isPresent()) {
+            Medicacao medicacao = medicacaoExistente.get();
+
+            medicacao.setNomeMedicacao(dto.getNomeMedicacao());
+            medicacao.setDataInicio(dto.getDataInicio());
+            medicacao.setDataFim(dto.getDataFim());
+            medicacao.setAtivo(dto.getAtivo());
+
+            if (dto.getIdProntuario() != null) {
+                Optional<Prontuario> prontuario = prontuarioRepository.findById(dto.getIdProntuario());
+                prontuario.ifPresent(medicacao::setProntuario);
+            }
+            return repository.save(medicacao);
+        } else {
+            throw new RuntimeException("Medicação não encontrada para atualização.");
+        }
+    }
+
+
+    public void deletar(Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new RuntimeException("Medicação não encontrada para exclusão.");
+        }
+    }
+
 
     public List<Medicacao> ordenarPorTempoMedicando() {
         List<Medicacao> todas = repository.findAll();

@@ -71,8 +71,6 @@ public class ConsultaController {
 
     }
 
-
-
     @PutMapping("/{id}")
     public ResponseEntity<ConsultaResponseDto> editarConsulta(
             @PathVariable Long id,

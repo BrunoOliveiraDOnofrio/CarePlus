@@ -19,26 +19,67 @@ public class MedicacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Medicacao> adicionar(@RequestBody MedicacaoRequestDto medicacao) {
-        try{
-            return ResponseEntity.status(201).body(service.adicionar(medicacao));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public ResponseEntity<Medicacao> adicionar(@RequestBody MedicacaoRequestDto dto) {
+        try {
+            Medicacao novaMedicacao = service.adicionar(dto);
+            return ResponseEntity.status(201).body(novaMedicacao);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Medicacao> atualizar(@PathVariable Long id, @RequestBody MedicacaoRequestDto dto) {
+
+        try {
+            Medicacao medicacaoAtualizada = service.atualizar(id, dto);
+            return ResponseEntity.status(200).body(medicacaoAtualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        try {
+            service.deletar(id);
+            return ResponseEntity.status(204).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Medicacao>> listarOrdenadasPorNome() {
+        List<Medicacao> lista = service.listarOrdenadasPorNome();
+
+        if (lista.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(200).body(lista);
+        }
+    }
+
+    @GetMapping("/ordenadas-tempo")
+    public ResponseEntity<List<Medicacao>> listarPorTempoMedicando() {
+        List<Medicacao> lista = service.ordenarPorTempoMedicando();
+
+        if (lista.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(200).body(lista);
         }
     }
 
     @GetMapping("/ativas")
-    public long contarAtivas() {
-        return service.contarAtivas();
-    }
+    public ResponseEntity<Long> contarAtivas() {
+        long qtd = service.contarAtivas();
 
-    @GetMapping("/ordenadas")
-    public List<Medicacao> listarOrdenadasPorNome() {
-        return service.listarOrdenadasPorNome();
-    }
-
-    @GetMapping("/tempo")
-    public List<Medicacao> ordenarPorTempo() {
-        return service.ordenarPorTempoMedicando();
+        if (qtd == 0) {
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(200).body(qtd);
+        }
     }
 }
