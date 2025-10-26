@@ -3,6 +3,7 @@ package com.example.careplus.controller;
 import com.example.careplus.controller.dtoMedicacao.MedicacaoRequestDto;
 import com.example.careplus.model.Medicacao;
 import com.example.careplus.service.MedicacaoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class MedicacaoController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Medicacao> adicionar(@RequestBody MedicacaoRequestDto dto) {
         try {
             Medicacao novaMedicacao = service.adicionar(dto);
@@ -30,6 +32,7 @@ public class MedicacaoController {
 
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Medicacao> atualizar(@PathVariable Long id, @RequestBody MedicacaoRequestDto dto) {
 
         try {
@@ -41,6 +44,7 @@ public class MedicacaoController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         try {
             service.deletar(id);
@@ -51,6 +55,7 @@ public class MedicacaoController {
     }
 
     @GetMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<Medicacao>> listarOrdenadasPorNome() {
         List<Medicacao> lista = service.listarOrdenadasPorNome();
 
@@ -62,6 +67,7 @@ public class MedicacaoController {
     }
 
     @GetMapping("/ordenadas-tempo")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<Medicacao>> listarPorTempoMedicando() {
         List<Medicacao> lista = service.ordenarPorTempoMedicando();
 
@@ -73,6 +79,7 @@ public class MedicacaoController {
     }
 
     @GetMapping("/ativas")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Long> contarAtivas() {
         long qtd = service.contarAtivas();
 

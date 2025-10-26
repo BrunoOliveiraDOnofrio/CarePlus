@@ -1,4 +1,4 @@
-package com.example.careplus.utils;
+package com.example.careplus.config.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

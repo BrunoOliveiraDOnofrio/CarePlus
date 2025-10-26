@@ -5,6 +5,7 @@ import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.ConsultaRequest;
 import com.example.careplus.service.ConsultaService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.apache.commons.lang3.concurrent.ConcurrentUtils;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,14 @@ public class ConsultaController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<ConsultaResponseDto> marcarConsulta(@RequestBody ConsultaRequestDto request) {
         ConsultaResponseDto consulta = service.marcarConsulta(request);
         return ResponseEntity.ok(consulta);
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<?> deletarConsulta(@PathVariable Long id){
         try{
             service.removerConsulta(id);
@@ -38,6 +41,7 @@ public class ConsultaController {
     }
 
     @GetMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<Consulta>> listarConsultas(){
         List<Consulta> consultas = service.listarConsultas();
         if (consultas.isEmpty()){
@@ -48,6 +52,7 @@ public class ConsultaController {
     }
 
     @GetMapping("/por-data")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ConsultaResponseDto>> listarPorData(){
         List<ConsultaResponseDto> consultas = service.listarPorData();
 
@@ -60,6 +65,7 @@ public class ConsultaController {
     }
 
     @GetMapping("/por-paciente")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ConsultaResponseDto>> listarPorPaciente(@RequestParam Long idPaciente){
         List<ConsultaResponseDto> consultas = service.listarPorPaciente(idPaciente);
 
@@ -72,6 +78,7 @@ public class ConsultaController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<ConsultaResponseDto> editarConsulta(
             @PathVariable Long id,
             @RequestBody ConsultaRequest request) {

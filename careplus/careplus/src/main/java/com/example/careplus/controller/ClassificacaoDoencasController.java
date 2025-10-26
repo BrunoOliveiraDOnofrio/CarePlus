@@ -3,6 +3,7 @@ package com.example.careplus.controller;
 import com.example.careplus.controller.dtoCid.ClassificacaoDoencasRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.service.ClassificacaoDoencasService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,14 @@ public class ClassificacaoDoencasController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<ClassificacaoDoencas> cadastrar(@RequestBody ClassificacaoDoencasRequestDto doencaNew) {
         ClassificacaoDoencas criada = classificacaoDoencasService.cadastrar(doencaNew);
         return ResponseEntity.status(201).body(criada);
     }
 
     @GetMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ClassificacaoDoencas>> listar() {
         try {
             return ResponseEntity.status(200).body(classificacaoDoencasService.listar());
@@ -37,6 +40,7 @@ public class ClassificacaoDoencasController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Optional<ClassificacaoDoencas>> buscarPorId(@PathVariable Long id) {
         try {
             Optional<ClassificacaoDoencas> achado = classificacaoDoencasService.buscarPorId(id);
@@ -47,6 +51,7 @@ public class ClassificacaoDoencasController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Optional<ClassificacaoDoencas>> atualizar(@PathVariable Long id,
                                                           @RequestBody ClassificacaoDoencas dadosAtualizados) {
         try {
@@ -60,6 +65,7 @@ public class ClassificacaoDoencasController {
 
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         try {
             classificacaoDoencasService.deletar(id);

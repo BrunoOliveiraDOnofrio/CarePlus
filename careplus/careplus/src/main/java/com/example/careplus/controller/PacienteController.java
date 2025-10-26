@@ -5,6 +5,7 @@ import com.example.careplus.controller.dtoPaciente.PacienteRequestDto;
 import com.example.careplus.controller.dtoPaciente.PacienteResponseDto;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.service.PacienteService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class PacienteController {
     }
 
     @GetMapping // OK
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<PacienteResponseDto>> listarPacientes(){
         List<PacienteResponseDto> pacientes = service.listarTodos();
 
@@ -33,6 +35,7 @@ public class PacienteController {
     }
 
     @GetMapping("/{id}") // OK
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<PacienteResponseDto> listarPorId(@PathVariable Long id){
 
             PacienteResponseDto paciente = service.listarPorId(id);
@@ -41,6 +44,7 @@ public class PacienteController {
     }
 
     @PostMapping // OK
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<PacienteResponseDto> cadastrarPaciente(@RequestBody PacienteRequestDto paciente){
         try {
             PacienteResponseDto pacienteSalvo = service.salvar(paciente);
@@ -54,6 +58,7 @@ public class PacienteController {
     }
 
     @DeleteMapping("/{id}") // OK
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity deletarPaciente(@PathVariable Long id){
         try{
             service.deletar(id);
@@ -64,6 +69,7 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}") //OK
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<?> atualizarPaciente(@RequestBody PacienteRequestDto paciente, @PathVariable Long id){
         try{
             service.atualizar(paciente, id);
@@ -74,6 +80,7 @@ public class PacienteController {
     }
 
     @GetMapping("/por-email") // OK
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<PacienteResponseDto>> listarPorEmail(@RequestParam String email){
         List<PacienteResponseDto> paciente = service.listarPorEmail(email);
         return ResponseEntity.ok().body(paciente);

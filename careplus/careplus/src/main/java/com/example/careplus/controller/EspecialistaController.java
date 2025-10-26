@@ -38,6 +38,7 @@ public class EspecialistaController {
     }
 
     @GetMapping("/por-email")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<EspecialistaResponseDto>> buscarPorEmail(@RequestParam String email){
         List<EspecialistaResponseDto> especialistas = especialistaService.buscarPorEmail(email);
         return ResponseEntity.status(200).body(especialistas);
@@ -51,6 +52,7 @@ public class EspecialistaController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity deletarEspecialista(@PathVariable Long id){
         try{
             especialistaService.deletar(id);
@@ -61,6 +63,7 @@ public class EspecialistaController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<?> atualizarEspecialista(@RequestBody Especialista especialista, @PathVariable Long id){
             especialistaService.atualizar(especialista, id);
             return ResponseEntity.status(200).build();

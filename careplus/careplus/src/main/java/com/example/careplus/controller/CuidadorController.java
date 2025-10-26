@@ -3,6 +3,7 @@ package com.example.careplus.controller;
 import com.example.careplus.controller.dtoCuidador.CuidadorRequestDto;
 import com.example.careplus.controller.dtoCuidador.CuidadorResponseDto;
 import com.example.careplus.service.CuidadorService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class CuidadorController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<CuidadorResponseDto> cadastrar(@RequestBody CuidadorRequestDto cuidador){
         try {
             return ResponseEntity.status(201).body(cuidadorService.cadastrar(cuidador));
@@ -28,6 +30,7 @@ public class CuidadorController {
     }
 
     @GetMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<CuidadorResponseDto>> listar(){
         try{
             return ResponseEntity.status(200).body(cuidadorService.listar());
@@ -37,6 +40,7 @@ public class CuidadorController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<CuidadorResponseDto>> listarPacientesPorResponsavel_Id(@PathVariable Long id){
         try {
             return ResponseEntity.status(200).body(cuidadorService.listarPacientesPorResponsavel_Id(id));
@@ -46,6 +50,7 @@ public class CuidadorController {
     }
 
     @GetMapping("/por-nome-paciente")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<CuidadorResponseDto>> listarResponsaveisPorPaciente_Nome(@RequestParam String nome) {
         try {
             return ResponseEntity.ok(cuidadorService.listarResponsaveisPorPaciente_Nome(nome));
@@ -55,6 +60,7 @@ public class CuidadorController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<CuidadorResponseDto> atualizar(@PathVariable Long id , @RequestParam CuidadorRequestDto cuidadorAtt){
         try {
             return ResponseEntity.status(200).body(cuidadorService.atualizar(id, cuidadorAtt));
@@ -64,6 +70,7 @@ public class CuidadorController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         try{
             cuidadorService.deletar(id);

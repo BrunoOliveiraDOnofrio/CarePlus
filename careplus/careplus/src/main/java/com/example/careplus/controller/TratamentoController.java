@@ -5,6 +5,7 @@ import com.example.careplus.controller.dtoTratamento.TratamentoRequestDto;
 import com.example.careplus.model.Tratamento;
 import com.example.careplus.repository.TratamentoRepository;
 import com.example.careplus.service.TratamentoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class TratamentoController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Tratamento> cadastrarTratamento(@Valid @RequestBody TratamentoRequestDto tratamento){
         try{
             return ResponseEntity.status(201).body(tratamentoService.cadastrar(tratamento));
@@ -37,6 +39,7 @@ public class TratamentoController {
     }
 
     @GetMapping("/{nomeTratamento}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<Tratamento>> buscarPeloNome(@PathVariable String nomeTratamento){
         try{
             return ResponseEntity.status(200).body(tratamentoService.buscarByNome(nomeTratamento));
