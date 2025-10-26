@@ -1,18 +1,37 @@
 package com.example.careplus.service;
 
+import com.example.careplus.config.GerenciadorTokenJwt;
 import com.example.careplus.controller.dtoEspecialista.EspecialistaMapper;
 import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
 import com.example.careplus.controller.dtoEspecialista.EspecialistaResquestDto;
+import com.example.careplus.controller.dtoEspecialista.EspecialistaTokenDto;
 import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Especialista;
 import com.example.careplus.repository.EspecialistaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EspecialistaService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private GerenciadorTokenJwt gerenciadorTokenJwt;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     private final EspecialistaRepository repository;
 
@@ -47,11 +66,34 @@ public class EspecialistaService {
                     .orElseThrow(() -> new RuntimeException("Supervisor não encontrado"));
         }
 
+        // criptografa senha
+        String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
         Especialista novoEspecialista = EspecialistaMapper.toEntity(dto, supervisor);
+        novoEspecialista.setSenha(senhaCriptografada);
 
         Especialista salvo = repository.save(novoEspecialista);
 
         return EspecialistaMapper.toResponseDto(salvo);
+    }
+
+    // autenticar usuário
+    public EspecialistaTokenDto autenticar(Especialista usuario){
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                usuario.getEmail(), usuario.getSenha());
+
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        Especialista especialistaAtenticado =
+                repository.findByEmail(usuario.getEmail())
+                        .orElseThrow(
+                                () -> new ResponseStatusException(404, "Email do especialista não cadastrado", null)
+                        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final String token = gerenciadorTokenJwt.generateToken(authentication);
+
+        return EspecialistaMapper.of(especialistaAtenticado, token);
     }
 
     public List<EspecialistaResponseDto> buscarPorEmail(String email){

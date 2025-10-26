@@ -3,7 +3,7 @@ VALUES
     (1, 'Dra. Helena Castro', 'helena.castro@clinica.com', 'SenhaForte@2024', NULL,
      'Supervisora de Fonoaudiologia', 'Motricidade Orofacial'),
 
-    (2, 'Juliana Almeida', 'juliana.almeida@clinica.com', 'SenhaForte@2024', 1,
+    (2, 'Juliana Almeida', 'juliana.almeida@clinica.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 1,
      'Fonoaudióloga', 'Linguagem Infantil'),
 
     (3, 'Marcos Ribeiro', 'marcos.ribeiro@clinica.com', 'SenhaForte@2024', 1,

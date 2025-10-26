@@ -9,6 +9,29 @@ import java.util.List;
 
 public class EspecialistaMapper {
 
+
+    // LoginDto para usuário
+    public static Especialista of(EspecialistaLoginDto especialistaLoginDto){
+        Especialista especialista = new Especialista();
+
+        especialista.setEmail(especialistaLoginDto.getEmail());
+        especialista.setSenha(especialistaLoginDto.getSenha());
+
+        return especialista;
+    }
+
+    // Usuario para o UsuarioTokenDto, além de também colocar o valor do token no dto
+    public static EspecialistaTokenDto of(Especialista especialista, String token){
+        EspecialistaTokenDto especialistaTokenDto = new EspecialistaTokenDto();
+
+        especialistaTokenDto.setUserId(especialista.getId());
+        especialistaTokenDto.setEmail(especialista.getEmail());
+        especialistaTokenDto.setNome(especialista.getNome());
+        especialistaTokenDto.setToken(token);
+
+        return especialistaTokenDto;
+    }
+
     public static Especialista toEntity(EspecialistaResquestDto dto, Especialista supervisor){
         if (dto == null){
             return null;
