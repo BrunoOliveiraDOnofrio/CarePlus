@@ -1,13 +1,11 @@
 package com.example.careplus.service;
 
 import com.example.careplus.config.GerenciadorTokenJwt;
-import com.example.careplus.controller.dtoEspecialista.EspecialistaMapper;
-import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
-import com.example.careplus.controller.dtoEspecialista.EspecialistaResquestDto;
-import com.example.careplus.controller.dtoEspecialista.EspecialistaTokenDto;
+import com.example.careplus.controller.dtoEspecialista.*;
 import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.EspecialistaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +36,25 @@ public class EspecialistaService {
 
     public EspecialistaService(EspecialistaRepository repository) {
         this.repository = repository;
+    }
+
+    public List<EspecialistaResponseDto> listarSubordinados(Long id, List<Especialista> todos) {
+        List<EspecialistaResponseDto> subordinados = new ArrayList<>();
+
+        Optional<Especialista> especialistaOpt = repository.findById(id);
+
+        if (especialistaOpt.isPresent()) {
+            Especialista usuario = especialistaOpt.get();
+            for (Especialista f : todos) {
+                if (f.getSupervisor() != null && f.getSupervisor().equals(usuario)) {
+                    subordinados.add(EspecialistaMapper.toResponseDto(f));
+                    subordinados.addAll(listarSubordinados(f.getId(), todos)); // aqui ta a recursividade, você consegue ver se os subordinados tem algum subordinado
+                }
+            }
+            return subordinados;
+        } else {
+            throw new RuntimeException("Usuário não encontrado!");
+        }
     }
 
     public List<Especialista> buscarTodos(){

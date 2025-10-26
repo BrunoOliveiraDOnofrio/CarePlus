@@ -6,11 +6,17 @@ VALUES
     (2, 'Juliana Almeida', 'admin@clinica.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 1,
      'Fonoaudióloga', 'Linguagem Infantil'),
 
-    (3, 'Marcos Ribeiro', 'marcos.ribeiro@clinica.com', 'SenhaForte@2024', 1,
+    (3, 'Marcos Ribeiro', 'marcos.ribeiro@clinica.com', 'SenhaForte@2024', 2,
      'Fonoaudiólogo', 'Voz e Reabilitação Vocal'),
 
     (4, 'Carla Menezes', 'carla.menezes@clinica.com', 'SenhaForte@2024', 1,
-     'Fonoaudióloga', 'Audiologia e Processamento Auditivo');
+     'Fonoaudióloga', 'Audiologia e Processamento Auditivo'),
+
+    (5, 'Charles Oliveira', 'charles.oliveira@clinica.com', 'SenhaForte@2024', 1,
+     'Fonoaudióloga', 'Audiologia e Processamento Auditivo'),
+
+    (6, 'Dra. Marina Castro', 'marina.castro@clinica.com', 'SenhaForte@2024', NULL,
+     'Supervisora de Terapia', 'Motricidade Orofacial');
 
 INSERT INTO paciente (nome, email, cpf, telefone, senha, dt_nascimento)
 VALUES

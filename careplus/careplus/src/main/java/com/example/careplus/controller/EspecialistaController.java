@@ -69,4 +69,11 @@ public class EspecialistaController {
             return ResponseEntity.status(200).build();
     }
 
+    @GetMapping("/subordinados/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<EspecialistaResponseDto>> listarTodosSubordinados(@PathVariable Long id){
+        List<EspecialistaResponseDto> especialistas = especialistaService.listarSubordinados(id, especialistaService.buscarTodos());
+        return ResponseEntity.status(200).body(especialistas);
+    }
+
 }

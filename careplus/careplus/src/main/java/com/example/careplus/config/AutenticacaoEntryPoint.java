@@ -16,9 +16,9 @@ public class AutenticacaoEntryPoint implements AuthenticationEntryPoint {
     @Override // serve para definir como a aplicação vai reagir com as requisições não autenticadas
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException, java.io.IOException {
         if (authException.getClass().equals(BadCredentialsException.class) || authException.getClass().equals(InsufficientAuthenticationException.class)){
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Acesso negado. Token inválido ou ausente.");
         } else {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acesso negado. Token inválido ou ausente.");
         }
     }
 
