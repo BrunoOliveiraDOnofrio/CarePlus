@@ -64,7 +64,6 @@ public class Paciente {
         this.cpf = cpf;
     }
 
-
     public String getTelefone() {
         return telefone;
     }
