@@ -12,8 +12,8 @@ public class Consulta {
 
     // essa anotação associa com outro objeto
     @ManyToOne //muitas consultas podem ser de um usuário
-    @JoinColumn(name = "especialista_id") // define o nome no banco
-    private Especialista especialista;
+    @JoinColumn(name = "funcionario_id") // define o nome no banco
+    private Funcionario funcionario;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -34,9 +34,9 @@ public class Consulta {
     public Consulta() {
     }
 
-    public Consulta(Long id, Especialista especialista, Paciente paciente, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
+    public Consulta(Long id, Funcionario funcionario, Paciente paciente, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
         this.id = id;
-        this.especialista = especialista;
+        this.funcionario = funcionario;
         this.paciente = paciente;
         this.dataHora = dataHora;
         this.tipo = tipo;
@@ -52,12 +52,12 @@ public class Consulta {
         this.paciente = paciente;
     }
 
-    public Especialista getEspecialista() {
-        return especialista;
+    public Funcionario getFuncionario() {
+        return funcionario;
     }
 
-    public void setEspecialista(Especialista especialista) {
-        this.especialista = especialista;
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
     }
 
     public Long getId() {

@@ -1,8 +1,9 @@
 package com.example.careplus.controller.dtoConsulta;
 
-import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
+import com.example.careplus.controller.dtoFuncionario.FuncionarioResponseDto;
+import com.example.careplus.controller.dtoFuncionario.FuncionarioResquestDto;
 import com.example.careplus.controller.dtoPaciente.PacienteResponseDto;
-import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -10,8 +11,8 @@ import java.time.LocalDateTime;
 
 public class ConsultaResponseDto {
     private Long id;
-    private Paciente paciente;
-    private Especialista especialista;
+    private PacienteResponseDto paciente;
+    private FuncionarioResponseDto funcionario;
     private LocalDateTime dataHora;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tipo;
@@ -23,10 +24,10 @@ public class ConsultaResponseDto {
     public ConsultaResponseDto() {
     }
 
-    public ConsultaResponseDto(Long id, Paciente paciente, Especialista especialista, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
+    public ConsultaResponseDto(Long id, PacienteResponseDto paciente, FuncionarioResponseDto funcionario, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
         this.id = id;
         this.paciente = paciente;
-        this.especialista = especialista;
+        this.funcionario = funcionario;
         this.dataHora = dataHora;
         this.tipo = tipo;
         this.anotacoes = anotacoes;
@@ -41,20 +42,20 @@ public class ConsultaResponseDto {
         this.id = id;
     }
 
-    public Paciente getPaciente() {
+    public PacienteResponseDto getPaciente() {
         return paciente;
     }
 
-    public void setPaciente(Paciente paciente) {
+    public void setPaciente(PacienteResponseDto paciente) {
         this.paciente = paciente;
     }
 
-    public Especialista getEspecialista() {
-        return especialista;
+    public FuncionarioResponseDto getFuncionario() {
+        return funcionario;
     }
 
-    public void setEspecialista(Especialista especialista) {
-        this.especialista = especialista;
+    public void setFuncionario(FuncionarioResponseDto funcionario) {
+        this.funcionario = funcionario;
     }
 
     public LocalDateTime getDataHora() {

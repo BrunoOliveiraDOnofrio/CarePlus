@@ -1,7 +1,7 @@
 package com.example.careplus.service;
 
 import com.example.careplus.model.Consulta;
-import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.utils.Notification;
 import jakarta.mail.internet.MimeMessage;
@@ -30,7 +30,7 @@ public class EmailService implements Notification {
 
 
     @Override
-    public void EnviarNotificacao(Especialista especialista, Consulta consulta, Paciente paciente) {
+    public void EnviarNotificacao(Funcionario funcionario, Consulta consulta, Paciente paciente) {
         try{
             Context contexto = new Context();
 
@@ -39,14 +39,14 @@ public class EmailService implements Notification {
             contexto.setVariable("dataHoraConsulta", dataFormatada);
             contexto.setVariable("paciente", paciente.getNome());
             contexto.setVariable("status", consulta.getTipo());
-            contexto.setVariable("nomeEspecialista", especialista.getNome());
+            contexto.setVariable("nomeFuncionario", funcionario.getNome());
 
             String htmlBody = templateEngine.process("notificacao", contexto);
 
             MimeMessage conteudoMensagem = mailSender.createMimeMessage();
             MimeMessageHelper auxiliar = new MimeMessageHelper(conteudoMensagem, true);
 
-            auxiliar.setTo(especialista.getEmail());
+            auxiliar.setTo(funcionario.getEmail());
             auxiliar.setSubject("Consulta Marcada");
             auxiliar.setText(htmlBody, true);
 

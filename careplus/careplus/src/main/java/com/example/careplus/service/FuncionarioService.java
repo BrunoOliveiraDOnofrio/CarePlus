@@ -1,12 +1,12 @@
 package com.example.careplus.service;
 
 import com.example.careplus.config.GerenciadorTokenJwt;
-import com.example.careplus.controller.dtoEspecialista.*;
+import com.example.careplus.controller.dtoFuncionario.*;
 import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.exception.ResourceNotFoundException;
-import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
-import com.example.careplus.repository.EspecialistaRepository;
+import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EspecialistaService {
+public class FuncionarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -32,22 +32,22 @@ public class EspecialistaService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    private final EspecialistaRepository repository;
+    private final FuncionarioRepository repository;
 
-    public EspecialistaService(EspecialistaRepository repository) {
+    public FuncionarioService(FuncionarioRepository repository) {
         this.repository = repository;
     }
 
-    public List<EspecialistaResponseDto> listarSubordinados(Long id, List<Especialista> todos) {
-        List<EspecialistaResponseDto> subordinados = new ArrayList<>();
+    public List<FuncionarioResponseDto> listarSubordinados(Long id, List<Funcionario> todos) {
+        List<FuncionarioResponseDto> subordinados = new ArrayList<>();
 
-        Optional<Especialista> especialistaOpt = repository.findById(id);
+        Optional<Funcionario> funcionarioOpt = repository.findById(id);
 
-        if (especialistaOpt.isPresent()) {
-            Especialista usuario = especialistaOpt.get();
-            for (Especialista f : todos) {
+        if (funcionarioOpt.isPresent()) {
+            Funcionario usuario = funcionarioOpt.get();
+            for (Funcionario f : todos) {
                 if (f.getSupervisor() != null && f.getSupervisor().equals(usuario)) {
-                    subordinados.add(EspecialistaMapper.toResponseDto(f));
+                    subordinados.add(FuncionarioMapper.toResponseDto(f));
                     subordinados.addAll(listarSubordinados(f.getId(), todos)); // aqui ta a recursividade, você consegue ver se os subordinados tem algum subordinado
                 }
             }
@@ -57,11 +57,11 @@ public class EspecialistaService {
         }
     }
 
-    public List<Especialista> buscarTodos(){
+    public List<Funcionario> buscarTodos(){
         return repository.findAll();
     }
 
-    public EspecialistaResponseDto salvar(EspecialistaResquestDto dto){
+    public FuncionarioResponseDto salvar(FuncionarioResquestDto dto){
 
 // Modelo de JSON
 //        {
@@ -77,7 +77,7 @@ public class EspecialistaService {
 //        }
 // Caso não tiver o especialista não tiver um supervisor, basta não enviar o campo
 
-        Especialista supervisor = null;
+        Funcionario supervisor = null;
 
         if (dto.getSupervisor() != null && dto.getSupervisor().getId() != null) {
             supervisor = repository.findById(dto.getSupervisor().getId())
@@ -86,50 +86,50 @@ public class EspecialistaService {
 
         // criptografa senha
         String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
-        Especialista novoEspecialista = EspecialistaMapper.toEntity(dto, supervisor);
-        novoEspecialista.setSenha(senhaCriptografada);
+        Funcionario novoFuncionario = FuncionarioMapper.toEntity(dto, supervisor);
+        novoFuncionario.setSenha(senhaCriptografada);
 
-        Especialista salvo = repository.save(novoEspecialista);
+        Funcionario salvo = repository.save(novoFuncionario);
 
-        return EspecialistaMapper.toResponseDto(salvo);
+        return FuncionarioMapper.toResponseDto(salvo);
     }
 
     // autenticar usuário
-    public EspecialistaTokenDto autenticar(Especialista usuario){
+    public FuncionarioTokenDto autenticar(Funcionario usuario){
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 usuario.getEmail(), usuario.getSenha());
 
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-        Especialista especialistaAtenticado =
+        Funcionario funcionarioAtenticado =
                 repository.findByEmail(usuario.getEmail())
                         .orElseThrow(
-                                () -> new ResponseStatusException(404, "Email do especialista não cadastrado", null)
+                                () -> new ResponseStatusException(404, "Email do funcionario não cadastrado", null)
                         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return EspecialistaMapper.of(especialistaAtenticado, token);
+        return FuncionarioMapper.of(funcionarioAtenticado, token);
     }
 
-    public List<EspecialistaResponseDto> buscarPorEmail(String email){
+    public List<FuncionarioResponseDto> buscarPorEmail(String email){
 
-        List<Especialista> especialistasEncontrados = repository.findByEmailContainingIgnoreCase(email);
+        List<Funcionario> funcionariosEncontrados = repository.findByEmailContainingIgnoreCase(email);
 
-        if (!especialistasEncontrados.isEmpty()){
-            return EspecialistaMapper.toResponseDto(especialistasEncontrados);
+        if (!funcionariosEncontrados.isEmpty()){
+            return FuncionarioMapper.toResponseDto(funcionariosEncontrados);
         }else{
             throw new ResourceNotFoundException("Usuário não encontrado!");
         }
     }
 
-    public List<EspecialistaResponseDto> listarTodos(){
-        List<Especialista> especialistas = repository.findAll();
+    public List<FuncionarioResponseDto> listarTodos(){
+        List<Funcionario> funcionarios = repository.findAll();
 
-        if (!especialistas.isEmpty()){
-            return EspecialistaMapper.toResponseDto(especialistas);
+        if (!funcionarios.isEmpty()){
+            return FuncionarioMapper.toResponseDto(funcionarios);
         }else{
             throw new RuntimeException("Nenhum usuario cadastrado");
         }
@@ -145,19 +145,19 @@ public class EspecialistaService {
         repository.deleteById(id);
     }
 
-    public EspecialistaResponseDto atualizar(Especialista especialista, Long id){
-        Optional<Especialista> existe = repository.findById(id);
+    public FuncionarioResponseDto atualizar(FuncionarioResquestDto funcionario, Long id){
+        Optional<Funcionario> existe = repository.findById(id);
 
         if (existe.isPresent()){
-            Especialista especExistente = existe.get();
+            Funcionario funcExistente = existe.get();
 
-            especExistente.setNome(especialista.getNome());
-            especExistente.setEmail(especialista.getEmail());
-            especExistente.setCargo(especialista.getCargo());
-            especExistente.setEspecialidade(especialista.getEspecialidade());
-            Especialista atualizado = repository.save(especExistente);
+            funcExistente.setNome(funcionario.getNome());
+            funcExistente.setEmail(funcionario.getEmail());
+            funcExistente.setCargo(funcionario.getCargo());
+            funcExistente.setEspecialidade(funcionario.getEspecialidade());
+            Funcionario atualizado = repository.save(funcExistente);
 
-            return EspecialistaMapper.toResponseDto(atualizado);
+            return FuncionarioMapper.toResponseDto(atualizado);
         }else{
             throw new ResourceNotFoundException("Usuario nao encontrado!");
         }

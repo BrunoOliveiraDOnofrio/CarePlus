@@ -1,8 +1,8 @@
-package com.example.careplus.controller.dtoEspecialista;
+package com.example.careplus.controller.dtoFuncionario;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class EspecialistaLoginDto {
+public class FuncionarioLoginDto {
     @Schema(description = "Email do usuário", example = "admin@clinica.com")
     private String email;
 

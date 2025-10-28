@@ -1,11 +1,11 @@
 package com.example.careplus.controller.dtoConsulta;
 
-import com.example.careplus.controller.dtoEspecialista.EspecialistaMapper;
-import com.example.careplus.controller.dtoEspecialista.EspecialistaResponseDto;
+import com.example.careplus.controller.dtoFuncionario.FuncionarioMapper;
+import com.example.careplus.controller.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.controller.dtoPaciente.PacienteResponseDto;
 import com.example.careplus.model.Consulta;
-import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
 import org.apache.commons.lang3.concurrent.ConcurrentUtils;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ConsultaMapper {
 
-    public static Consulta toEntity(ConsultaRequestDto dto, PacienteResponseDto paciente, EspecialistaResponseDto especialista){
+    public static Consulta toEntity(ConsultaRequestDto dto, PacienteResponseDto paciente, FuncionarioResponseDto funcionario){
         if (dto == null){
             return null;
         }
@@ -23,7 +23,7 @@ public class ConsultaMapper {
 
         Consulta entity = new Consulta();
         entity.setPaciente(PacienteMapper.toEntityResponse(paciente));
-        entity.setEspecialista(EspecialistaMapper.toEntityResponse(especialista));
+        entity.setFuncionario(FuncionarioMapper.toEntityResponse(funcionario));
         entity.setDataHora(dto.getDataHora());
         return entity;
 
@@ -34,7 +34,9 @@ public class ConsultaMapper {
             return null;
         }
 
-        return new ConsultaResponseDto(entity.getId(),entity.getPaciente(), entity.getEspecialista(), entity.getDataHora(), null, null, null);
+
+
+        return new ConsultaResponseDto(entity.getId(),PacienteMapper.toResponseDto(entity.getPaciente()), FuncionarioMapper.toResponseDto(entity.getFuncionario()), entity.getDataHora(), null, null, null);
 
     }
 
