@@ -1,15 +1,20 @@
-package com.example.careplus.controller.dtoAtividade;
+package com.example.careplus.controller.dtoMaterial;
 
 import java.time.LocalDate;
 
-public class AtividadeResponseDto {
-    private Long id;
+public class MaterialRequestDto {
     private String item;
     private Integer tempoExposicao;
     private LocalDate dataImplementacao;
+    private Long idConsulta;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getIdConsulta() {
+        return idConsulta;
+    }
+
+    public void setIdConsulta(Long idConsulta) {
+        this.idConsulta = idConsulta;
+    }
 
     public String getItem() { return item; }
     public void setItem(String item) { this.item = item; }
@@ -19,4 +24,5 @@ public class AtividadeResponseDto {
 
     public LocalDate getDataImplementacao() { return dataImplementacao; }
     public void setDataImplementacao(LocalDate dataImplementacao) { this.dataImplementacao = dataImplementacao; }
+
 }

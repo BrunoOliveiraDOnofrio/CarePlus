@@ -1,7 +1,6 @@
 package com.example.careplus.service;
 
 import com.example.careplus.controller.dtoProntuario.ProntuarioRequestDto;
-import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.model.Prontuario;
 import com.example.careplus.repository.*;
@@ -18,15 +17,15 @@ public class ProntuarioService {
     private final PacienteRepository pacienteRepository;
     private final ClassificacaoDoencasRepository cidRepository;
     private final TratamentoRepository tratamentoRepository;
-    private final AtividadeRepository atividadeRepository;
+
     private final MedicacaoRepository medicacaoRepository;
 
-    public ProntuarioService(ProntuarioRepository repository, PacienteRepository pacienteRepository, ClassificacaoDoencasRepository cidRepository, TratamentoRepository tratamentoRepository, AtividadeRepository atividadeRepository, MedicacaoRepository medicacaoRepository) {
+    public ProntuarioService(ProntuarioRepository repository, PacienteRepository pacienteRepository, ClassificacaoDoencasRepository cidRepository, TratamentoRepository tratamentoRepository, MedicacaoRepository medicacaoRepository) {
         this.prontuatioRepository = repository;
         this.pacienteRepository = pacienteRepository;
         this.cidRepository = cidRepository;
         this.tratamentoRepository = tratamentoRepository;
-        this.atividadeRepository = atividadeRepository;
+
         this.medicacaoRepository = medicacaoRepository;
     }
 
@@ -60,7 +59,7 @@ public class ProntuarioService {
         for (Prontuario p : prontuarios){
             p.setCid(cidRepository.findByProntuario_Id(p.getId()));
             p.setTratamentos(tratamentoRepository.findByProntuario_Id(p.getId()));
-            p.setAtividades(atividadeRepository.findByProntuario_Id(p.getId()));
+
             p.setMedicacoes(medicacaoRepository.findByProntuario_Id(p.getId()));
         }
 
