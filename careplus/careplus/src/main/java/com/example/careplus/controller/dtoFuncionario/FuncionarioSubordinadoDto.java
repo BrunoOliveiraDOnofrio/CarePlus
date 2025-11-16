@@ -1,9 +1,10 @@
-package com.example.careplus.controller.dtoEspecialista;
+package com.example.careplus.controller.dtoFuncionario;
 
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class EspecialistaResquestDto {
+public class FuncionarioSubordinadoDto {
+    private Long id;
 
     @Schema(description = "Iago Benedito Barbosa")
     private String nome;
@@ -11,24 +12,26 @@ public class EspecialistaResquestDto {
     @Schema(description = "iago_benedito_barbosa@navescorat.com.br")
     private String email;
 
-    @Schema(description = "olgyT0E7nH")
-    private String senha;
-
-    private SupervisorDto supervisor;
-
     @Schema(description = "Estagiaria")
     private String cargo;
 
     @Schema(description = "Fonoaudiologa")
     private String especialidade;
 
-    public EspecialistaResquestDto(String nome, String email, String senha, SupervisorDto supervisor, String cargo, String especialidade) {
+    public FuncionarioSubordinadoDto(Long id, String nome, String email, String cargo, String especialidade) {
+        this.id = id;
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
-        this.supervisor = supervisor;
         this.cargo = cargo;
         this.especialidade = especialidade;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -45,22 +48,6 @@ public class EspecialistaResquestDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public SupervisorDto getSupervisor() {
-        return supervisor;
-    }
-
-    public void setSupervisor(SupervisorDto supervisor) {
-        this.supervisor = supervisor;
     }
 
     public String getCargo() {

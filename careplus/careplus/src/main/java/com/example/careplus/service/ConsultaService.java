@@ -3,15 +3,15 @@ package com.example.careplus.service;
 import com.example.careplus.controller.dtoConsulta.ConsultaMapper;
 import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
 import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
-import com.example.careplus.controller.dtoEspecialista.EspecialistaMapper;
+import com.example.careplus.controller.dtoFuncionario.FuncionarioMapper;
 import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.ConsultaRequest;
-import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.ConsultaRepository;
-import com.example.careplus.repository.EspecialistaRepository;
+import com.example.careplus.repository.FuncionarioRepository;
 import com.example.careplus.repository.PacienteRepository;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,14 @@ public class ConsultaService {
 
     private final ConsultaRepository consultaRepository;
     private final PacienteRepository pacienteRepository;
-    private final EspecialistaRepository especialistaRepository;
+    private final FuncionarioRepository funcionarioRepository;
     private final EmailService emailService;
     private final ResourcePatternResolver resourcePatternResolver;
 
-    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, EspecialistaRepository especialistaRepository, EmailService emailService, ResourcePatternResolver resourcePatternResolver) {
+    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, ResourcePatternResolver resourcePatternResolver) {
         this.consultaRepository = consultaRepository;
         this.pacienteRepository = pacienteRepository;
-        this.especialistaRepository = especialistaRepository;
+        this.funcionarioRepository = funcionarioRepository;
         this.emailService = emailService;
         this.resourcePatternResolver = resourcePatternResolver;
     }
@@ -46,28 +46,28 @@ public class ConsultaService {
             throw new ResourceNotFoundException("Usuário não encontrado!");
         }
 
-        Optional<Especialista> especialistaOpt = especialistaRepository.findById(request.getEspecialistaId());
-        Especialista especialista;
-        if (especialistaOpt.isPresent()) {
-            especialista = especialistaOpt.get();
+        Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(request.getFuncionarioId());
+        Funcionario funcionario;
+        if (funcionarioOpt.isPresent()) {
+            funcionario = funcionarioOpt.get();
         } else {
-            throw new ResourceNotFoundException("Especialista não encontrado!");
+            throw new ResourceNotFoundException("Funcionario não encontrado!");
         }
 
 //        Consulta consulta = new Consulta();
-//        consulta.setEspecialista(especialista);
+//        consulta.setFuncionario(funcionario);
 //        consulta.setPaciente(paciente);
 //        consulta.setDataHora(request.getDataHora());
 //        consulta.setTipo("Pendente");
 
         Consulta novaConsulta = new Consulta();
         novaConsulta.setPaciente(paciente);
-        novaConsulta.setEspecialista(especialista);
+        novaConsulta.setFuncionario(funcionario);
         novaConsulta.setDataHora(request.getDataHora());
 
         Consulta salvo = consultaRepository.save(novaConsulta);
 
-        emailService.EnviarNotificacao(especialista, novaConsulta, paciente);
+        emailService.EnviarNotificacao(funcionario, novaConsulta, paciente);
 
         return ConsultaMapper.toResponseDto(salvo);
     }
@@ -113,14 +113,14 @@ public class ConsultaService {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
-        Especialista especialista = especialistaRepository.findById(request.getEspecialistaId())
-                .orElseThrow(() -> new ResourceNotFoundException("Especialista não encontrado"));
+        Funcionario funcionario = funcionarioRepository.findById(request.getFuncionarioId())
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionario não encontrado"));
 
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
 
         consulta.setPaciente(paciente);
-        consulta.setEspecialista(especialista);
+        consulta.setFuncionario(funcionario);
         consulta.setDataHora(request.getDataHora());
         consulta.setTipo("Retorno");
 

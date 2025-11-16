@@ -5,35 +5,35 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-public class Atividade {
+public class Material {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAtividade;
+    private Long id;
 
     private String item;
     private Integer tempoExposicao; // minutos
     private LocalDate dataImplementacao;
 
     @ManyToOne
-    @JoinColumn(name = "prontuario_id")
+    @JoinColumn(name = "fkConsulta")
     @JsonBackReference
-    private Prontuario prontuario;
+    private Consulta consulta;
 
-    public Prontuario getProntuario() {
-        return prontuario;
+    public Consulta getConsulta() {
+        return consulta;
     }
 
-    public void setProntuario(Prontuario prontuario) {
-        this.prontuario = prontuario;
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
     }
 
-    public Long getIdAtividade() {
-        return idAtividade;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdAtividade(Long idAtividade) {
-        this.idAtividade = idAtividade;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getItem() {

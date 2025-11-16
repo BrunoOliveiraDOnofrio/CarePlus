@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Especialista {
+public class Funcionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +24,10 @@ public class Especialista {
 
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
-    private Especialista supervisor;
+    private Funcionario supervisor;
 
     @OneToMany(mappedBy = "supervisor")
-    private List<Especialista> subordinados = new ArrayList<>();
+    private List<Funcionario> subordinados = new ArrayList<>();
 
     @Schema(description = "Supervisora")
     private String cargo;
@@ -35,7 +35,7 @@ public class Especialista {
     @Schema(description = "Fonoaudiolgia")
     private String especialidade;
 
-    public Especialista() {
+    public Funcionario() {
     }
 
     public Long getId() {
@@ -67,11 +67,11 @@ public class Especialista {
         this.senha = senha;
     }
 
-    public Especialista getSupervisor() {
+    public Funcionario getSupervisor() {
         return supervisor;
     }
 
-    public void setSupervisor(Especialista supervisor) {
+    public void setSupervisor(Funcionario supervisor) {
         this.supervisor = supervisor;
     }
 

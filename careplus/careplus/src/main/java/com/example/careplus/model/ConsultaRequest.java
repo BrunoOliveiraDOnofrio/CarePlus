@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class ConsultaRequest {
 
     private Long pacienteId;
-    private Long especialistaId;
+    private Long funcionarioId;
 
     @Schema(description = "2025-10-14")
     private LocalDateTime dataHora;
@@ -17,9 +17,9 @@ public class ConsultaRequest {
     public ConsultaRequest() {
     }
 
-    public ConsultaRequest(Long pacienteId, Long especialistaId, LocalDateTime dataHora) {
+    public ConsultaRequest(Long pacienteId, Long funcionarioId, LocalDateTime dataHora) {
         this.pacienteId = pacienteId;
-        this.especialistaId = especialistaId;
+        this.funcionarioId = funcionarioId;
         this.dataHora = dataHora;
     }
 
@@ -31,12 +31,12 @@ public class ConsultaRequest {
         this.pacienteId = pacienteId;
     }
 
-    public Long getEspecialistaId() {
-        return especialistaId;
+    public Long getFuncionarioId() {
+        return funcionarioId;
     }
 
-    public void setEspecialistaId(Long especialistaId) {
-        this.especialistaId = especialistaId;
+    public void setFuncionarioId(Long funcionarioId) {
+        this.funcionarioId = funcionarioId;
     }
 
     public LocalDateTime getDataHora() {

@@ -1,19 +1,19 @@
-package com.example.careplus.controller.dtoEspecialista;
+package com.example.careplus.controller.dtoFuncionario;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class EspecialistaResponseDto {
-    private Long id;
+public class FuncionarioResquestDto {
 
     @Schema(description = "Iago Benedito Barbosa")
     private String nome;
 
     @Schema(description = "iago_benedito_barbosa@navescorat.com.br")
     private String email;
-    @JsonInclude(JsonInclude.Include.NON_NULL) // Anotação usada para não incluir o atributo abaixo no JSON caso o
-    // campo seja nulo
+
+    @Schema(description = "olgyT0E7nH")
+    private String senha;
+
     private SupervisorDto supervisor;
 
     @Schema(description = "Estagiaria")
@@ -22,21 +22,13 @@ public class EspecialistaResponseDto {
     @Schema(description = "Fonoaudiologa")
     private String especialidade;
 
-    public EspecialistaResponseDto(Long id, String nome, String email, SupervisorDto supervisor, String cargo, String especialidade) {
-        this.id = id;
+    public FuncionarioResquestDto(String nome, String email, String senha, SupervisorDto supervisor, String cargo, String especialidade) {
         this.nome = nome;
         this.email = email;
+        this.senha = senha;
         this.supervisor = supervisor;
         this.cargo = cargo;
         this.especialidade = especialidade;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -53,6 +45,14 @@ public class EspecialistaResponseDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public SupervisorDto getSupervisor() {

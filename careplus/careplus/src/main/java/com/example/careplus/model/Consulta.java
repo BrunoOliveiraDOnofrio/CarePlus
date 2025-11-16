@@ -1,8 +1,10 @@
 package com.example.careplus.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Consulta {
@@ -12,8 +14,8 @@ public class Consulta {
 
     // essa anotação associa com outro objeto
     @ManyToOne //muitas consultas podem ser de um usuário
-    @JoinColumn(name = "especialista_id") // define o nome no banco
-    private Especialista especialista;
+    @JoinColumn(name = "funcionario_id") // define o nome no banco
+    private Funcionario funcionario;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -25,22 +27,26 @@ public class Consulta {
     @Schema(description = "Retorno")
     private String tipo;
 
-    @Schema(description = "Anotacoes sobre o paciente")
-    private String anotacoes;
+    @Schema(description = "Observacoes Comportamentais sobre o paciente")
+    private String observacoesComportamentais;
 
     @Schema(description = "Sim")
     private Boolean presenca;
 
+    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Material> materiais;
+
     public Consulta() {
     }
 
-    public Consulta(Long id, Especialista especialista, Paciente paciente, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
+    public Consulta(Long id, Funcionario funcionario, Paciente paciente, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca) {
         this.id = id;
-        this.especialista = especialista;
+        this.funcionario = funcionario;
         this.paciente = paciente;
         this.dataHora = dataHora;
         this.tipo = tipo;
-        this.anotacoes = anotacoes;
+        this.observacoesComportamentais = observacoesComportamentais;
         this.presenca = presenca;
     }
 
@@ -52,12 +58,12 @@ public class Consulta {
         this.paciente = paciente;
     }
 
-    public Especialista getEspecialista() {
-        return especialista;
+    public Funcionario getFuncionario() {
+        return funcionario;
     }
 
-    public void setEspecialista(Especialista especialista) {
-        this.especialista = especialista;
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
     }
 
     public Long getId() {
@@ -85,12 +91,12 @@ public class Consulta {
         this.tipo = tipo;
     }
 
-    public String getAnotacoes() {
-        return anotacoes;
+    public String getObservacoesComportamentais() {
+        return observacoesComportamentais;
     }
 
-    public void setAnotacoes(String anotacoes) {
-        this.anotacoes = anotacoes;
+    public void setObservacoesComportamentais(String observacoesComportamentais) {
+        this.observacoesComportamentais = observacoesComportamentais;
     }
 
     public Boolean getPresenca() {
@@ -100,4 +106,13 @@ public class Consulta {
     public void setPresenca(Boolean presenca) {
         this.presenca = presenca;
     }
+
+    public List<Material> getMateriais() {
+        return materiais;
+    }
+
+    public void setMateriais(List<Material> materiais) {
+        this.materiais = materiais;
+    }
+
 }

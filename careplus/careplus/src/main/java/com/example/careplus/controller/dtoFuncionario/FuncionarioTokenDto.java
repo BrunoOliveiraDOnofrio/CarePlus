@@ -1,6 +1,6 @@
-package com.example.careplus.controller.dtoEspecialista;
+package com.example.careplus.controller.dtoFuncionario;
 
-public class EspecialistaTokenDto {
+public class FuncionarioTokenDto {
     private Long userId;
     private String nome;
     private String email;

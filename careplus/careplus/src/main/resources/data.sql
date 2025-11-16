@@ -1,4 +1,4 @@
-INSERT INTO especialista (id, nome, email, senha, supervisor_id, cargo, especialidade)
+INSERT INTO funcionario (id, nome, email, senha, supervisor_id, cargo, especialidade)
 VALUES
     (1, 'Dra. Helena Castro', 'helena.castro@clinica.com', 'SenhaForte@2024', NULL,
      'Supervisora de Fonoaudiologia', 'Motricidade Orofacial'),

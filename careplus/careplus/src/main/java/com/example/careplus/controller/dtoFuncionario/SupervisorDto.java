@@ -1,4 +1,4 @@
-package com.example.careplus.controller.dtoEspecialista;
+package com.example.careplus.controller.dtoFuncionario;
 
 public class SupervisorDto {
     private Long id;

@@ -1,44 +1,44 @@
-package com.example.careplus.controller.dtoEspecialista;
+package com.example.careplus.controller.dtoFuncionario;
 
 
-import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Funcionario;
 
 
 
 import java.util.List;
 
-public class EspecialistaMapper {
+public class FuncionarioMapper {
 
 
     // LoginDto para usuário
-    public static Especialista of(EspecialistaLoginDto especialistaLoginDto){
-        Especialista especialista = new Especialista();
+    public static Funcionario of(FuncionarioLoginDto funcionarioLoginDto){
+        Funcionario funcionario = new Funcionario();
 
-        especialista.setEmail(especialistaLoginDto.getEmail());
-        especialista.setSenha(especialistaLoginDto.getSenha());
+        funcionario.setEmail(funcionarioLoginDto.getEmail());
+        funcionario.setSenha(funcionarioLoginDto.getSenha());
 
-        return especialista;
+        return funcionario;
     }
 
     // Usuario para o UsuarioTokenDto, além de também colocar o valor do token no dto
-    public static EspecialistaTokenDto of(Especialista especialista, String token){
-        EspecialistaTokenDto especialistaTokenDto = new EspecialistaTokenDto();
+    public static FuncionarioTokenDto of(Funcionario funcionario, String token){
+        FuncionarioTokenDto funcionarioTokenDto = new FuncionarioTokenDto();
 
-        especialistaTokenDto.setUserId(especialista.getId());
-        especialistaTokenDto.setEmail(especialista.getEmail());
-        especialistaTokenDto.setNome(especialista.getNome());
-        especialistaTokenDto.setToken(token);
+        funcionarioTokenDto.setUserId(funcionario.getId());
+        funcionarioTokenDto.setEmail(funcionario.getEmail());
+        funcionarioTokenDto.setNome(funcionario.getNome());
+        funcionarioTokenDto.setToken(token);
 
-        return especialistaTokenDto;
+        return funcionarioTokenDto;
     }
 
-    public static Especialista toEntity(EspecialistaResquestDto dto, Especialista supervisor){
+    public static Funcionario toEntity(FuncionarioResquestDto dto, Funcionario supervisor){
         if (dto == null){
             return null;
         }
 
 
-        Especialista entity = new Especialista();
+        Funcionario entity = new Funcionario();
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
         entity.setSenha(dto.getSenha());
@@ -50,12 +50,12 @@ public class EspecialistaMapper {
         return entity;
     }
 
-    public static Especialista toEntity(EspecialistaResquestDto dto){
+    public static Funcionario toEntity(FuncionarioResquestDto dto){
         if (dto == null){
             return null;
         }
 
-        Especialista entity = new Especialista();
+        Funcionario entity = new Funcionario();
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
         entity.setSenha(dto.getSenha());
@@ -66,12 +66,12 @@ public class EspecialistaMapper {
         return entity;
     }
 
-    public static Especialista toEntityResponse(EspecialistaResponseDto dto){
+    public static Funcionario toEntityResponse(FuncionarioResponseDto dto){
         if (dto == null){
             return null;
         }
 
-        Especialista entity = new Especialista();
+        Funcionario entity = new Funcionario();
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
         entity.setCargo(dto.getCargo());
@@ -81,7 +81,7 @@ public class EspecialistaMapper {
         return entity;
     }
 
-    public static EspecialistaResponseDto toResponseDto(Especialista entity){
+    public static FuncionarioResponseDto toResponseDto(Funcionario entity){
         if (entity == null){
             return null;
         }
@@ -97,7 +97,7 @@ public class EspecialistaMapper {
 //            supervisorDto = new SupervisorDto(null, "Nenhum");
 //        }
 
-        return new EspecialistaResponseDto(
+        return new FuncionarioResponseDto(
                 entity.getId(),
                 entity.getNome(),
                 entity.getEmail(),
@@ -107,8 +107,8 @@ public class EspecialistaMapper {
         );
     }
 
-    public static List<EspecialistaResponseDto> toResponseDto(List<Especialista> entity){
-        return entity.stream().map(EspecialistaMapper::toResponseDto).toList();
+    public static List<FuncionarioResponseDto> toResponseDto(List<Funcionario> entity){
+        return entity.stream().map(FuncionarioMapper::toResponseDto).toList();
     }
 
 }

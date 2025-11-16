@@ -1,21 +1,21 @@
-package com.example.careplus.controller.dtoEspecialista;
+package com.example.careplus.controller.dtoFuncionario;
 
-import com.example.careplus.model.Especialista;
+import com.example.careplus.model.Funcionario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-public class EspecialistaDetalhesDto implements UserDetails {
+public class FuncionarioDetalhesDto implements UserDetails {
     private final String nome;
     private final String email;
     private final String senha;
 
-    public EspecialistaDetalhesDto(Especialista especialista) {
-        this.nome = especialista.getNome();
-        this.email = especialista.getEmail();
-        this.senha = especialista.getSenha();
+    public FuncionarioDetalhesDto(Funcionario funcionario) {
+        this.nome = funcionario.getNome();
+        this.email = funcionario.getEmail();
+        this.senha = funcionario.getSenha();
     }
 
 
