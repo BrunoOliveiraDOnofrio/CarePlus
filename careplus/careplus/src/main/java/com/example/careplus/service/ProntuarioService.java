@@ -53,7 +53,7 @@ public class ProntuarioService {
     public List<Prontuario> listarProntuarios(){
         List<Prontuario> prontuarios = prontuatioRepository.findAll();
         if (prontuarios.isEmpty()){
-            return null;
+            return prontuarios;
         }
 
         for (Prontuario p : prontuarios){

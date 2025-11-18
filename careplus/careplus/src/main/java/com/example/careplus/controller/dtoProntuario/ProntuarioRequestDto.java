@@ -8,7 +8,7 @@ public class ProntuarioRequestDto {
     private Long idPaciente;
 
     @Schema(description = "Sim")
-    private String desfraldado;
+    private Boolean desfraldado;
 
     @Schema(description = "Dinossauro")
     private String hiperfoco;
@@ -23,13 +23,13 @@ public class ProntuarioRequestDto {
     private String resumoClinico;
 
     @Schema(description = "2")
-    private String nivelAgressividade;
+    private Integer nivelAgressividade;
 
     public ProntuarioRequestDto(Long idPaciente) {
         this.idPaciente = idPaciente;
     }
 
-    public ProntuarioRequestDto(Long idPaciente, String desfraldado, String hiperfoco, String anamnese, String diagnostico, String resumoClinico, String nivelAgressividade) {
+    public ProntuarioRequestDto(Long idPaciente, Boolean desfraldado, String hiperfoco, String anamnese, String diagnostico, String resumoClinico, Integer nivelAgressividade) {
         this.idPaciente = idPaciente;
         this.desfraldado = desfraldado;
         this.hiperfoco = hiperfoco;
@@ -47,11 +47,11 @@ public class ProntuarioRequestDto {
         this.idPaciente = idPaciente;
     }
 
-    public String getDesfraldado() {
+    public Boolean getDesfraldado() {
         return desfraldado;
     }
 
-    public void setDesfraldado(String desfraldado) {
+    public void setDesfraldado(Boolean desfraldado) {
         this.desfraldado = desfraldado;
     }
 
@@ -87,11 +87,11 @@ public class ProntuarioRequestDto {
         this.resumoClinico = resumoClinico;
     }
 
-    public String getNivelAgressividade() {
+    public Integer getNivelAgressividade() {
         return nivelAgressividade;
     }
 
-    public void setNivelAgressividade(String nivelAgressividade) {
+    public void setNivelAgressividade(Integer nivelAgressividade) {
         this.nivelAgressividade = nivelAgressividade;
     }
 }
