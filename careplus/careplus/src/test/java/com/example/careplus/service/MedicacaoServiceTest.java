@@ -35,7 +35,7 @@ class MedicacaoServiceTest {
 
     @Test
     @DisplayName("Deve adicionar medicação quando o prontuário existe")
-    void adicionarComProntuarioExistente() {
+    void adicionarComProntuarioExistenteTest() {
         MedicacaoRequestDto dto = new MedicacaoRequestDto();
         dto.setNomeMedicacao("Med1");
         dto.setDataInicio(LocalDate.of(2024, 1, 1));
@@ -59,7 +59,7 @@ class MedicacaoServiceTest {
 
     @Test
     @DisplayName("Deve lançar erro ao adicionar quando prontuário não existe")
-    void adicionarSemProntuario() {
+    void adicionarSemProntuarioTest() {
         MedicacaoRequestDto dto = new MedicacaoRequestDto();
         dto.setIdProntuario(2L);
 
@@ -73,7 +73,7 @@ class MedicacaoServiceTest {
 
     @Test
     @DisplayName("Deve atualizar medicação quando ela existe")
-    void atualizarMedicao() {
+    void atualizarMedicacaoTestTest() {
         MedicacaoRequestDto dto = new MedicacaoRequestDto();
         dto.setNomeMedicacao("Med2");
         dto.setAtivo(false);
@@ -94,7 +94,7 @@ class MedicacaoServiceTest {
 
     @Test
     @DisplayName("Deve lançar erro ao atualizar medicação que não existe")
-    void atualizarMedicaoInexistente() {
+    void atualizarMedicacaoInexistenteTest() {
         Mockito.when(medicacaoRepository.findById(1L))
                 .thenReturn(Optional.empty());
 
@@ -107,7 +107,7 @@ class MedicacaoServiceTest {
 
     @Test
     @DisplayName("Deve deletar quando ID existe")
-    void deletarExistente() {
+    void deletarExistenteTest() {
         Mockito.when(medicacaoRepository.existsById(1L))
                 .thenReturn(true);
 
@@ -117,7 +117,7 @@ class MedicacaoServiceTest {
 
     @Test
     @DisplayName("Deve lançar erro ao tentar deletar ID que não existe")
-    void deletarInexistente() {
+    void deletarInexistenteTest() {
         Mockito.when(medicacaoRepository.existsById(1L))
                 .thenReturn(false);
 
