@@ -58,7 +58,7 @@ class MedicacaoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar erro ao adicionar quando prontuário NÃO existe")
+    @DisplayName("Deve lançar erro ao adicionar quando prontuário não existe")
     void adicionarSemProntuario() {
         MedicacaoRequestDto dto = new MedicacaoRequestDto();
         dto.setIdProntuario(2L);
@@ -93,7 +93,7 @@ class MedicacaoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar erro ao atualizar medicação inexistente")
+    @DisplayName("Deve lançar erro ao atualizar medicação que não existe")
     void atualizarMedicaoInexistente() {
         Mockito.when(medicacaoRepository.findById(1L))
                 .thenReturn(Optional.empty());
@@ -116,7 +116,7 @@ class MedicacaoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar erro ao tentar deletar ID inexistente")
+    @DisplayName("Deve lançar erro ao tentar deletar ID que não existe")
     void deletarInexistente() {
         Mockito.when(medicacaoRepository.existsById(1L))
                 .thenReturn(false);
