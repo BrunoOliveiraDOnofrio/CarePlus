@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TratamentoServiceTest {
 
+    //testando o commit
     @InjectMocks
     private TratamentoService tratamentoService;
 
