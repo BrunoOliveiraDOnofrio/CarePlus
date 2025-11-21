@@ -25,3 +25,26 @@ VALUES
    ('Pedro Oliveira', 'pedro.oliveira@email.com', '456.789.123-11',  '(31) 91234-8765', 'pedroMed123', '1978-02-10'),
    ('Ana Paula Lima', 'ana.lima@email.com', '321.654.987-22',  '(41) 98765-4321', 'anaFisio2025', '1992-08-30'),
    ('Rafael Souza', 'rafael.souza@email.com', '654.321.987-33',  '(51) 91234-0987', 'rafaPsi2025', '1988-03-12');
+
+-- Tabela intermediária funcionario_roles
+CREATE TABLE IF NOT EXISTS funcionario_roles (
+                                                 funcionario_id BIGINT NOT NULL,
+                                                 role_id BIGINT NOT NULL,
+                                                 PRIMARY KEY (funcionario_id, role_id),
+    FOREIGN KEY (funcionario_id) REFERENCES funcionario(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE
+    );
+
+INSERT INTO role (nome) VALUES
+                            ('ADMIN'),
+                            ('USER'),
+                            ('MANAGER');
+
+-- 4. Vincular funcionários às roles
+INSERT INTO funcionario_roles (funcionario_id, role_id) VALUES
+                                                            (1, 3), -- Helena é MANAGER
+                                                            (2, 1), -- Juliana (admin@clinica.com) é ADMIN
+                                                            (3, 2), -- Marcos é USER
+                                                            (4, 2), -- Carla é USER
+                                                            (5, 2), -- Charles é USER
+                                                            (6, 3); -- Marina é MANAGER

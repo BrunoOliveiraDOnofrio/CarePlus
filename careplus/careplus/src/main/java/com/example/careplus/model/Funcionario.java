@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Funcionario {
@@ -34,6 +36,14 @@ public class Funcionario {
 
     @Schema(description = "Fonoaudiolgia")
     private String especialidade;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "funcionario_roles",
+            joinColumns = @JoinColumn(name = "funcionario_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public Funcionario() {
     }
@@ -95,5 +105,12 @@ public class Funcionario {
         this.especialidade = especialidade;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
 }
