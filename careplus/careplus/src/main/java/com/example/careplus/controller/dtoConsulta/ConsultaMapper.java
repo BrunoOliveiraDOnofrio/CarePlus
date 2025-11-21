@@ -36,7 +36,7 @@ public class ConsultaMapper {
 
 
 
-        return new ConsultaResponseDto(entity.getId(),PacienteMapper.toResponseDto(entity.getPaciente()), FuncionarioMapper.toResponseDto(entity.getFuncionario()), entity.getDataHora(), null, null, null);
+        return new ConsultaResponseDto(entity.getId(),PacienteMapper.toResponseDto(entity.getPaciente()), FuncionarioMapper.toResponseDto(entity.getFuncionario()), entity.getDataHora(), entity.getTipo(), entity.getObservacoesComportamentais(), entity.getPresenca(), entity.getConfirmada());
 
     }
 
