@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Notificação CarePlus</title>
+</head>
+<body>
+<div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ccc;">
+    <p>Prezado(a) <span th:text="${nomeEspecialista}"></span>,</p>
+
+    <p>Você tem uma nova consulta marcada:</p>
+
+    <div style="margin: 15px 0; padding: 15px; background-color: #f0f8ff; border-left: 5px solid #007bff;">
+         No <span th:text="${dataHoraConsulta}"></span> tem uma consulta marcada com o <span th:text="${paciente}"></span>,
+        o status da consulta é <span th:text="${status}"></span>, aguardamos sua confirmação ou remarcação da consulta.
+    </div>
+
+    <p>Agradecemos a atenção.</p>
+    <p>Atenciosamente,<br>Equipe CarePlus</p>
+    <img src="/images/Captura%20de%20tela%202025-10-11%20230528.png" style="height: 30px; width: 40px;">
+
+    <hr style="border: none; border-top: 1px solid #eee;">
+    <p style="font-size: 10px; color: #777;">Este é um e-mail automático. Por favor, não responda.</p>
+</div>
+</body>
+</html>
