@@ -11,11 +11,13 @@ public class FuncionarioDetalhesDto implements UserDetails {
     private final String nome;
     private final String email;
     private final String senha;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    public FuncionarioDetalhesDto(Funcionario funcionario) {
+    public FuncionarioDetalhesDto(Funcionario funcionario, Collection<? extends GrantedAuthority> authorities) {
         this.nome = funcionario.getNome();
         this.email = funcionario.getEmail();
         this.senha = funcionario.getSenha();
+        this.authorities = authorities;
     }
 
 
@@ -26,7 +28,7 @@ public class FuncionarioDetalhesDto implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override

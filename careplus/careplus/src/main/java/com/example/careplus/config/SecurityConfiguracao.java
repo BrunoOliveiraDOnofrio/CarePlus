@@ -61,8 +61,14 @@ public class SecurityConfiguracao {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(URLS_PERMITIDAS).permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers(URLS_PERMITIDAS).permitAll()
+                                // URLs protegidas por ROLE
+                                .requestMatchers("/pacientes/**").hasRole("ADMIN")
+//                        .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN") Exemplo de múltiplas roles
+                                .requestMatchers("/funcionarios/**").hasRole("USER")
+
+                                .requestMatchers("/public/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(autenticacaoJwtEntryPoint)

@@ -19,7 +19,7 @@ public class Prontuario {
     private Paciente paciente;
 
     @Schema(description = "Sim")
-    private String desfraldado;
+    private Boolean desfraldado;
 
     @Schema(description = "Dinossauro")
     private String hiperfoco;
@@ -34,7 +34,7 @@ public class Prontuario {
     private String resumoClinico;
 
     @Schema(description = "2")
-    private String nivelAgressividade;
+    private Integer nivelAgressividade;
 
     @OneToMany(mappedBy = "prontuario", cascade = CascadeType.ALL) // permite modificar
     @JsonManagedReference
@@ -54,8 +54,8 @@ public class Prontuario {
     public Prontuario() {
     }
 
-    public Prontuario(Long id, Paciente paciente, String desfraldado, String hiperfoco,
-                      String anamnese, String diagnostico, String resumoClinico, String nivelAgressividade) {
+    public Prontuario(Long id, Paciente paciente, Boolean desfraldado, String hiperfoco,
+                      String anamnese, String diagnostico, String resumoClinico, Integer nivelAgressividade) {
         this.id = id;
         this.paciente = paciente;
         this.desfraldado = desfraldado;
@@ -72,8 +72,8 @@ public class Prontuario {
     public Paciente getPaciente() { return paciente; }
     public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 
-    public String getDesfraldado() { return desfraldado; }
-    public void setDesfraldado(String desfraldado) { this.desfraldado = desfraldado; }
+    public Boolean getDesfraldado() { return desfraldado; }
+    public void setDesfraldado(Boolean desfraldado) { this.desfraldado = desfraldado; }
 
     public String getHiperfoco() { return hiperfoco; }
     public void setHiperfoco(String hiperfoco) { this.hiperfoco = hiperfoco; }
@@ -87,8 +87,8 @@ public class Prontuario {
     public String getResumoClinico() { return resumoClinico; }
     public void setResumoClinico(String resumoClinico) { this.resumoClinico = resumoClinico; }
 
-    public String getNivelAgressividade() { return nivelAgressividade; }
-    public void setNivelAgressividade(String nivelAgressividade) { this.nivelAgressividade = nivelAgressividade; }
+    public Integer getNivelAgressividade() { return nivelAgressividade; }
+    public void setNivelAgressividade(Integer nivelAgressividade) { this.nivelAgressividade = nivelAgressividade; }
 
     public List<ClassificacaoDoencas> getCid() { return cid; }
     public void setCid(List<ClassificacaoDoencas> cid) { this.cid = cid; }

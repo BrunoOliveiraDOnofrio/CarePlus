@@ -20,11 +20,13 @@ public class ConsultaResponseDto {
     private String anotacoes;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean presenca;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean confirmada;
 
     public ConsultaResponseDto() {
     }
 
-    public ConsultaResponseDto(Long id, PacienteResponseDto paciente, FuncionarioResponseDto funcionario, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca) {
+    public ConsultaResponseDto(Long id, PacienteResponseDto paciente, FuncionarioResponseDto funcionario, LocalDateTime dataHora, String tipo, String anotacoes, Boolean presenca, Boolean confirmada) {
         this.id = id;
         this.paciente = paciente;
         this.funcionario = funcionario;
@@ -32,6 +34,7 @@ public class ConsultaResponseDto {
         this.tipo = tipo;
         this.anotacoes = anotacoes;
         this.presenca = presenca;
+        this.confirmada = confirmada;
     }
 
     public Long getId() {
@@ -88,5 +91,13 @@ public class ConsultaResponseDto {
 
     public void setPresenca(Boolean presenca) {
         this.presenca = presenca;
+    }
+
+    public Boolean getConfirmada() {
+        return confirmada;
+    }
+
+    public void setConfirmada(Boolean confirmada) {
+        this.confirmada = confirmada;
     }
 }
