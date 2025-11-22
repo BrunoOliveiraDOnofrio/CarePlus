@@ -6,6 +6,7 @@ import com.example.careplus.model.Prontuario;
 import com.example.careplus.repository.ClassificacaoDoencasRepository;
 import com.example.careplus.repository.PacienteRepository;
 import com.example.careplus.repository.ProntuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -49,27 +50,31 @@ public class ClassificacaoDoencasService {
 
     public List<ClassificacaoDoencas> listar() {
         List<ClassificacaoDoencas> doencas = classificacaoDoencasRepository.findAll();
-        if (doencas.isEmpty()){
-            throw new NoSuchElementException();
-        }
         return doencas;
     }
 
-    public Optional<ClassificacaoDoencas> buscarPorId(Long id) {
-        boolean existe = classificacaoDoencasRepository.existsById(id);
-        if (!existe){
+    public ClassificacaoDoencas buscarPorId(Long id) {
+        Optional<ClassificacaoDoencas> classificacaoDoencasOpt = classificacaoDoencasRepository.findById(id);
+
+        if (classificacaoDoencasOpt.isPresent()){
+            return classificacaoDoencasOpt.get();
+        }else{
             throw new NoSuchElementException();
         }
-        return classificacaoDoencasRepository.findById(id);
     }
 
-    public Optional<ClassificacaoDoencas> atualizar(Long id, ClassificacaoDoencas dadosAtualizados) {
-        return classificacaoDoencasRepository.findById(id).map(doencaExistente -> {
-            doencaExistente.setCid(dadosAtualizados.getCid());
-            doencaExistente.setDtModificacao(LocalDate.now());
-            return classificacaoDoencasRepository.save(doencaExistente);
-        });
+    public ClassificacaoDoencas atualizar(Long id, ClassificacaoDoencasRequestDto dadosAtualizados) {
+        ClassificacaoDoencas existente = classificacaoDoencasRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Classificação não encontrada"));
+        existente.setCid(dadosAtualizados.getCid());
+        existente.setDtModificacao(LocalDate.now());
+        if (dadosAtualizados.getIdProntuario() != null) {
+            Prontuario prontuario = prontuarioRepository.findById(dadosAtualizados.getIdProntuario())
+                    .orElseThrow(() -> new EntityNotFoundException("Prontuário não encontrado"));
+            existente.setProntuario(prontuario);
+        }
+        return classificacaoDoencasRepository.save(existente);
     }
+
 
     public void deletar(Long id){
         boolean existe = classificacaoDoencasRepository.existsById(id);

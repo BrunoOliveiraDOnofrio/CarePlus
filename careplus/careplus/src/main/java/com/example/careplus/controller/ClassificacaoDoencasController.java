@@ -31,9 +31,11 @@ public class ClassificacaoDoencasController {
     @GetMapping
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ClassificacaoDoencas>> listar() {
-        try {
+        List<ClassificacaoDoencas> doencas = classificacaoDoencasService.listar();
+        if (!doencas.isEmpty()){
+
             return ResponseEntity.status(200).body(classificacaoDoencasService.listar());
-        } catch (Exception e){
+        } else {
             return ResponseEntity.status(204).build();
         }
 
@@ -41,26 +43,25 @@ public class ClassificacaoDoencasController {
 
     @GetMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Optional<ClassificacaoDoencas>> buscarPorId(@PathVariable Long id) {
-        try {
-            Optional<ClassificacaoDoencas> achado = classificacaoDoencasService.buscarPorId(id);
-            return ResponseEntity.status(200).body(achado);
-        } catch (Exception e) {
+    public ResponseEntity<ClassificacaoDoencas> buscarPorId(@PathVariable Long id) {
+        ClassificacaoDoencas achado = classificacaoDoencasService.buscarPorId(id);
+        if (achado != null) {
+            return ResponseEntity.ok(achado);
+        } else {
             return ResponseEntity.status(404).build();
         }
     }
 
     @PutMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Optional<ClassificacaoDoencas>> atualizar(@PathVariable Long id,
-                                                          @RequestBody ClassificacaoDoencas dadosAtualizados) {
-        try {
-            Optional<ClassificacaoDoencas> atualizada = classificacaoDoencasService.atualizar(id, dadosAtualizados);
-            return ResponseEntity.status(200).body(atualizada);
-        } catch (Exception e) {
+    public ResponseEntity<ClassificacaoDoencas> atualizar(@PathVariable Long id,
+                                                          @RequestBody ClassificacaoDoencasRequestDto dadosAtualizados) {
+        ClassificacaoDoencas atualizada = classificacaoDoencasService.atualizar(id, dadosAtualizados);
+        if (atualizada != null) {
+            return ResponseEntity.ok(atualizada);
+        } else {
             return ResponseEntity.status(404).build();
         }
-
     }
 
 
