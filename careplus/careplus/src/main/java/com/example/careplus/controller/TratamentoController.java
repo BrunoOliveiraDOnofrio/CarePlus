@@ -48,6 +48,7 @@ public class TratamentoController {
         }
     }
 
+    /*
 
     @GetMapping("/{idProntuario}")
     public ResponseEntity<Long> buscarPeloIdProntuario(@PathVariable Long idProntuario){
@@ -56,5 +57,5 @@ public class TratamentoController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 }

@@ -52,7 +52,7 @@ public class TratamentoService {
         return tratamentoEncontrado;
     }
 
-  
+  /*
     public Long buscarPeloIdProntuario(Long idProntuario){
         Long tratamentoContagem = tratamentoRepository.buscarQuantidadeDeTratamentosPorId(idProntuario);
         if (tratamentoContagem == null || tratamentoContagem == 0){
@@ -61,4 +61,5 @@ public class TratamentoService {
 
         return tratamentoContagem;
     }
+   */
 }
