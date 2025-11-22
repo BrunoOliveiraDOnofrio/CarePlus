@@ -13,6 +13,16 @@ public class TratamentoRequestDto {
 
     private Long idProntuario;
 
+    public TratamentoRequestDto(String tipoDeTratamento, Boolean finalizado, Long idProntuario) {
+        this.tipoDeTratamento = tipoDeTratamento;
+        this.finalizado = finalizado;
+        this.idProntuario = idProntuario;
+    }
+
+    public TratamentoRequestDto(String tipoDeTratamento) {
+        this.tipoDeTratamento = tipoDeTratamento;
+    }
+
     public String getTipoDeTratamento() {
         return tipoDeTratamento;
     }

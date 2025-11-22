@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TratamentoRepository extends JpaRepository<Tratamento, Long> {
 
-
     @Query("SELECT COUNT(t) FROM Prontuario p LEFT JOIN p.tratamentos t WHERE p.id = :idProntuario")
-    Long buscarQuantidadeDeTratamentosPorId( Long idProntuario);
+    Long buscarQuantidadeDeTratamentosPorId(@Param("idProntuario") Long idProntuario);
 
     List<Tratamento> findByProntuario_Id(Long idProntuario);
 

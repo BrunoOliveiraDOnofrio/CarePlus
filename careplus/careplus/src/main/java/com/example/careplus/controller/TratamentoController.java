@@ -48,15 +48,14 @@ public class TratamentoController {
         }
     }
 
-    /* metodo da contagem de tratamento po id do prontuario.
+    /*
+
     @GetMapping("/{idProntuario}")
-    public ResponseEntity<Long> buscarPeloNome(@PathVariable Long idProntuario){
+    public ResponseEntity<Long> buscarPeloIdProntuario(@PathVariable Long idProntuario){
         try{
-            return ResponseEntity.status(200).body(tratamentoService.buscarPeloNome(idProntuario));
+            return ResponseEntity.status(200).body(tratamentoService.buscarPeloIdProntuario(idProntuario));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-     */
+    }*/
 }

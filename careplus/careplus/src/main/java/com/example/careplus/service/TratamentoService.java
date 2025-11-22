@@ -52,15 +52,14 @@ public class TratamentoService {
         return tratamentoEncontrado;
     }
 
-    /*
-    public Long buscarPeloNome(Long idProntuario){
-        Long contagem = tratamentoRepository.buscarQuantidadeDeTratamentosPorId(Long idProntuario);
-        if (idProntuario.isEmpty()){
-            return null;
+  /*
+    public Long buscarPeloIdProntuario(Long idProntuario){
+        Long tratamentoContagem = tratamentoRepository.buscarQuantidadeDeTratamentosPorId(idProntuario);
+        if (tratamentoContagem == null || tratamentoContagem == 0){
+            return 0L;
         }
 
-        return idProntuario;
+        return tratamentoContagem;
     }
-
-     */
+   */
 }
