@@ -23,7 +23,6 @@ import java.util.Optional;
 @Service
 public class FuncionarioService {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -34,8 +33,9 @@ public class FuncionarioService {
 
     private final FuncionarioRepository repository;
 
-    public FuncionarioService(FuncionarioRepository repository) {
+    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
+        this.passwordEncoder = encoder;
     }
 
     public List<FuncionarioResponseDto> listarSubordinados(Long id, List<Funcionario> todos) {
