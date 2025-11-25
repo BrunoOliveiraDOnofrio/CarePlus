@@ -18,7 +18,6 @@ public class ResponsavelMapper {
         entity.setTelefone(dto.getTelefone());
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setCpf(dto.getCpf());
-        entity.setConvenio(dto.getConvenio());
 
         return entity;
     }
@@ -36,7 +35,6 @@ public class ResponsavelMapper {
         dto.setTelefone(entity.getTelefone());
         dto.setDtNascimento(entity.getDtNascimento());
         dto.setCpf(entity.getCpf());
-        dto.setConvenio(entity.getConvenio());
 
         return dto;
     }
@@ -57,7 +55,6 @@ public class ResponsavelMapper {
         entity.setTelefone(dto.getTelefone());
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setCpf(dto.getCpf());
-        entity.setConvenio(dto.getConvenio());
 
         return entity;
     }

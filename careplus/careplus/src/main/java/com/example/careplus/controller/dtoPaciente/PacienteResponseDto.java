@@ -24,16 +24,20 @@ public class PacienteResponseDto {
     @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 
+    @Schema(description = "Sul America")
+    private String convenio;
+
     public PacienteResponseDto() {
     }
 
-    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento) {
+    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
         this.telefone = telefone;
         this.dtNascimento = dtNascimento;
+        this.convenio = convenio;
     }
 
     public Long getId() {
@@ -82,5 +86,13 @@ public class PacienteResponseDto {
 
     public void setDtNascimento(LocalDate dtNascimento) {
         this.dtNascimento = dtNascimento;
+    }
+
+    public String getConvenio() {
+        return convenio;
+    }
+
+    public void setConvenio(String convenio) {
+        this.convenio = convenio;
     }
 }

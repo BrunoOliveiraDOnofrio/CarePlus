@@ -24,6 +24,9 @@ public class PacienteRequestDto {
     @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 
+    @Schema(description = "Sul America")
+    private String convenio;
+
     public PacienteRequestDto(String nome, String email, String cpf, String telefone, String senha, LocalDate dtNascimento) {
         this.nome = nome;
         this.email = email;
@@ -79,5 +82,13 @@ public class PacienteRequestDto {
 
     public void setDtNascimento(LocalDate dtNascimento) {
         this.dtNascimento = dtNascimento;
+    }
+
+    public String getConvenio() {
+        return convenio;
+    }
+
+    public void setConvenio(String convenio) {
+        this.convenio = convenio;
     }
 }

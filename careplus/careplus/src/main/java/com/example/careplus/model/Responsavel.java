@@ -15,7 +15,6 @@ public class Responsavel {
     private String telefone;
     private LocalDate dtNascimento;
     private String cpf;
-    private String convenio;
 
     public Long getId() {
         return id;
@@ -65,12 +64,5 @@ public class Responsavel {
         this.cpf = cpf;
     }
 
-    public String getConvenio() {
-        return convenio;
-    }
-
-    public void setConvenio(String convenio) {
-        this.convenio = convenio;
-    }
 
 }

@@ -22,8 +22,6 @@ public class ResponsavelResponseDto {
 
     private String cpf;
 
-    @Schema(description = "Sul America")
-    private String convenio;
 
 
     public String getNome() {
@@ -71,13 +69,5 @@ public class ResponsavelResponseDto {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public String getConvenio() {
-        return convenio;
-    }
-
-    public void setConvenio(String convenio) {
-        this.convenio = convenio;
     }
 }

@@ -63,7 +63,7 @@ public class SecurityConfiguracao {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(URLS_PERMITIDAS).permitAll()
                                 // URLs protegidas por ROLE
-                                .requestMatchers("/pacientes/**").hasRole("ADMIN")
+                                .requestMatchers("/**").hasRole("ADMIN")
 //                        .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN") Exemplo de múltiplas roles
                                 .requestMatchers("/funcionarios/**").hasRole("USER")
 
@@ -92,10 +92,6 @@ public class SecurityConfiguracao {
         return authenticationManagerBuilder.build();
     }
 
-    @Bean
-    public AutenticacaoEntryPoint jwtAuthenticationEntryPointBean() {
-        return new AutenticacaoEntryPoint();
-    }
 
     @Bean
     public AutenticacaoFilter jwtAuthenticationFilterBean() {

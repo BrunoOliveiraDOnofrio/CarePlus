@@ -28,9 +28,6 @@ public class ResponsavelRequestDto {
     @NotBlank @Size(min = 11, max = 11) @Pattern(regexp = "\\d+")
     private String cpf;
 
-    @Schema(description = "Sul America")
-    @NotBlank
-    private String convenio;
 
 
     public String getNome() {
@@ -73,12 +70,5 @@ public class ResponsavelRequestDto {
         this.cpf = cpf;
     }
 
-    public String getConvenio() {
-        return convenio;
-    }
-
-    public void setConvenio(String convenio) {
-        this.convenio = convenio;
-    }
 
 }
