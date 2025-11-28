@@ -27,10 +27,13 @@ public class PacienteResponseDto {
     @Schema(description = "Sul America")
     private String convenio;
 
+    @Schema(description = "2025-11-25")
+    private LocalDate dataInicio;
+
     public PacienteResponseDto() {
     }
 
-    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio) {
+    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio, LocalDate dataInicio) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -38,6 +41,7 @@ public class PacienteResponseDto {
         this.telefone = telefone;
         this.dtNascimento = dtNascimento;
         this.convenio = convenio;
+        this.dataInicio = dataInicio;
     }
 
     public Long getId() {
@@ -94,5 +98,13 @@ public class PacienteResponseDto {
 
     public void setConvenio(String convenio) {
         this.convenio = convenio;
+    }
+
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
     }
 }

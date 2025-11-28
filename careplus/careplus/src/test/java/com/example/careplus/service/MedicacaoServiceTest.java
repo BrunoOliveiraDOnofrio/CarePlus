@@ -158,7 +158,10 @@ class MedicacaoServiceTest {
 
         List<Medicacao> ordenada = service.ordenarPorTempoMedicando();
 
-        assertEquals("Med1", ordenada.get(0).getNomeMedicacao());
+        // Med2 deve vir primeiro (1 dia medicando - menos tempo)
+        // Med1 deve vir depois (3 dias medicando - mais tempo)
+        assertEquals("Med2", ordenada.get(0).getNomeMedicacao());
+        assertEquals("Med1", ordenada.get(1).getNomeMedicacao());
     }
   
 }

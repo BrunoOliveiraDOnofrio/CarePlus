@@ -18,22 +18,19 @@ public class PacienteRequestDto {
     @Schema(description = "(11) 99182-8249")
     private String telefone;
 
-    @Schema(description = "qhcPkyyKB1")
-    private String senha;
-
     @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 
     @Schema(description = "Sul America")
     private String convenio;
 
-    public PacienteRequestDto(String nome, String email, String cpf, String telefone, String senha, LocalDate dtNascimento) {
+    public PacienteRequestDto(String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio) {
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
         this.telefone = telefone;
-        this.senha = senha;
         this.dtNascimento = dtNascimento;
+        this.convenio = convenio;
     }
 
     public String getNome() {
@@ -68,13 +65,6 @@ public class PacienteRequestDto {
         this.telefone = telefone;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
 
     public LocalDate getDtNascimento() {
         return dtNascimento;

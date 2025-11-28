@@ -27,9 +27,9 @@ public class PacienteMapper {
         entity.setEmail(dto.getEmail());
         entity.setCpf(dto.getCpf());
         entity.setTelefone(dto.getTelefone());
-        entity.setSenha(dto.getSenha());
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setConvenio(dto.getConvenio());
+        entity.setDataInicio(LocalDate.now()); // define data de início automaticamente
 
         return entity;
     }
@@ -56,6 +56,7 @@ public class PacienteMapper {
         entity.setTelefone(dto.getTelefone());
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setConvenio(dto.getConvenio());
+        entity.setDataInicio(dto.getDataInicio());
 
         return entity;
     }
@@ -68,7 +69,7 @@ public class PacienteMapper {
             return null;
         }
 
-        PacienteResponseDto dto = new PacienteResponseDto(entity.getId(), entity.getNome(), entity.getEmail(), entity.getCpf(), entity.getTelefone(), entity.getDtNascimento(), entity.getConvenio());
+        PacienteResponseDto dto = new PacienteResponseDto(entity.getId(), entity.getNome(), entity.getEmail(), entity.getCpf(), entity.getTelefone(), entity.getDtNascimento(), entity.getConvenio(), entity.getDataInicio());
 
         return dto;
     }

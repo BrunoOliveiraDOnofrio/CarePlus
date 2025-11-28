@@ -23,14 +23,14 @@ public class Paciente {
     @Schema(description = "(11) 98215-0272")
     private String telefone;
 
-    @Schema(description = "olgyT0E7nH")
-    private String senha;
-
     @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 
     @Schema(description = "Sul America")
     private String convenio;
+
+    @Schema(description = "2025-11-25")
+    private LocalDate dataInicio;
 
     public Paciente() {
     }
@@ -75,14 +75,6 @@ public class Paciente {
         this.telefone = telefone;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
     public LocalDate getDtNascimento() {
         return dtNascimento;
     }
@@ -97,6 +89,14 @@ public class Paciente {
 
     public void setConvenio(String convenio) {
         this.convenio = convenio;
+    }
+
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
     }
 }
 

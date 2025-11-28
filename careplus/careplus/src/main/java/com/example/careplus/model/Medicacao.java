@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Medicacao implements Comparable<Medicacao> {
@@ -16,6 +17,9 @@ public class Medicacao implements Comparable<Medicacao> {
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private boolean ativo;
+
+    @Column(name = "data_modificacao")
+    private LocalDateTime dataModificacao;
 
     @ManyToOne
     @JoinColumn(name = "prontuario_id")
@@ -31,6 +35,7 @@ public class Medicacao implements Comparable<Medicacao> {
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.ativo = ativo;
+        this.dataModificacao = LocalDateTime.now();
     }
 
     public Prontuario getProntuario() {
@@ -81,6 +86,20 @@ public class Medicacao implements Comparable<Medicacao> {
         this.ativo = ativo;
     }
 
+    public LocalDateTime getDataModificacao() {
+        return dataModificacao;
+    }
+
+    public void setDataModificacao(LocalDateTime dataModificacao) {
+        this.dataModificacao = dataModificacao;
+    }
+
+    @PrePersist
+    @PreUpdate
+    protected void onCreateOrUpdate() {
+        this.dataModificacao = LocalDateTime.now();
+    }
+
     public Duration getTempoMedicando() {
         LocalDate fim;
 
@@ -113,3 +132,4 @@ public class Medicacao implements Comparable<Medicacao> {
     }
 
 }
+
