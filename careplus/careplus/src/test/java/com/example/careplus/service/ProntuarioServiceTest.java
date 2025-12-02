@@ -103,6 +103,7 @@ class ProntuarioServiceTest {
     @DisplayName("Buscar prontuario por id existente retorna prontuario")
     void buscarProntuarioPorIdExistente() {
         Prontuario p = new Prontuario();
+
         p.setId(5L);
         when(prontuatioRepository.findById(5L)).thenReturn(Optional.of(p));
 

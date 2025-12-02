@@ -1,7 +1,9 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.controller.dtoResponsavel.ResponsavelMapper;
 import com.example.careplus.controller.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.controller.dtoResponsavel.ResponsavelResponseDto;
+import com.example.careplus.model.Responsavel;
 import com.example.careplus.service.ResponsavelService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class ResponsavelController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ResponsavelResponseDto> cadastrar(@Valid @RequestBody ResponsavelRequestDto responsavel){
+    public ResponseEntity<Responsavel> cadastrar(@Valid @RequestBody ResponsavelRequestDto responsavel){
         try {
             return ResponseEntity.status(201).body(responsavelService.cadastrar(responsavel));
         } catch (Exception e){
@@ -33,7 +35,7 @@ public class ResponsavelController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ResponsavelResponseDto>> listar(){
+    public ResponseEntity<List<Responsavel>> listar(){
         try {
             return ResponseEntity.status(200).body(responsavelService.listar());
         } catch (NoSuchElementException e) {
@@ -44,7 +46,7 @@ public class ResponsavelController {
 
     @GetMapping("/por-email")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ResponsavelResponseDto>> buscarPorEmail(@RequestParam String email){
+    public ResponseEntity<Responsavel> buscarPorEmail(@RequestParam String email){
         try {
             return ResponseEntity.status(200).body(responsavelService.buscarPorEmail(email));
         } catch (NoSuchElementException e) {
@@ -54,7 +56,7 @@ public class ResponsavelController {
 
     @PutMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ResponsavelResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
+    public ResponseEntity<Responsavel> atualizar(@PathVariable Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
         try {
             return ResponseEntity.status(200).body(responsavelService.atualizar(id, responsavelAtt));
         } catch (NoSuchElementException e) {

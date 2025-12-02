@@ -22,35 +22,32 @@ public class ResponsavelService {
         this.responsavelRepository = responsavelRepository;
     }
     // CRUD SIMPLES
-    public ResponsavelResponseDto cadastrar(ResponsavelRequestDto responsavelNew){
+    public Responsavel cadastrar(ResponsavelRequestDto responsavelNew){
         Responsavel paraRegistrar = ResponsavelMapper.toEntity(responsavelNew);
         if(responsavelRepository.existsByEmail(paraRegistrar.getEmail()) || responsavelRepository.existsByCpf(paraRegistrar.getCpf())){
             throw new IllegalArgumentException();
         }
         Responsavel responsavelRegistrado = responsavelRepository.save(paraRegistrar);
-        ResponsavelResponseDto resposta = ResponsavelMapper.toResponseDto(responsavelRegistrado);
-        return resposta;
+        return responsavelRegistrado;
     }
 
-    public List<ResponsavelResponseDto> listar(){
+    public List<Responsavel> listar(){
         List<Responsavel> responsaveis = responsavelRepository.findAll();
         if(responsaveis.isEmpty()){
             throw new NoSuchElementException();
         }
 
-        return ResponsavelMapper.toResponseDto(responsaveis);
+        return responsaveis;
     }
 
-    public List<ResponsavelResponseDto> buscarPorEmail(String email){
-        List<Responsavel> responsaveisEncontrador = responsavelRepository.findByEmailStartingWith(email);
-        if (!responsaveisEncontrador.isEmpty()){
-            return ResponsavelMapper.toResponseDto(responsaveisEncontrador);
-        }else{
-            throw new ResourceNotFoundException("Usuário não encontrado!");
-        }
+    public Responsavel buscarPorEmail(String email){
+        Responsavel responsavelEncontrado = responsavelRepository.findByEmailStartingWith(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+
+        return responsavelEncontrado;
     }
 
-    public ResponsavelResponseDto atualizar(Long id, ResponsavelRequestDto responsavelAtt){
+    public Responsavel atualizar(Long id, ResponsavelRequestDto responsavelAtt){
         Optional<Responsavel> selecionar = responsavelRepository.findById(id);
         if(selecionar.isEmpty()){
             throw new EntityNotFoundException();
@@ -64,7 +61,7 @@ public class ResponsavelService {
 
         responsavelRepository.save(ResponsavelMapper.updateEntityFromDto(responsavelAtt , selecionado));
 
-        return ResponsavelMapper.toResponseDto(selecionado);
+        return selecionado;
     }
 
     public void deletar(Long id){
