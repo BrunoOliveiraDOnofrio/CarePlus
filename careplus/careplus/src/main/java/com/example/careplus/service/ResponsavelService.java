@@ -33,10 +33,6 @@ public class ResponsavelService {
 
     public List<Responsavel> listar(){
         List<Responsavel> responsaveis = responsavelRepository.findAll();
-        if(responsaveis.isEmpty()){
-            throw new NoSuchElementException();
-        }
-
         return responsaveis;
     }
 
