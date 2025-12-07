@@ -29,7 +29,7 @@ public class CuidadorService {
         this.responsavelRepository = responsavelRepository;
     }
 
-    public CuidadorResponseDto cadastrar (CuidadorRequestDto cuidadorNew){
+    public Cuidador cadastrar (CuidadorRequestDto cuidadorNew){
         Optional<Paciente> paciente = pacienteRepository.findById(cuidadorNew.getPacienteId());
         if(paciente.isEmpty()){
             throw new EntityNotFoundException();
@@ -44,41 +44,29 @@ public class CuidadorService {
 
         paraRegistro = cuidadorRepository.save(paraRegistro);
 
-        return CuidadorMapper.toResponseDto(paraRegistro);
+        return paraRegistro;
     }
 
-    public List<CuidadorResponseDto> listar(){
-
+    public List<Cuidador> listar(){
         List<Cuidador> registros = cuidadorRepository.findAll();
-        if (registros.isEmpty()){
-            throw new EntityNotFoundException();
-        }
 
-        return CuidadorMapper.toResponseDto(registros);
-
+        return registros;
     }
 
-    public CuidadorResponseDto atualizar(Long id, CuidadorRequestDto cuidadorAtt){
-        Optional<Cuidador> escolhido = cuidadorRepository.findById(id);
-        if (escolhido.isEmpty()){
-            throw new EntityNotFoundException();
-        }
-        Optional<Paciente> paciente = pacienteRepository.findById(cuidadorAtt.getPacienteId());
-        if(paciente.isEmpty()){
-            throw new EntityNotFoundException();
-        }
-        Optional<Responsavel> responsavel = responsavelRepository.findById(cuidadorAtt.getResponsavelId());
-        if (responsavel.isEmpty()){
-            throw new EntityNotFoundException();
-        }
-        Cuidador cuidadorEscolhido = escolhido.get();
-        Responsavel responsavelEscolhido = responsavel.get();
-        Paciente pacienteEscolhido = paciente.get();
-        cuidadorEscolhido = CuidadorMapper.updateEntityFromDto(cuidadorAtt, cuidadorEscolhido, pacienteEscolhido, responsavelEscolhido);
+    public Cuidador atualizar(Long id, CuidadorRequestDto dto) {
 
-        cuidadorEscolhido = cuidadorRepository.save(cuidadorEscolhido);
+        Cuidador cuidador = cuidadorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cuidador não encontrado"));
 
-        return CuidadorMapper.toResponseDto(cuidadorEscolhido);
+        Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
+                .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado"));
+
+        Responsavel responsavel = responsavelRepository.findById(dto.getResponsavelId())
+                .orElseThrow(() -> new EntityNotFoundException("Responsável não encontrado"));
+
+        CuidadorMapper.updateEntityFromDto(dto, cuidador, paciente, responsavel);
+
+        return cuidadorRepository.save(cuidador);
     }
 
     public void deletar(Long id){

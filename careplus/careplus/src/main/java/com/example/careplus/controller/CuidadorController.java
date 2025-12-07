@@ -2,6 +2,7 @@ package com.example.careplus.controller;
 
 import com.example.careplus.controller.dtoCuidador.CuidadorRequestDto;
 import com.example.careplus.controller.dtoCuidador.CuidadorResponseDto;
+import com.example.careplus.model.Cuidador;
 import com.example.careplus.service.CuidadorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class CuidadorController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<CuidadorResponseDto> cadastrar(@RequestBody CuidadorRequestDto cuidador){
+    public ResponseEntity<Cuidador> cadastrar(@RequestBody CuidadorRequestDto cuidador){
         try {
             return ResponseEntity.status(201).body(cuidadorService.cadastrar(cuidador));
         } catch (Exception e){
@@ -31,12 +32,11 @@ public class CuidadorController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<CuidadorResponseDto>> listar(){
-        try{
-            return ResponseEntity.status(200).body(cuidadorService.listar());
-        } catch (Exception e){
-            return ResponseEntity.status(404).build();
+    public ResponseEntity<List<Cuidador>> listar(){
+        if (cuidadorService.listar().isEmpty()){
+            return ResponseEntity.status(204).build();
         }
+            return ResponseEntity.status(200).body(cuidadorService.listar());
     }
 
     @GetMapping("/{id}")
@@ -61,7 +61,7 @@ public class CuidadorController {
 
     @PutMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<CuidadorResponseDto> atualizar(@PathVariable Long id , @RequestParam CuidadorRequestDto cuidadorAtt){
+    public ResponseEntity<Cuidador> atualizar(@PathVariable Long id , @RequestBody CuidadorRequestDto cuidadorAtt){
         try {
             return ResponseEntity.status(200).body(cuidadorService.atualizar(id, cuidadorAtt));
         } catch (Exception e){

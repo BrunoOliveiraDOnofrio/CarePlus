@@ -18,7 +18,7 @@ public class Consulta {
     private Funcionario funcionario;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
     @Schema(description = "2025-10-14T01:09:31.734Z")
