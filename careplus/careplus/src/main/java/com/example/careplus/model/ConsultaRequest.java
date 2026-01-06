@@ -1,7 +1,6 @@
 package com.example.careplus.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 

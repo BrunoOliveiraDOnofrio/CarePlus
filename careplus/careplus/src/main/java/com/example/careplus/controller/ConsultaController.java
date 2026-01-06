@@ -77,14 +77,28 @@ public class ConsultaController {
 
     }
 
-    @PutMapping("/{id}")
-    @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaResponseDto> editarConsulta(
-            @PathVariable Long id,
-            @RequestBody ConsultaRequest request) {
+//    @PutMapping("/{id}")
+//    @SecurityRequirement(name = "Bearer")
+//    public ResponseEntity<ConsultaResponseDto> editarConsulta(
+//            @PathVariable Long id,
+//            @RequestBody ConsultaRequest request) {
+//
+//        ConsultaResponseDto consultaEditada = service.editarConsulta(id, request);
+//        return ResponseEntity.status(200).body(consultaEditada);
+//    }
 
-        ConsultaResponseDto consultaEditada = service.editarConsulta(id, request);
-        return ResponseEntity.status(200).body(consultaEditada);
+    @PutMapping("/confirmar/{idConsulta}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ConsultaResponseDto> confirmarConsulta(@PathVariable Long idConsulta, @RequestBody Boolean status){
+        ConsultaResponseDto consultaResponseDto = service.confirmarConsulta(idConsulta, status);
+        return ResponseEntity.status(200).body(consultaResponseDto);
+    }
+
+    @PutMapping("/observacoes/{idConsulta}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ConsultaResponseDto> confirmarConsulta(@PathVariable Long idConsulta, @RequestBody String obs){
+        ConsultaResponseDto consultaResponseDto = service.salvarObservacoes(idConsulta, obs);
+        return ResponseEntity.status(200).body(consultaResponseDto);
     }
 
 

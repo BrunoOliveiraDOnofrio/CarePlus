@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+script-mysql-careplus.sql
+README-MySQL.md
+
 ### STS ###
 .apt_generated
 .classpath

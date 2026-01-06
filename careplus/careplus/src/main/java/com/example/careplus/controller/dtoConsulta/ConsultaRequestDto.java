@@ -1,8 +1,5 @@
 package com.example.careplus.controller.dtoConsulta;
 
-import com.example.careplus.model.Funcionario;
-import com.example.careplus.model.Paciente;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
@@ -10,13 +7,13 @@ public class ConsultaRequestDto {
     private Long pacienteId;
     private Long funcionarioId;
     private LocalDateTime dataHora;
-    private Boolean confirmada;
+    private String tipo;
 
-    public ConsultaRequestDto(Long pacienteId, Long funcionarioId, LocalDateTime dataHora, Boolean confirmada) {
+    public ConsultaRequestDto(Long pacienteId, Long funcionarioId, LocalDateTime dataHora, String tipo) {
         this.pacienteId = pacienteId;
         this.funcionarioId = funcionarioId;
         this.dataHora = dataHora;
-        this.confirmada = confirmada;
+        this.tipo = tipo;
     }
 
     public Long getPacienteId() {
@@ -31,11 +28,12 @@ public class ConsultaRequestDto {
         return dataHora;
     }
 
-    public Boolean getConfirmada() {
-        return confirmada;
+
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setConfirmada(Boolean confirmada) {
-        this.confirmada = confirmada;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }

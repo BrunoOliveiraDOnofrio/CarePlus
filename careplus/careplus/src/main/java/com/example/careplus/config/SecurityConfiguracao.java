@@ -64,8 +64,8 @@ public class SecurityConfiguracao {
                                 .requestMatchers(URLS_PERMITIDAS).permitAll()
                                 // URLs protegidas por ROLE
                                 .requestMatchers("/**").hasRole("ADMIN")
-//                        .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN") Exemplo de múltiplas roles
-                                .requestMatchers("/funcionarios/**").hasRole("USER")
+                        .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN")
+//                                .requestMatchers("/funcionarios/**").hasRole("USER")
 
                                 .requestMatchers("/public/**").permitAll()
                                 .anyRequest().authenticated()

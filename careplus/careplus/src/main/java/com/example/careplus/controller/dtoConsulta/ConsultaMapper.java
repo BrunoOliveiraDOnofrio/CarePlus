@@ -20,7 +20,6 @@ public class ConsultaMapper {
         entity.setPaciente(PacienteMapper.toEntityResponse(paciente));
         entity.setFuncionario(FuncionarioMapper.toEntityResponse(funcionario));
         entity.setDataHora(dto.getDataHora());
-        entity.setConfirmada(dto.getConfirmada());
         // Tipo inicial padrão se não informado
         entity.setTipo(entity.getTipo() == null ? "Pendente" : entity.getTipo());
         return entity;

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -54,9 +53,8 @@ class ConsultaServiceTest {
         Long pacienteId = 1L;
         Long funcionarioId = 2L;
         LocalDateTime dataHora = LocalDateTime.now().plusDays(1);
-        Boolean confirmada = false;
 
-        ConsultaRequestDto requestDto = new ConsultaRequestDto(pacienteId, funcionarioId, dataHora, confirmada);
+        ConsultaRequestDto requestDto = new ConsultaRequestDto(pacienteId, funcionarioId, dataHora, "Pendente");
 
         Paciente paciente = new Paciente();
         paciente.setId(pacienteId);
@@ -139,7 +137,7 @@ class ConsultaServiceTest {
         Long funcionarioId = 2L;
         LocalDateTime dataHora = LocalDateTime.now().plusDays(1);
 
-        ConsultaRequestDto requestDto = new ConsultaRequestDto(pacienteId, funcionarioId, dataHora, false);
+        ConsultaRequestDto requestDto = new ConsultaRequestDto(pacienteId, funcionarioId, dataHora, "Pendente");
 
         when(pacienteRepository.findById(pacienteId)).thenReturn(Optional.empty());
 
@@ -158,12 +156,11 @@ class ConsultaServiceTest {
     @Test
     @DisplayName("Quando marcar consulta com funcionario inexistente deve lançar ResourceNotFoundException")
     void deveLancarExcecaoQuandoFuncionarioNaoExiste() {
-        // Arrange
         Long pacienteId = 1L;
         Long funcionarioId = 999L;
         LocalDateTime dataHora = LocalDateTime.now().plusDays(1);
 
-        ConsultaRequestDto requestDto = new ConsultaRequestDto(pacienteId, funcionarioId, dataHora, false);
+        ConsultaRequestDto requestDto = new ConsultaRequestDto(pacienteId, funcionarioId, dataHora,  "Pendente");
 
         Paciente paciente = new Paciente();
         paciente.setId(pacienteId);
@@ -171,7 +168,6 @@ class ConsultaServiceTest {
         when(pacienteRepository.findById(pacienteId)).thenReturn(Optional.of(paciente));
         when(funcionarioRepository.findById(funcionarioId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         ResourceNotFoundException exception = assertThrows(
                 ResourceNotFoundException.class,
                 () -> service.marcarConsulta(requestDto)
@@ -226,7 +222,6 @@ class ConsultaServiceTest {
     @Test
     @DisplayName("Quando listar consultas e existirem registros deve retornar lista")
     void deveListarConsultasQuandoExistirem() {
-        // Arrange
         Consulta consulta1 = new Consulta();
         consulta1.setId(1L);
         consulta1.setTipo("Pendente");

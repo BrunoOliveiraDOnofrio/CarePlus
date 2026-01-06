@@ -43,8 +43,8 @@ public class ConsultaService {
         novaConsulta.setPaciente(paciente);
         novaConsulta.setFuncionario(funcionario);
         novaConsulta.setDataHora(request.getDataHora());
-        novaConsulta.setConfirmada(request.getConfirmada() != null ? request.getConfirmada() : Boolean.FALSE);
-        novaConsulta.setTipo("Pendente");
+        novaConsulta.setConfirmada(null);
+        novaConsulta.setTipo(request.getTipo() != null ? request.getTipo() : "Pendente");
 
         Consulta salvo = consultaRepository.save(novaConsulta);
         emailService.EnviarNotificacao(funcionario, novaConsulta, paciente);
@@ -85,8 +85,6 @@ public class ConsultaService {
 
     }
 
-
-
     public ConsultaResponseDto editarConsulta(Long consultaId, ConsultaRequest request) {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
@@ -107,6 +105,33 @@ public class ConsultaService {
         Consulta salva = consultaRepository.save(consulta);
 
         return ConsultaMapper.toResponseDto(salva);
+    }
+
+    public ConsultaResponseDto confirmarConsulta(Long consultaId, Boolean status){
+        Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
+        if (consultaParaAtualizar.isPresent()){
+            Consulta consulta = consultaParaAtualizar.get();
+            consulta.setConfirmada(status);
+
+            Consulta consultaSalva = consultaRepository.save(consulta);
+            return ConsultaMapper.toResponseDto(consultaSalva);
+        } else {
+            throw new RuntimeException("Consulta não encontrada");
+        }
+    }
+
+    public ConsultaResponseDto salvarObservacoes(Long consultaId, String observacoes){
+        Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
+        if (consultaParaAtualizar.isPresent()){
+            Consulta consulta = consultaParaAtualizar.get();
+            consulta.setObservacoesComportamentais(observacoes);
+            consulta.setPresenca(true);
+
+            Consulta consultaSalva = consultaRepository.save(consulta);
+            return ConsultaMapper.toResponseDto(consultaSalva);
+        } else {
+            throw new RuntimeException("Consulta não encontrada");
+        }
     }
 
 }
