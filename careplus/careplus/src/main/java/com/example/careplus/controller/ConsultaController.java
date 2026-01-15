@@ -7,9 +7,11 @@ import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteR
 import com.example.careplus.model.Consulta;
 import com.example.careplus.service.ConsultaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -113,6 +115,27 @@ public class ConsultaController {
             @RequestBody ConsultaRecorrenteRequestDto request) {
         ConsultaRecorrenteResponseDto response = service.criarConsultasRecorrentes(request);
         return ResponseEntity.status(207).body(response);
+    }
+
+    @GetMapping("/agenda-semanal")
+    public ResponseEntity<List<ConsultaResponseDto>> listarAgendaSemanal(
+            @RequestParam Long funcionarioId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
+    ) {
+        List<ConsultaResponseDto> agenda = service.listarAgendaSemanal(funcionarioId, dataReferencia);
+        return ResponseEntity.ok(agenda);
+    }
+
+    @GetMapping("/pendentes/{idFuncionario}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ConsultaResponseDto>> listarConsultasPendentes(@PathVariable Long idFuncionario) {
+        List<ConsultaResponseDto> consultasPendentes = service.listarConsultasPendentes(idFuncionario);
+
+        if (consultasPendentes.isEmpty()) {
+            return ResponseEntity.status(404).build();
+        }
+
+        return ResponseEntity.status(200).body(consultasPendentes);
     }
 
 }

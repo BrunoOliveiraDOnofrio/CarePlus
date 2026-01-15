@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ConsultaService {
@@ -205,6 +206,32 @@ public class ConsultaService {
         response.setTotalFalhas(0);
 
         return response;
+    }
+
+    public List<ConsultaResponseDto> listarAgendaSemanal(Long funcionarioId, LocalDate dataReferencia) {
+        // Encontra a segunda-feira da semana da data de referência
+        LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
+        LocalDate fimDaSemana = inicioDaSemana.plusDays(6);
+
+        LocalDateTime inicioDateTime = inicioDaSemana.atStartOfDay();
+        LocalDateTime fimDateTime = fimDaSemana.atTime(23, 59, 59);
+
+        List<Consulta> consultas = consultaRepository.buscarConsultasPorFuncionarioEPeriodo(
+                funcionarioId,
+                inicioDateTime,
+                fimDateTime
+        );
+
+        if (consultas.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+        }
+
+        return ConsultaMapper.toResponseDto(consultas);
+    }
+
+    public List<ConsultaResponseDto> listarConsultasPendentes(Long idFuncionario) {
+        List<Consulta> consultas = consultaRepository.findByFuncionarioIdAndConfirmadaFalse(idFuncionario);
+        return ConsultaMapper.toResponseDto(consultas);
     }
 
 }
