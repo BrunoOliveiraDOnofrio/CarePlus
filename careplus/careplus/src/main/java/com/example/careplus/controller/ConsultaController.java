@@ -96,9 +96,16 @@ public class ConsultaController {
 
     @PutMapping("/observacoes/{idConsulta}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaResponseDto> confirmarConsulta(@PathVariable Long idConsulta, @RequestBody String obs){
+    public ResponseEntity<ConsultaResponseDto> editarObervacoes(@PathVariable Long idConsulta, @RequestBody String obs){
         ConsultaResponseDto consultaResponseDto = service.salvarObservacoes(idConsulta, obs);
         return ResponseEntity.status(200).body(consultaResponseDto);
+    }
+
+    @GetMapping("/consultasDoDia/{idFuncionario}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ConsultaResponseDto>> buscarConsultasDoDia(@PathVariable Long idFuncionario){
+        List<ConsultaResponseDto> consultaResponseDtos = service.consultasDoDia(idFuncionario);
+        return ResponseEntity.status(200).body(consultaResponseDtos);
     }
 
 

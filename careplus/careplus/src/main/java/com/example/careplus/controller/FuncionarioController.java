@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -76,4 +77,27 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarios);
     }
 
+    @GetMapping("/especialidades")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<String>> listarEspecialidades(){
+        List<String> especialidades = funcionarioService.listarEspecialidades();
+        return ResponseEntity.status(200).body(especialidades);
+    }
+
+    @GetMapping("/nomesPorEspecialidade/{especialidade}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<String>> listarNomesPorEspecialidade(@PathVariable String especialidade){
+        List<String> nomes = funcionarioService.nomesFuncionariosPorEspecialidade(especialidade);
+        return ResponseEntity.status(200).body(nomes);
+    }
+
+    @GetMapping("/{id}/horarios-disponiveis")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<String>> buscarHorariosDisponiveis(
+            @PathVariable Long id,
+            @RequestParam String data){
+        LocalDate dataConsulta = LocalDate.parse(data);
+        List<String> horarios = funcionarioService.buscarHorariosDisponiveis(id, dataConsulta);
+        return ResponseEntity.status(200).body(horarios);
+    }
 }

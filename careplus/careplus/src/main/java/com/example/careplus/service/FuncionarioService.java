@@ -4,8 +4,10 @@ import com.example.careplus.config.GerenciadorTokenJwt;
 import com.example.careplus.controller.dtoFuncionario.*;
 import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.exception.ResourceNotFoundException;
+import com.example.careplus.model.Consulta;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
+import com.example.careplus.repository.ConsultaRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,10 +37,12 @@ public class FuncionarioService {
     private AuthenticationManager authenticationManager;
 
     private final FuncionarioRepository repository;
+    private final ConsultaRepository consultaRepository;
 
-    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder) {
+    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder, ConsultaRepository consultaRepository) {
         this.repository = repository;
         this.passwordEncoder = encoder;
+        this.consultaRepository = consultaRepository;
     }
 
     public List<FuncionarioResponseDto> listarSubordinados(Long id, List<Funcionario> todos) {
@@ -163,6 +170,100 @@ public class FuncionarioService {
         }
     }
 
+    public List<String> listarEspecialidades(){
+
+        List<Funcionario> funcionarios = repository.findAll();
+
+        if (funcionarios.isEmpty()){
+            throw new ResourceNotFoundException("Nenhum funcionario cadastrado!");
+        }
+
+        List<String> especialidades = funcionarios.stream()
+                .map(Funcionario::getEspecialidade)
+                .filter(especialidade -> especialidade != null && !especialidade.isEmpty())
+                .distinct()
+                .toList();
+
+        if (especialidades.isEmpty()){
+            throw new ResourceNotFoundException("Nenhuma especialidade encontrada!");
+        }
+
+        return especialidades;
+    }
+
+    public List<String> nomesFuncionariosPorEspecialidade(String especialidade){
+        List<Funcionario> funcionarios = repository.findAll();
+        if (funcionarios.isEmpty()){
+            throw new ResourceNotFoundException("Nenhum funcionario cadastrado!");
+        }
+
+        List<String> nomes = funcionarios.stream()
+                .filter(f -> f.getEspecialidade() != null && f.getEspecialidade().equalsIgnoreCase(especialidade))
+                .map(f ->" Dr. - " + f.getNome())
+                .toList();
+
+        if (nomes.isEmpty()){
+            throw new ResourceNotFoundException("Nenhum funcionário encontrado para a especialidade: " + especialidade);
+        }
+
+        return nomes;
+    }
+
+    public List<String> buscarHorariosDisponiveis(Long idFuncionario, LocalDate data){
+        // Verifica se o funcionário existe
+        if (!repository.existsById(idFuncionario)){
+            throw new ResourceNotFoundException("Funcionário não encontrado!");
+        }
+
+        // Busca todas as consultas do funcionário nessa data
+        List<Consulta> consultas = consultaRepository.buscarConsultasPorFuncionarioEData(idFuncionario, data);
+
+        // Define horário de funcionamento: 8h às 18h
+        LocalTime horarioInicio = LocalTime.of(8, 0);
+        LocalTime horarioFim = LocalTime.of(18, 0);
+
+        // Lista de horários disponíveis
+        List<String> horariosDisponiveis = new ArrayList<>();
+
+        // Percorre todos os horários possíveis de 30 em 30 minutos
+        LocalTime horarioAtual = horarioInicio;
+
+        while (horarioAtual.isBefore(horarioFim)){
+            LocalDateTime horarioConsulta = LocalDateTime.of(data, horarioAtual);
+
+            // Verifica se o horário está ocupado
+            boolean ocupado = false;
+
+            for (Consulta consulta : consultas){
+                LocalDateTime inicioConsulta = consulta.getDataHora();
+
+                // Calcula o fim da consulta baseado no tipo
+                int duracaoMinutos = 30; // padrão para retorno e encaixe
+                if (consulta.getTipo() != null && consulta.getTipo().equalsIgnoreCase("primeira consulta")){
+                    duracaoMinutos = 60;
+                }
+
+                LocalDateTime fimConsulta = inicioConsulta.plusMinutes(duracaoMinutos);
+
+                // Verifica se o horário atual está dentro do período da consulta
+                if ((horarioConsulta.isEqual(inicioConsulta) || horarioConsulta.isAfter(inicioConsulta))
+                    && horarioConsulta.isBefore(fimConsulta)){
+                    ocupado = true;
+                    break;
+                }
+            }
+
+            // Se não está ocupado, adiciona à lista
+            if (!ocupado){
+                horariosDisponiveis.add(horarioAtual.toString());
+            }
+
+            // Avança 30 minutos
+            horarioAtual = horarioAtual.plusMinutes(30);
+        }
+
+        return horariosDisponiveis;
+    }
 
 
 }

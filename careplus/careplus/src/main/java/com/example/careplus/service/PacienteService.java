@@ -1,10 +1,13 @@
 package com.example.careplus.service;
 
+import com.example.careplus.controller.dtoFuncionario.FuncionarioMapper;
+import com.example.careplus.controller.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.controller.dtoPaciente.PacienteRequestDto;
 import com.example.careplus.controller.dtoPaciente.PacienteResponseDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.exception.UserAlreadyExistsException;
+import com.example.careplus.model.Funcionario;
 import org.springframework.stereotype.Service;
 
 import com.example.careplus.exception.MissingFieldException;
@@ -102,6 +105,18 @@ public class PacienteService {
         }
         return PacienteMapper.toResponseDto(existeEmail);
     }
+
+    public List<PacienteResponseDto> buscarPorNome(String nome){
+
+        List<Paciente> pacientes = repository.findByNomeContainingIgnoreCase(nome);
+
+        if (!pacientes.isEmpty()){
+            return PacienteMapper.toResponseDto(pacientes);
+        }else{
+            throw new ResourceNotFoundException("Usuário não encontrado!");
+        }
+    }
+
 
 
 }

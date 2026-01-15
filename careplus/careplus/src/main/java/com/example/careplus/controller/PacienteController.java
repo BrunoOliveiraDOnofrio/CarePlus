@@ -1,9 +1,7 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoPaciente.PacienteMapper;
 import com.example.careplus.controller.dtoPaciente.PacienteRequestDto;
 import com.example.careplus.controller.dtoPaciente.PacienteResponseDto;
-import com.example.careplus.model.Paciente;
 import com.example.careplus.service.PacienteService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +35,8 @@ public class PacienteController {
     @GetMapping("/{id}") // OK
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<PacienteResponseDto> listarPorId(@PathVariable Long id){
-
             PacienteResponseDto paciente = service.listarPorId(id);
             return ResponseEntity.ok().body(paciente);
-
     }
 
     @PostMapping // OK
@@ -84,9 +80,14 @@ public class PacienteController {
     public ResponseEntity<List<PacienteResponseDto>> listarPorEmail(@RequestParam String email){
         List<PacienteResponseDto> paciente = service.listarPorEmail(email);
         return ResponseEntity.ok().body(paciente);
-
     }
 
+    @GetMapping("/por-nome/{nome}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<PacienteResponseDto>> buscarPorNome(@RequestParam String nome){
+        List<PacienteResponseDto> pacientes = service.buscarPorNome(nome);
+        return ResponseEntity.status(200).body(pacientes);
+    }
 
 }
 
