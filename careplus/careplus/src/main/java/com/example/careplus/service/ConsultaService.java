@@ -3,6 +3,9 @@ package com.example.careplus.service;
 import com.example.careplus.controller.dtoConsulta.ConsultaMapper;
 import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
 import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
+import com.example.careplus.controller.dtoConsultaRecorrente.ConflitoDatasDto;
+import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
+import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.ConsultaRequest;
@@ -11,8 +14,11 @@ import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.ConsultaRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import com.example.careplus.repository.PacienteRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -133,6 +139,72 @@ public class ConsultaService {
         } else {
             throw new RuntimeException("Consulta não encontrada");
         }
+    }
+
+    @Transactional
+    public ConsultaRecorrenteResponseDto criarConsultasRecorrentes(ConsultaRecorrenteRequestDto dto) {
+        ConsultaRecorrenteResponseDto response = new ConsultaRecorrenteResponseDto();
+
+        // Verifica se paciente e funcionário existem
+        Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado!"));
+
+        Funcionario funcionario = funcionarioRepository.findById(dto.getFuncionarioId())
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado!"));
+
+        // PRIMEIRA FASE: Validar TODAS as datas
+        for (LocalDate data : dto.getDatas()) {
+            LocalDateTime dataHora = LocalDateTime.of(data, dto.getHorario());
+
+            List<Consulta> consultasExistentes = consultaRepository
+                    .buscarConsultasPorFuncionarioEData(dto.getFuncionarioId(), data);
+
+            for (Consulta consulta : consultasExistentes) {
+                LocalDateTime inicioConsulta = consulta.getDataHora();
+                LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
+                LocalDateTime fimNovaConsulta = dataHora.plusHours(1);
+
+                // Verifica sobreposição de horários
+                boolean temConflito = (dataHora.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta));
+
+                if (temConflito) {
+                    ConflitoDatasDto conflito = new ConflitoDatasDto(
+                            data,
+                            dto.getHorario().toString(),
+                            String.format("Horário indisponível - Funcionário já possui consulta marcada às %s",
+                                    inicioConsulta.toLocalTime().toString())
+                    );
+                    response.getDatasComConflito().add(conflito);
+                }
+            }
+        }
+
+        // Se houver QUALQUER conflito, não cria NENHUMA consulta
+        if (!response.getDatasComConflito().isEmpty()) {
+            response.setTotalConsultasCriadas(0);
+            response.setTotalFalhas(response.getDatasComConflito().size());
+            return response;
+        }
+
+        // SEGUNDA FASE: Criar TODAS as consultas (só chega aqui se NÃO houver conflitos)
+        for (LocalDate data : dto.getDatas()) {
+            LocalDateTime dataHora = LocalDateTime.of(data, dto.getHorario());
+
+            Consulta consulta = new Consulta();
+            consulta.setPaciente(paciente);
+            consulta.setFuncionario(funcionario);
+            consulta.setDataHora(dataHora);
+            consulta.setTipo(dto.getTipo());
+            consulta.setConfirmada(false);
+
+            Consulta consultaSalva = consultaRepository.save(consulta);
+            response.getConsultasCriadas().add(ConsultaMapper.toResponseDto(consultaSalva));
+        }
+
+        response.setTotalConsultasCriadas(response.getConsultasCriadas().size());
+        response.setTotalFalhas(0);
+
+        return response;
     }
 
 }

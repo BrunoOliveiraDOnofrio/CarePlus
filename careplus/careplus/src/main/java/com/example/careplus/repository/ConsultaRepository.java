@@ -19,7 +19,7 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     @Query("SELECT c FROM Consulta c WHERE FUNCTION('DATE', c.dataHora) = CURRENT_DATE AND c.funcionario.Id = :idFuncionario")
     List<Consulta> consultasDoDia(Long idFuncionario);
 
-    @Query("SELECT c FROM Consulta c WHERE FUNCTION('DATE', c.dataHora) = :data AND c.funcionario.id = :idFuncionario ORDER BY c.dataHora")
+    @Query("SELECT c FROM Consulta c WHERE FUNCTION('DATE', c.dataHora) = :data AND c.funcionario.Id = :idFuncionario ORDER BY c.dataHora")
     List<Consulta> buscarConsultasPorFuncionarioEData(Long idFuncionario, LocalDate data);
 
 }

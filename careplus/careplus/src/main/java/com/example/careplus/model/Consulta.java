@@ -21,7 +21,7 @@ public class Consulta {
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
-    @Schema(description = "2025-10-14T01:09:31.734Z")
+    @Schema(description = "2026-01-15 10:00:00", example = "2026-01-15 10:00:00")
     private LocalDateTime dataHora;
 
     @Schema(description = "Retorno")

@@ -86,8 +86,8 @@ public class FuncionarioController {
 
     @GetMapping("/nomesPorEspecialidade/{especialidade}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<String>> listarNomesPorEspecialidade(@PathVariable String especialidade){
-        List<String> nomes = funcionarioService.nomesFuncionariosPorEspecialidade(especialidade);
+    public ResponseEntity<List<FuncionarioResponseDto>> listarNomesPorEspecialidade(@PathVariable String especialidade){
+        List<FuncionarioResponseDto> nomes = funcionarioService.nomesFuncionariosPorEspecialidade(especialidade);
         return ResponseEntity.status(200).body(nomes);
     }
 

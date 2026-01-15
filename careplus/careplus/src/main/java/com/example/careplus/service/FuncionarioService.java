@@ -191,15 +191,15 @@ public class FuncionarioService {
         return especialidades;
     }
 
-    public List<String> nomesFuncionariosPorEspecialidade(String especialidade){
+    public List<FuncionarioResponseDto> nomesFuncionariosPorEspecialidade(String especialidade){
         List<Funcionario> funcionarios = repository.findAll();
         if (funcionarios.isEmpty()){
             throw new ResourceNotFoundException("Nenhum funcionario cadastrado!");
         }
 
-        List<String> nomes = funcionarios.stream()
+        List<FuncionarioResponseDto> nomes = funcionarios.stream()
                 .filter(f -> f.getEspecialidade() != null && f.getEspecialidade().equalsIgnoreCase(especialidade))
-                .map(f ->" Dr. - " + f.getNome())
+                .map(FuncionarioMapper::toResponseDto)
                 .toList();
 
         if (nomes.isEmpty()){
@@ -236,18 +236,11 @@ public class FuncionarioService {
 
             for (Consulta consulta : consultas){
                 LocalDateTime inicioConsulta = consulta.getDataHora();
-
-                // Calcula o fim da consulta baseado no tipo
-                int duracaoMinutos = 30; // padrão para retorno e encaixe
-                if (consulta.getTipo() != null && consulta.getTipo().equalsIgnoreCase("primeira consulta")){
-                    duracaoMinutos = 60;
-                }
-
-                LocalDateTime fimConsulta = inicioConsulta.plusMinutes(duracaoMinutos);
+                LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
 
                 // Verifica se o horário atual está dentro do período da consulta
                 if ((horarioConsulta.isEqual(inicioConsulta) || horarioConsulta.isAfter(inicioConsulta))
-                    && horarioConsulta.isBefore(fimConsulta)){
+                        && horarioConsulta.isBefore(fimConsulta)){
                     ocupado = true;
                     break;
                 }
@@ -264,6 +257,7 @@ public class FuncionarioService {
 
         return horariosDisponiveis;
     }
+
 
 
 }

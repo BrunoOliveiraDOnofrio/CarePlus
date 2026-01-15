@@ -2,12 +2,11 @@ package com.example.careplus.controller;
 
 import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
 import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
+import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
+import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
 import com.example.careplus.model.Consulta;
-import com.example.careplus.model.ConsultaRequest;
 import com.example.careplus.service.ConsultaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.apache.commons.lang3.concurrent.ConcurrentUtils;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,5 +107,12 @@ public class ConsultaController {
         return ResponseEntity.status(200).body(consultaResponseDtos);
     }
 
+    @PostMapping("/recorrentes")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ConsultaRecorrenteResponseDto> criarConsultasRecorrentes(
+            @RequestBody ConsultaRecorrenteRequestDto request) {
+        ConsultaRecorrenteResponseDto response = service.criarConsultasRecorrentes(request);
+        return ResponseEntity.status(207).body(response);
+    }
 
 }
