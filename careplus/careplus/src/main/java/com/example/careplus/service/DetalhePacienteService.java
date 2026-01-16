@@ -1,10 +1,16 @@
 package com.example.careplus.service;
 
+import com.example.careplus.controller.dtoDetalhes.AtualizarFichaClinicaDTO;
+import com.example.careplus.controller.dtoDetalhes.AtualizarObservacoesComportamentaisDTO;
 import com.example.careplus.controller.dtoPaciente.DetalhePacienteDTO;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.Paciente;
+import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.Tratamento;
 import com.example.careplus.repository.ConsultaRepository;
 import com.example.careplus.repository.PacienteRepository;
+import com.example.careplus.repository.ProntuarioRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +24,7 @@ public class DetalhePacienteService {
 
     private final PacienteRepository pacienteRepository;
     private final ConsultaRepository consultaRepository;
+    private final ProntuarioRepository prontuarioRepository;
     private final ProntuarioService prontuarioService;
 
     public DetalhePacienteDTO buscarDetalhesCompletoPaciente(Long pacienteId) {
@@ -79,5 +86,39 @@ public class DetalhePacienteService {
     private Integer calcularProgresso(Paciente paciente) {
         // Implementar lógica de cálculo do progresso
         return 65; // Exemplo
+    }
+
+    @Transactional
+    public void atualizarFichaClinica(Long pacienteId, AtualizarFichaClinicaDTO dto) {
+        Paciente paciente = pacienteRepository.findById(pacienteId)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+        Prontuario prontuario = prontuarioService.buscarProntuarioPorId(pacienteId);
+
+        prontuario.setAnamnese(dto.getAnamnese());
+        prontuario.setDiagnostico(dto.getDiagnostico());
+        paciente.setConvenio(dto.getPlanoTerapeutico());
+
+        prontuarioRepository.save(prontuario);
+        pacienteRepository.save(paciente);
+    }
+
+    @Transactional
+    public void atualizarObservacoesComportamentais(Long pacienteId, AtualizarObservacoesComportamentaisDTO dto) {
+        Paciente paciente = pacienteRepository.findById(pacienteId)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+        Prontuario prontuario = prontuarioService.buscarProntuarioPorId(pacienteId);
+
+        prontuario.setResumoClinico(dto.getObservacoesComportamentais());
+
+        prontuarioRepository.save(prontuario);
+        pacienteRepository.save(paciente);
+    }
+
+    @Transactional
+    public void atualizarTratamento(Long pacienteId, Tratamento dto) {
+        Prontuario prontuario = prontuarioService.buscarProntuarioPorId(pacienteId);
+        prontuario.getTratamentos().add(dto);
+        prontuarioRepository.save(prontuario);
     }
 }

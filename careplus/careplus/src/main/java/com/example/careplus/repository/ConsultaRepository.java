@@ -33,7 +33,7 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
             @Param("fim") LocalDateTime fim
     );
 
-    List<Consulta> findByFuncionarioIdAndConfirmadaFalse(Long funcionarioId);
+    List<Consulta> findByFuncionarioIdAndConfirmadaNull(Long funcionarioId);
 
     @Query("SELECT c FROM Consulta c WHERE c.paciente.id = :pacienteId ORDER BY c.dataHora DESC")
     List<Consulta> buscarUltimaConsultaPorPaciente(@Param("pacienteId") Long pacienteId);

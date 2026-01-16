@@ -78,20 +78,17 @@ public class ConsultaController {
 
     }
 
-//    @PutMapping("/{id}")
-//    @SecurityRequirement(name = "Bearer")
-//    public ResponseEntity<ConsultaResponseDto> editarConsulta(
-//            @PathVariable Long id,
-//            @RequestBody ConsultaRequest request) {
-//
-//        ConsultaResponseDto consultaEditada = service.editarConsulta(id, request);
-//        return ResponseEntity.status(200).body(consultaEditada);
-//    }
-
     @PutMapping("/confirmar/{idConsulta}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaResponseDto> confirmarConsulta(@PathVariable Long idConsulta, @RequestBody Boolean status){
-        ConsultaResponseDto consultaResponseDto = service.confirmarConsulta(idConsulta, status);
+    public ResponseEntity<ConsultaResponseDto> confirmarConsulta(@PathVariable Long idConsulta){
+        ConsultaResponseDto consultaResponseDto = service.confirmarConsulta(idConsulta);
+        return ResponseEntity.status(200).body(consultaResponseDto);
+    }
+
+    @PutMapping("/recusar/{idConsulta}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ConsultaResponseDto> recusarConsulta(@PathVariable Long idConsulta, @RequestBody String justificativa){
+        ConsultaResponseDto consultaResponseDto = service.recusarConsulta(idConsulta, justificativa);
         return ResponseEntity.status(200).body(consultaResponseDto);
     }
 

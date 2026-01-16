@@ -115,11 +115,25 @@ public class ConsultaService {
         return ConsultaMapper.toResponseDto(salva);
     }
 
-    public ConsultaResponseDto confirmarConsulta(Long consultaId, Boolean status){
+    public ConsultaResponseDto confirmarConsulta(Long consultaId){
         Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
         if (consultaParaAtualizar.isPresent()){
             Consulta consulta = consultaParaAtualizar.get();
-            consulta.setConfirmada(status);
+            consulta.setConfirmada(true);
+
+            Consulta consultaSalva = consultaRepository.save(consulta);
+            return ConsultaMapper.toResponseDto(consultaSalva);
+        } else {
+            throw new RuntimeException("Consulta não encontrada");
+        }
+    }
+
+    public ConsultaResponseDto recusarConsulta(Long consultaId, String justificativa){
+        Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
+        if (consultaParaAtualizar.isPresent()){
+            Consulta consulta = consultaParaAtualizar.get();
+            consulta.setObservacoesComportamentais(justificativa);
+            consulta.setConfirmada(false);
 
             Consulta consultaSalva = consultaRepository.save(consulta);
             return ConsultaMapper.toResponseDto(consultaSalva);
@@ -209,7 +223,7 @@ public class ConsultaService {
     }
 
     public List<ConsultaResponseDto> listarAgendaSemanal(Long funcionarioId, LocalDate dataReferencia) {
-        // Encontra a segunda-feira da semana da data de referência
+        // acha a segunda-feira da semana da data de referência
         LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
         LocalDate fimDaSemana = inicioDaSemana.plusDays(6);
 
@@ -230,7 +244,7 @@ public class ConsultaService {
     }
 
     public List<ConsultaResponseDto> listarConsultasPendentes(Long idFuncionario) {
-        List<Consulta> consultas = consultaRepository.findByFuncionarioIdAndConfirmadaFalse(idFuncionario);
+        List<Consulta> consultas = consultaRepository.findByFuncionarioIdAndConfirmadaNull(idFuncionario);
         return ConsultaMapper.toResponseDto(consultas);
     }
 
