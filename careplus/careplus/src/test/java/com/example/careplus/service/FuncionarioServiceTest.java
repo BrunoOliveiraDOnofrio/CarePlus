@@ -1,11 +1,9 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoFuncionario.FuncionarioMapper;
-import com.example.careplus.controller.dtoFuncionario.FuncionarioResponseDto;
-import com.example.careplus.controller.dtoFuncionario.FuncionarioResquestDto;
+import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
+import com.example.careplus.dto.dtoFuncionario.FuncionarioResquestDto;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.repository.FuncionarioRepository;
-import jakarta.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class FuncionarioServiceTest {
 

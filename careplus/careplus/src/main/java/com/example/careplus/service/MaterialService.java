@@ -1,6 +1,8 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoMaterial.*;
+import com.example.careplus.dto.dtoMaterial.MaterialMapper;
+import com.example.careplus.dto.dtoMaterial.MaterialRequestDto;
+import com.example.careplus.dto.dtoMaterial.MaterialResponseDto;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.Material;
 
@@ -24,16 +26,22 @@ public class MaterialService {
         this.consultaRepository = consultaRepository;
     }
 
-    public MaterialResponseDto cadastrar(MaterialRequestDto dto) {
-        Material material = MaterialMapper.toEntity(dto);
-
-        Optional<Consulta> existe = consultaRepository.findById(dto.getIdConsulta());
-
+    public List<MaterialResponseDto> cadastrar(List<MaterialRequestDto> dto) {
+        Optional<Consulta> existe = consultaRepository.findById(dto.getFirst().getIdConsulta());
+        List<Material> materiasParaAdicionar = MaterialMapper.toEntityList(dto);
         if(existe.isPresent()){
-            material.setConsulta(existe.get());
 
-            material = materialRepository.save(material);
-            return MaterialMapper.toResponseDto(material);
+            Consulta consulta = existe.get();
+
+            // Setar a referência da consulta em cada material
+            for (Material material : materiasParaAdicionar) {
+                material.setConsulta(consulta);
+            }
+
+            consulta.setMateriais(materiasParaAdicionar);
+
+            consultaRepository.save(consulta);
+            return MaterialMapper.toResponseDto(materiasParaAdicionar);
 
         } else {
             throw new RuntimeException("Consulta não encontrado");
@@ -55,7 +63,6 @@ public class MaterialService {
 
         existente.setItem(dto.getItem());
         existente.setTempoExposicao(dto.getTempoExposicao());
-        existente.setDataImplementacao(dto.getDataImplementacao());
 
         materialRepository.save(existente);
         return MaterialMapper.toResponseDto(existente);

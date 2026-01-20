@@ -1,6 +1,7 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoMaterial.*;
+import com.example.careplus.dto.dtoMaterial.MaterialRequestDto;
+import com.example.careplus.dto.dtoMaterial.MaterialResponseDto;
 import com.example.careplus.service.MaterialService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class MaterialController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<MaterialResponseDto> cadastrar(@RequestBody MaterialRequestDto dto) {
+    public ResponseEntity<List<MaterialResponseDto>> cadastrar(@RequestBody List<MaterialRequestDto> dto) {
         return ResponseEntity.status(201).body(materialService.cadastrar(dto));
     }
 

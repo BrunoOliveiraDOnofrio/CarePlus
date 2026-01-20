@@ -1,9 +1,8 @@
 package com.example.careplus.controller;
 
 
-import com.example.careplus.controller.dtoTratamento.TratamentoRequestDto;
+import com.example.careplus.dto.dtoTratamento.TratamentoRequestDto;
 import com.example.careplus.model.Tratamento;
-import com.example.careplus.repository.TratamentoRepository;
 import com.example.careplus.service.TratamentoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/tratamentos")

@@ -1,20 +1,18 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoCid.ClassificacaoDoencasRequestDto;
+import com.example.careplus.dto.dtoCid.ClassificacaoDoencasRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.model.Prontuario;
 import com.example.careplus.repository.ClassificacaoDoencasRepository;
 import com.example.careplus.repository.ProntuarioRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

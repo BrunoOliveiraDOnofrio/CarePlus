@@ -1,6 +1,6 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoFuncionario.*;
+import com.example.careplus.dto.dtoFuncionario.*;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.service.FuncionarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

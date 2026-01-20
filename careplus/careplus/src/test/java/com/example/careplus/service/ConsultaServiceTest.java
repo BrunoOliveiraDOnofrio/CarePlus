@@ -1,10 +1,10 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
-import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
+import com.example.careplus.dto.dtoConsulta.ConsultaRequestDto;
+import com.example.careplus.dto.dtoConsulta.ConsultaResponseDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Consulta;
-import com.example.careplus.model.ConsultaRequest;
+import com.example.careplus.dto.dtoConsulta.ConsultaRequest;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.ConsultaRepository;

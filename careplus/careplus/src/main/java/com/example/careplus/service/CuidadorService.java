@@ -1,8 +1,9 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoCuidador.CuidadorMapper;
-import com.example.careplus.controller.dtoCuidador.CuidadorRequestDto;
-import com.example.careplus.controller.dtoCuidador.CuidadorResponseDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorContatoResponseDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorMapper;
+import com.example.careplus.dto.dtoCuidador.CuidadorRequestDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorResponseDto;
 import com.example.careplus.model.Cuidador;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.model.Responsavel;
@@ -13,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -98,5 +98,13 @@ public class CuidadorService {
         return CuidadorMapper.toResponseDto(cuidadores);
     }
 
+    public List<CuidadorContatoResponseDto> buscarContato(Long idPaciente){
+        List<Cuidador> cuidadores = cuidadorRepository.findByPacienteId(idPaciente);
+        if (cuidadores.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        return CuidadorMapper.toContatoResponseDto(cuidadores);
+    }
 
 }

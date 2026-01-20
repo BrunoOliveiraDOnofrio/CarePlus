@@ -14,4 +14,6 @@ public interface ProntuarioRepository extends JpaRepository<Prontuario, Long> {
 
     Optional<Prontuario> findByPacienteCpf(String pacienteCpf);
 
+    Optional<Prontuario> findByPacienteId(Long pacienteId);
+
 }

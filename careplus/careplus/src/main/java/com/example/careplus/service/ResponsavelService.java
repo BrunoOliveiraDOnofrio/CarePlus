@@ -1,8 +1,7 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoResponsavel.ResponsavelMapper;
-import com.example.careplus.controller.dtoResponsavel.ResponsavelRequestDto;
-import com.example.careplus.controller.dtoResponsavel.ResponsavelResponseDto;
+import com.example.careplus.dto.dtoResponsavel.ResponsavelMapper;
+import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.repository.ResponsavelRepository;

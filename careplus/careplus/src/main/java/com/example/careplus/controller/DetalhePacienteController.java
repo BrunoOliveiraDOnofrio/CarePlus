@@ -1,10 +1,8 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoDetalhes.AtualizarFichaClinicaDTO;
-import com.example.careplus.controller.dtoDetalhes.AtualizarObservacoesComportamentaisDTO;
-import com.example.careplus.controller.dtoDetalhes.AtualizarObservacoesConsultaDTO;
-import com.example.careplus.controller.dtoDetalhes.AtualizarTratamentoDTO;
-import com.example.careplus.controller.dtoPaciente.DetalhePacienteDTO;
+import com.example.careplus.dto.dtoDetalhes.AtualizarFichaClinicaDTO;
+import com.example.careplus.dto.dtoDetalhes.AtualizarObservacoesComportamentaisDTO;
+import com.example.careplus.dto.dtoPaciente.DetalhePacienteDTO;
 import com.example.careplus.model.Tratamento;
 import com.example.careplus.service.DetalhePacienteService;
 import lombok.RequiredArgsConstructor;

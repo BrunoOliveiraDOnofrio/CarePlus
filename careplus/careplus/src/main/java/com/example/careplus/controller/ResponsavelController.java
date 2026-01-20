@@ -1,8 +1,6 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoResponsavel.ResponsavelMapper;
-import com.example.careplus.controller.dtoResponsavel.ResponsavelRequestDto;
-import com.example.careplus.controller.dtoResponsavel.ResponsavelResponseDto;
+import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.service.ResponsavelService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

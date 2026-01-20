@@ -16,6 +16,10 @@ public class Responsavel {
     private LocalDate dtNascimento;
     private String cpf;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_endereco", referencedColumnName = "id")
+    private Endereco endereco;
+
     public Long getId() {
         return id;
     }
@@ -64,5 +68,12 @@ public class Responsavel {
         this.cpf = cpf;
     }
 
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
 
 }

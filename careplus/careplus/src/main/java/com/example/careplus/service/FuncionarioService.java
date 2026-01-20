@@ -1,12 +1,13 @@
 package com.example.careplus.service;
 
 import com.example.careplus.config.GerenciadorTokenJwt;
-import com.example.careplus.controller.dtoFuncionario.*;
-import com.example.careplus.controller.dtoPaciente.PacienteMapper;
+import com.example.careplus.dto.dtoFuncionario.FuncionarioMapper;
+import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
+import com.example.careplus.dto.dtoFuncionario.FuncionarioResquestDto;
+import com.example.careplus.dto.dtoFuncionario.FuncionarioTokenDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.model.Funcionario;
-import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.ConsultaRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

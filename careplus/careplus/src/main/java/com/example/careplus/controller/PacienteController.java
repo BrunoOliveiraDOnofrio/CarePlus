@@ -1,7 +1,7 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoPaciente.PacienteRequestDto;
-import com.example.careplus.controller.dtoPaciente.PacienteResponseDto;
+import com.example.careplus.dto.dtoPaciente.PacienteRequestDto;
+import com.example.careplus.dto.dtoPaciente.PacienteResponseDto;
 import com.example.careplus.service.PacienteService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;

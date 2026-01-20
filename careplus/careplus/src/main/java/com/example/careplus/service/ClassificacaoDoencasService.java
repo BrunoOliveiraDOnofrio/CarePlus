@@ -1,10 +1,9 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoCid.ClassificacaoDoencasRequestDto;
+import com.example.careplus.dto.dtoCid.ClassificacaoDoencasRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.model.Prontuario;
 import com.example.careplus.repository.ClassificacaoDoencasRepository;
-import com.example.careplus.repository.PacienteRepository;
 import com.example.careplus.repository.ProntuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;

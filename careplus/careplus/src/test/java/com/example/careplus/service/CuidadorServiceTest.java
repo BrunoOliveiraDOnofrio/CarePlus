@@ -1,14 +1,12 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoCuidador.CuidadorMapper;
-import com.example.careplus.controller.dtoCuidador.CuidadorRequestDto;
-import com.example.careplus.controller.dtoCuidador.CuidadorResponseDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorMapper;
+import com.example.careplus.dto.dtoCuidador.CuidadorRequestDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorResponseDto;
 import com.example.careplus.model.Cuidador;
 import com.example.careplus.model.Paciente;
-import com.example.careplus.model.Prontuario;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.repository.CuidadorRepository;
-import com.example.careplus.repository.FuncionarioRepository;
 import com.example.careplus.repository.PacienteRepository;
 import com.example.careplus.repository.ResponsavelRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

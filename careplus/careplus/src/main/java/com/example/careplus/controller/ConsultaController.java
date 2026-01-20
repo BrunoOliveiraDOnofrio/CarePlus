@@ -1,9 +1,8 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
-import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
-import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
-import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
+import com.example.careplus.dto.dtoConsulta.*;
+import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
+import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
 import com.example.careplus.model.Consulta;
 import com.example.careplus.service.ConsultaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -92,9 +91,9 @@ public class ConsultaController {
         return ResponseEntity.status(200).body(consultaResponseDto);
     }
 
-    @PutMapping("/observacoes/{idConsulta}")
+    @PutMapping("/realizarObservacoes/{idConsulta}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaResponseDto> editarObervacoes(@PathVariable Long idConsulta, @RequestBody String obs){
+    public ResponseEntity<ConsultaResponseDto> editarObervacoes(@PathVariable Long idConsulta, @RequestBody RealizarConsultaDto obs){
         ConsultaResponseDto consultaResponseDto = service.salvarObservacoes(idConsulta, obs);
         return ResponseEntity.status(200).body(consultaResponseDto);
     }
@@ -133,6 +132,27 @@ public class ConsultaController {
         }
 
         return ResponseEntity.status(200).body(consultasPendentes);
+    }
+
+    @GetMapping("/proxima/{idPaciente}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ProximaConsultaResponseDto> buscarProximaConsultaConfirmada(@PathVariable Long idPaciente) {
+        ProximaConsultaResponseDto proximaConsulta = service.buscarProximaConsultaConfirmada(idPaciente);
+        return ResponseEntity.ok(proximaConsulta);
+    }
+
+    @GetMapping("/detalhes/{idConsulta}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ConsultaAtualResponseDto> buscarDetalhesConsultaAtual(@PathVariable Long idConsulta) {
+        ConsultaAtualResponseDto detalhes = service.buscarDetalhesConsultaAtual(idConsulta);
+        return ResponseEntity.ok(detalhes);
+    }
+
+    @GetMapping("/detalhes-anterior/{idConsulta}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<DetalhesConsultaAnteriorResponseDto> buscarDetalhesConsultaAnterior(@PathVariable Long idConsulta) {
+        DetalhesConsultaAnteriorResponseDto detalhes = service.buscarDetalhesConsultaAnterior(idConsulta);
+        return ResponseEntity.ok(detalhes);
     }
 
 }

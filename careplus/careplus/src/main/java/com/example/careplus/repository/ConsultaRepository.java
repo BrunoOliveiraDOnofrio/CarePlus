@@ -38,6 +38,12 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     @Query("SELECT c FROM Consulta c WHERE c.paciente.id = :pacienteId ORDER BY c.dataHora DESC")
     List<Consulta> buscarUltimaConsultaPorPaciente(@Param("pacienteId") Long pacienteId);
 
+    @Query("SELECT c FROM Consulta c WHERE c.paciente.id = :pacienteId AND c.dataHora < CURRENT_TIMESTAMP ORDER BY c.dataHora DESC")
+    List<Consulta> buscarUltimaConsultaPassadaPorPaciente(@Param("pacienteId") Long pacienteId);
+
     @Query("SELECT c FROM Consulta c WHERE c.paciente.id = :pacienteId AND c.dataHora > CURRENT_TIMESTAMP ORDER BY c.dataHora ASC")
     List<Consulta> buscarProximaConsultaPorPaciente(@Param("pacienteId") Long pacienteId);
+
+    @Query("SELECT c FROM Consulta c WHERE c.paciente.id = :pacienteId AND c.dataHora > CURRENT_TIMESTAMP AND c.confirmada = true ORDER BY c.dataHora ASC")
+    List<Consulta> buscarProximaConsultaConfirmadaPorPaciente(@Param("pacienteId") Long pacienteId);
 }

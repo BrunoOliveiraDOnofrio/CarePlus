@@ -1,6 +1,6 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoMedicacao.MedicacaoRequestDto;
+import com.example.careplus.dto.dtoMedicacao.MedicacaoRequestDto;
 import com.example.careplus.model.Medicacao;
 import com.example.careplus.model.Prontuario;
 import com.example.careplus.repository.MedicacaoRepository;

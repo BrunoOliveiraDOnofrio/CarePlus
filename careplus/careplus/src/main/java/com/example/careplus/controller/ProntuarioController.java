@@ -1,16 +1,13 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoProntuario.ProntuarioRequestDto;
-import com.example.careplus.model.ClassificacaoDoencas;
+import com.example.careplus.dto.dtoProntuario.ProntuarioRequestDto;
 import com.example.careplus.model.Prontuario;
 import com.example.careplus.service.ProntuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/prontuarios")

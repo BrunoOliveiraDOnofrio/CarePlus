@@ -1,6 +1,6 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoMedicacao.MedicacaoRequestDto;
+import com.example.careplus.dto.dtoMedicacao.MedicacaoRequestDto;
 import com.example.careplus.model.Medicacao;
 import com.example.careplus.service.MedicacaoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

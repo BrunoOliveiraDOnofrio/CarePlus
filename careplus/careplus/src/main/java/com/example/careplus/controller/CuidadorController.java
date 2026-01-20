@@ -1,7 +1,8 @@
 package com.example.careplus.controller;
 
-import com.example.careplus.controller.dtoCuidador.CuidadorRequestDto;
-import com.example.careplus.controller.dtoCuidador.CuidadorResponseDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorContatoResponseDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorRequestDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorResponseDto;
 import com.example.careplus.model.Cuidador;
 import com.example.careplus.service.CuidadorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -76,6 +77,17 @@ public class CuidadorController {
             cuidadorService.deletar(id);
             return ResponseEntity.status(204).build();
         } catch (Exception e){
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @GetMapping("contato/{idPaciente}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<CuidadorContatoResponseDto>> contatosPorPaciente(@PathVariable Long idPaciente){
+        try {
+            List<CuidadorContatoResponseDto> cuidadorContatoResponseDto = cuidadorService.buscarContato(idPaciente);
+            return ResponseEntity.status(200).body(cuidadorContatoResponseDto);
+        } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
     }

@@ -1,19 +1,24 @@
 package com.example.careplus.service;
 
-import com.example.careplus.controller.dtoConsulta.ConsultaMapper;
-import com.example.careplus.controller.dtoConsulta.ConsultaRequestDto;
-import com.example.careplus.controller.dtoConsulta.ConsultaResponseDto;
-import com.example.careplus.controller.dtoConsultaRecorrente.ConflitoDatasDto;
-import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
-import com.example.careplus.controller.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
+import com.example.careplus.dto.dtoConsulta.*;
+import com.example.careplus.dto.dtoConsultaRecorrente.ConflitoDatasDto;
+import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
+import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Consulta;
-import com.example.careplus.model.ConsultaRequest;
+import com.example.careplus.model.ClassificacaoDoencas;
+import com.example.careplus.model.Cuidador;
 import com.example.careplus.model.Funcionario;
+import com.example.careplus.model.Material;
+import com.example.careplus.model.Medicacao;
 import com.example.careplus.model.Paciente;
+import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.Tratamento;
 import com.example.careplus.repository.ConsultaRepository;
+import com.example.careplus.repository.CuidadorRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import com.example.careplus.repository.PacienteRepository;
+import com.example.careplus.repository.ProntuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +26,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ConsultaService {
@@ -30,12 +34,16 @@ public class ConsultaService {
     private final PacienteRepository pacienteRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final EmailService emailService;
+    private final ProntuarioRepository prontuarioRepository;
+    private final CuidadorRepository cuidadorRepository;
 
-    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService) {
+    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, ProntuarioRepository prontuarioRepository, CuidadorRepository cuidadorRepository) {
         this.consultaRepository = consultaRepository;
         this.pacienteRepository = pacienteRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.emailService = emailService;
+        this.prontuarioRepository = prontuarioRepository;
+        this.cuidadorRepository = cuidadorRepository;
     }
 
     //montando a Consulta a partir do ConsultaRequest
@@ -142,11 +150,11 @@ public class ConsultaService {
         }
     }
 
-    public ConsultaResponseDto salvarObservacoes(Long consultaId, String observacoes){
+    public ConsultaResponseDto salvarObservacoes(Long consultaId, RealizarConsultaDto info){
         Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
         if (consultaParaAtualizar.isPresent()){
             Consulta consulta = consultaParaAtualizar.get();
-            consulta.setObservacoesComportamentais(observacoes);
+            consulta.setObservacoesComportamentais(info.getObservacao());
             consulta.setPresenca(true);
 
             Consulta consultaSalva = consultaRepository.save(consulta);
@@ -246,6 +254,185 @@ public class ConsultaService {
     public List<ConsultaResponseDto> listarConsultasPendentes(Long idFuncionario) {
         List<Consulta> consultas = consultaRepository.findByFuncionarioIdAndConfirmadaNull(idFuncionario);
         return ConsultaMapper.toResponseDto(consultas);
+    }
+
+    public ProximaConsultaResponseDto buscarProximaConsultaConfirmada(Long pacienteId) {
+        List<Consulta> consultas = consultaRepository.buscarProximaConsultaConfirmadaPorPaciente(pacienteId);
+
+        if (consultas.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhuma consulta confirmada encontrada para este paciente!");
+        }
+
+        Consulta proximaConsulta = consultas.get(0);
+
+        // Buscar o tratamento ativo do paciente (se existir)
+        String tratamento = null;
+        Prontuario prontuario = prontuarioRepository.findByPacienteId(pacienteId).orElse(null);
+        if (prontuario != null && prontuario.getTratamentos() != null) {
+            tratamento = prontuario.getTratamentos().stream()
+                    .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
+                    .map(Tratamento::getTipoDeTratamento)
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        return new ProximaConsultaResponseDto(
+                proximaConsulta.getId(),
+                proximaConsulta.getDataHora().toLocalDate(),
+                proximaConsulta.getDataHora().toLocalTime(),
+                proximaConsulta.getDataHora().toLocalTime().plusHours(1),
+                proximaConsulta.getTipo(),
+                proximaConsulta.getFuncionario().getNome(),
+                tratamento
+        );
+    }
+
+    public ConsultaAtualResponseDto buscarDetalhesConsultaAtual(Long consultaId) {
+        Consulta consulta = consultaRepository.findById(consultaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada!"));
+
+        Paciente paciente = consulta.getPaciente();
+        Funcionario funcionario = consulta.getFuncionario();
+
+        // Buscar prontuário do paciente
+        Prontuario prontuario = prontuarioRepository.findByPacienteId(paciente.getId()).orElse(null);
+
+        ConsultaAtualResponseDto response = new ConsultaAtualResponseDto();
+
+        // Dados da consulta atual
+        response.setConsultaId(consulta.getId());
+        response.setData(consulta.getDataHora().toLocalDate());
+        response.setHorarioInicio(consulta.getDataHora().toLocalTime());
+        response.setHorarioFim(consulta.getDataHora().toLocalTime().plusHours(1));
+        response.setTipo(consulta.getTipo());
+        response.setEspecialidade(funcionario.getEspecialidade());
+        response.setNomeProfissional(funcionario.getNome());
+
+        // Tratamento atual (do prontuário)
+        if (prontuario != null && prontuario.getTratamentos() != null) {
+            String tratamentoAtual = prontuario.getTratamentos().stream()
+                    .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
+                    .map(Tratamento::getTipoDeTratamento)
+                    .findFirst()
+                    .orElse(null);
+            response.setTratamentoAtual(tratamentoAtual);
+        }
+
+        // Dados do paciente
+        ConsultaAtualResponseDto.DadosPaciente dadosPaciente = new ConsultaAtualResponseDto.DadosPaciente();
+        dadosPaciente.setPacienteId(paciente.getId());
+        dadosPaciente.setNome(paciente.getNome());
+
+        // Buscar contato do 1º cuidador legal (responsável)
+        List<Cuidador> cuidadores = cuidadorRepository.findByPacienteId(paciente.getId());
+        if (!cuidadores.isEmpty() && cuidadores.get(0).getResponsavel() != null) {
+            dadosPaciente.setContato(cuidadores.get(0).getResponsavel().getTelefone());
+        }
+
+        // Calcular idade
+        if (paciente.getDtNascimento() != null) {
+            int idade = java.time.Period.between(paciente.getDtNascimento(), java.time.LocalDate.now()).getYears();
+            dadosPaciente.setIdade(idade);
+        }
+
+        // Dados do prontuário
+        if (prontuario != null) {
+            dadosPaciente.setDesfraldado(prontuario.getDesfraldado());
+            dadosPaciente.setHiperfocoAtual(prontuario.getHiperfoco());
+            dadosPaciente.setDiagnostico(prontuario.getDiagnostico());
+
+            // CID (pegar o primeiro ou concatenar)
+            if (prontuario.getCid() != null && !prontuario.getCid().isEmpty()) {
+                String cids = prontuario.getCid().stream()
+                        .map(ClassificacaoDoencas::getCid)
+                        .reduce((a, b) -> a + ", " + b)
+                        .orElse(null);
+                dadosPaciente.setCid(cids);
+            }
+
+            // Medicações ativas
+            if (prontuario.getMedicacoes() != null && !prontuario.getMedicacoes().isEmpty()) {
+                String medicacoes = prontuario.getMedicacoes().stream()
+                        .filter(Medicacao::getAtivo)
+                        .map(Medicacao::getNomeMedicacao)
+                        .reduce((a, b) -> a + ", " + b)
+                        .orElse(null);
+                dadosPaciente.setMedicacoes(medicacoes);
+            }
+
+            // Atendimento especial baseado no nível de agressividade
+            if (prontuario.getNivelAgressividade() != null && prontuario.getNivelAgressividade() > 0) {
+                dadosPaciente.setAtendimentoEspecial("Lesivo");
+            }
+        }
+
+        response.setDadosPaciente(dadosPaciente);
+
+        // Última consulta passada do paciente
+        List<Consulta> ultimasConsultas = consultaRepository.buscarUltimaConsultaPassadaPorPaciente(paciente.getId());
+        if (!ultimasConsultas.isEmpty()) {
+            Consulta ultimaConsultaEntity = ultimasConsultas.get(0);
+            ConsultaAtualResponseDto.UltimaConsulta ultimaConsulta = new ConsultaAtualResponseDto.UltimaConsulta();
+            ultimaConsulta.setConsultaId(ultimaConsultaEntity.getId());
+            ultimaConsulta.setData(ultimaConsultaEntity.getDataHora().toLocalDate());
+
+            // Tratamento da última consulta (mesmo do prontuário por enquanto)
+            if (prontuario != null && prontuario.getTratamentos() != null) {
+                String tratamentoUltima = prontuario.getTratamentos().stream()
+                        .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
+                        .map(Tratamento::getTipoDeTratamento)
+                        .findFirst()
+                        .orElse(null);
+                ultimaConsulta.setTratamento(tratamentoUltima);
+            }
+
+            response.setUltimaConsulta(ultimaConsulta);
+        }
+
+        return response;
+    }
+
+    public DetalhesConsultaAnteriorResponseDto buscarDetalhesConsultaAnterior(Long consultaId) {
+        Consulta consulta = consultaRepository.findById(consultaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada!"));
+
+        Paciente paciente = consulta.getPaciente();
+        Funcionario funcionario = consulta.getFuncionario();
+
+        // Buscar prontuário do paciente para pegar o tratamento
+        Prontuario prontuario = prontuarioRepository.findByPacienteId(paciente.getId()).orElse(null);
+
+        DetalhesConsultaAnteriorResponseDto response = new DetalhesConsultaAnteriorResponseDto();
+
+        // Dados da consulta
+        response.setConsultaId(consulta.getId());
+        response.setData(consulta.getDataHora().toLocalDate());
+        response.setHorarioInicio(consulta.getDataHora().toLocalTime());
+        response.setHorarioFim(consulta.getDataHora().toLocalTime().plusHours(1));
+        response.setEspecialidade(funcionario.getEspecialidade());
+        response.setNomeProfissional(funcionario.getNome());
+        response.setTipo(consulta.getTipo());
+        response.setObservacoesComportamentais(consulta.getObservacoesComportamentais());
+
+        // Tratamento atual (do prontuário)
+        if (prontuario != null && prontuario.getTratamentos() != null) {
+            String tratamentoAtual = prontuario.getTratamentos().stream()
+                    .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
+                    .map(Tratamento::getTipoDeTratamento)
+                    .findFirst()
+                    .orElse(null);
+            response.setTratamentoAtual(tratamentoAtual);
+        }
+
+        // Materiais utilizados na consulta
+        if (consulta.getMateriais() != null && !consulta.getMateriais().isEmpty()) {
+            List<String> materiais = consulta.getMateriais().stream()
+                    .map(Material::getItem)
+                    .toList();
+            response.setMateriaisUtilizados(materiais);
+        }
+
+        return response;
     }
 
 }
