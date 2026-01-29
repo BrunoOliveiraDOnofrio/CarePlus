@@ -32,9 +32,6 @@ public class Paciente {
     @Schema(description = "2025-11-25")
     private LocalDate dataInicio;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_endereco", referencedColumnName = "id")
-    private Endereco endereco;
 
     public Paciente() {
     }
@@ -101,13 +98,5 @@ public class Paciente {
 
     public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
     }
 }

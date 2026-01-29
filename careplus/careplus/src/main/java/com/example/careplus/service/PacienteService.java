@@ -1,6 +1,5 @@
 package com.example.careplus.service;
 
-import com.example.careplus.dto.dtoEndereco.EnderecoMapper;
 import com.example.careplus.dto.dtoPaciente.PacienteMapper;
 import com.example.careplus.dto.dtoPaciente.PacienteRequestDto;
 import com.example.careplus.dto.dtoPaciente.PacienteResponseDto;
@@ -87,22 +86,6 @@ public class PacienteService {
             pacienteExistente.setTelefone(paciente.getTelefone());
             pacienteExistente.setConvenio(paciente.getConvenio());
 
-            // Atualizar endereco se presente
-            if (paciente.getEndereco() != null) {
-                if (pacienteExistente.getEndereco() != null) {
-                    // Atualizar endereco existente
-                    pacienteExistente.getEndereco().setCep(paciente.getEndereco().getCep());
-                    pacienteExistente.getEndereco().setLogradouro(paciente.getEndereco().getLogradouro());
-                    pacienteExistente.getEndereco().setNumero(paciente.getEndereco().getNumero());
-                    pacienteExistente.getEndereco().setComplemento(paciente.getEndereco().getComplemento());
-                    pacienteExistente.getEndereco().setBairro(paciente.getEndereco().getBairro());
-                    pacienteExistente.getEndereco().setCidade(paciente.getEndereco().getCidade());
-                    pacienteExistente.getEndereco().setEstado(paciente.getEndereco().getEstado());
-                } else {
-                    // Criar novo endereco
-                    pacienteExistente.setEndereco(EnderecoMapper.toEntity(paciente.getEndereco()));
-                }
-            }
 
             Paciente atualizado = repository.save(pacienteExistente);
             return PacienteMapper.toResponseDto(atualizado);

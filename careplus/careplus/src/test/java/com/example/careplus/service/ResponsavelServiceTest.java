@@ -3,7 +3,9 @@ package com.example.careplus.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+import com.example.careplus.dto.dtoEndereco.EnderecoRequestDto;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
+import com.example.careplus.model.Endereco;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.repository.*;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +30,9 @@ class ResponsavelServiceTest {
     @Mock
     private ResponsavelRepository repository;
 
+    @Mock
+    private EnderecoRepository enderecoRepository;
+
     @InjectMocks
     private ResponsavelService service;
 
@@ -40,6 +45,7 @@ class ResponsavelServiceTest {
         when(dto.getNome()).thenReturn("nomerson");
         when(dto.getTelefone()).thenReturn("11980897665");
         when(dto.getDtNascimento()).thenReturn(LocalDate.of(1999, 1, 1));
+        when(dto.getEndereco()).thenReturn(null);
 
         when(repository.existsByEmail(anyString())).thenReturn(false);
         when(repository.existsByCpf(anyString())).thenReturn(false);
@@ -53,6 +59,46 @@ class ResponsavelServiceTest {
 
         assertNotNull(recebido);
         assertEquals(1L, recebido.getId());
+        verify(enderecoRepository, never()).save(any(Endereco.class));
+    }
+
+    @Test
+    @DisplayName("Cadastrar Responsavel com Endereço - deve salvar endereço primeiro")
+    void deveCriarResponsavelComEndereco(){
+        EnderecoRequestDto enderecoDto = Mockito.mock(EnderecoRequestDto.class);
+        when(enderecoDto.getCep()).thenReturn("01310-100");
+        when(enderecoDto.getLogradouro()).thenReturn("Avenida Paulista");
+        when(enderecoDto.getNumero()).thenReturn("1000");
+        when(enderecoDto.getCidade()).thenReturn("São Paulo");
+        when(enderecoDto.getEstado()).thenReturn("SP");
+
+        ResponsavelRequestDto dto = Mockito.mock(ResponsavelRequestDto.class);
+        when(dto.getCpf()).thenReturn("12345678900");
+        when(dto.getEmail()).thenReturn("email@email.com");
+        when(dto.getNome()).thenReturn("nomerson");
+        when(dto.getTelefone()).thenReturn("11980897665");
+        when(dto.getDtNascimento()).thenReturn(LocalDate.of(1999, 1, 1));
+        when(dto.getEndereco()).thenReturn(enderecoDto);
+
+        when(repository.existsByEmail(anyString())).thenReturn(false);
+        when(repository.existsByCpf(anyString())).thenReturn(false);
+
+        Endereco enderecoSalvo = new Endereco();
+        enderecoSalvo.setId(10);
+        when(enderecoRepository.save(any(Endereco.class))).thenReturn(enderecoSalvo);
+
+        Responsavel salvo = new Responsavel();
+        salvo.setId(1L);
+        when(repository.save(any(Responsavel.class))).thenReturn(salvo);
+
+        Responsavel recebido = service.cadastrar(dto);
+
+        assertNotNull(recebido);
+        assertEquals(1L, recebido.getId());
+
+        // Verificar que o endereço foi salvo antes do responsável
+        verify(enderecoRepository, times(1)).save(any(Endereco.class));
+        verify(repository, times(1)).save(any(Responsavel.class));
     }
 
     @Test
@@ -131,6 +177,7 @@ class ResponsavelServiceTest {
         when(dto.getEmail()).thenReturn("email@email.com");
         when(dto.getNome()).thenReturn("nomerson");
         when(dto.getTelefone()).thenReturn("11980897665");
+        when(dto.getEndereco()).thenReturn(null);
 
         when(repository.save(any(Responsavel.class))).thenAnswer(i -> i.getArgument(0));
 
@@ -138,6 +185,40 @@ class ResponsavelServiceTest {
 
         assertNotNull(atualizado);
         assertEquals("nomerson", atualizado.getNome());
+    }
+
+    @Test
+    @DisplayName("deve atualizar Responsavel com Endereço existente")
+    void atualizarResponsavelComEnderecoExistente(){
+        Endereco enderecoExistente = new Endereco();
+        enderecoExistente.setId(5);
+
+        Responsavel existe = new Responsavel();
+        existe.setId(1L);
+        existe.setEndereco(enderecoExistente);
+        when(repository.findById(1L)).thenReturn(Optional.of(existe));
+
+        EnderecoRequestDto enderecoDto = Mockito.mock(EnderecoRequestDto.class);
+        when(enderecoDto.getCep()).thenReturn("01310-100");
+        when(enderecoDto.getLogradouro()).thenReturn("Avenida Paulista");
+
+        ResponsavelRequestDto dto = Mockito.mock(ResponsavelRequestDto.class);
+        when(dto.getCpf()).thenReturn("12345678900");
+        when(dto.getEmail()).thenReturn("email@email.com");
+        when(dto.getNome()).thenReturn("nomerson");
+        when(dto.getTelefone()).thenReturn("11980897665");
+        when(dto.getEndereco()).thenReturn(enderecoDto);
+
+        Endereco enderecoAtualizado = new Endereco();
+        enderecoAtualizado.setId(5);
+        when(enderecoRepository.save(any(Endereco.class))).thenReturn(enderecoAtualizado);
+        when(repository.save(any(Responsavel.class))).thenAnswer(i -> i.getArgument(0));
+
+        Responsavel atualizado = service.atualizar(1L, dto);
+
+        assertNotNull(atualizado);
+        assertEquals("nomerson", atualizado.getNome());
+        verify(enderecoRepository, times(1)).save(any(Endereco.class));
     }
 
     @Test

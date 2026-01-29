@@ -1,9 +1,12 @@
 package com.example.careplus.service;
 
+import com.example.careplus.dto.dtoEndereco.EnderecoMapper;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelMapper;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.exception.ResourceNotFoundException;
+import com.example.careplus.model.Endereco;
 import com.example.careplus.model.Responsavel;
+import com.example.careplus.repository.EnderecoRepository;
 import com.example.careplus.repository.ResponsavelRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,9 +19,11 @@ import java.util.Optional;
 public class ResponsavelService {
 
     private final ResponsavelRepository responsavelRepository;
+    private final EnderecoRepository enderecoRepository;
 
-    public ResponsavelService(ResponsavelRepository responsavelRepository){
+    public ResponsavelService(ResponsavelRepository responsavelRepository, EnderecoRepository enderecoRepository){
         this.responsavelRepository = responsavelRepository;
+        this.enderecoRepository = enderecoRepository;
     }
     // CRUD SIMPLES
     public Responsavel cadastrar(ResponsavelRequestDto responsavelNew){
@@ -26,6 +31,14 @@ public class ResponsavelService {
         if(responsavelRepository.existsByEmail(paraRegistrar.getEmail()) || responsavelRepository.existsByCpf(paraRegistrar.getCpf())){
             throw new IllegalArgumentException();
         }
+
+        // Salvar o endereço primeiro, se presente
+        if (responsavelNew.getEndereco() != null) {
+            Endereco endereco = EnderecoMapper.toEntity(responsavelNew.getEndereco());
+            Endereco enderecoSalvo = enderecoRepository.save(endereco);
+            paraRegistrar.setEndereco(enderecoSalvo);
+        }
+
         Responsavel responsavelRegistrado = responsavelRepository.save(paraRegistrar);
         return responsavelRegistrado;
     }
@@ -51,8 +64,18 @@ public class ResponsavelService {
             throw new IllegalArgumentException();
         }
 
-
         Responsavel selecionado = selecionar.get();
+
+        // Salvar ou atualizar o endereço primeiro, se presente
+        if (responsavelAtt.getEndereco() != null) {
+            Endereco endereco = EnderecoMapper.toEntity(responsavelAtt.getEndereco());
+            if (selecionado.getEndereco() != null) {
+                // Se já existe endereço, atualiza mantendo o ID
+                endereco.setId(selecionado.getEndereco().getId());
+            }
+            Endereco enderecoSalvo = enderecoRepository.save(endereco);
+            selecionado.setEndereco(enderecoSalvo);
+        }
 
         responsavelRepository.save(ResponsavelMapper.updateEntityFromDto(responsavelAtt , selecionado));
 

@@ -1,5 +1,4 @@
 package com.example.careplus.dto.dtoPaciente;
-import com.example.careplus.dto.dtoEndereco.EnderecoResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 public class PacienteResponseDto {
@@ -18,11 +17,9 @@ public class PacienteResponseDto {
     private String convenio;
     @Schema(description = "2025-11-25")
     private LocalDate dataInicio;
-    @Schema(description = "Endereco do paciente")
-    private EnderecoResponseDto endereco;
     public PacienteResponseDto() {
     }
-    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio, LocalDate dataInicio, EnderecoResponseDto endereco) {
+    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio, LocalDate dataInicio) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -31,7 +28,6 @@ public class PacienteResponseDto {
         this.dtNascimento = dtNascimento;
         this.convenio = convenio;
         this.dataInicio = dataInicio;
-        this.endereco = endereco;
     }
     public Long getId() {
         return id;
@@ -80,11 +76,5 @@ public class PacienteResponseDto {
     }
     public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
-    }
-    public EnderecoResponseDto getEndereco() {
-        return endereco;
-    }
-    public void setEndereco(EnderecoResponseDto endereco) {
-        this.endereco = endereco;
     }
 }

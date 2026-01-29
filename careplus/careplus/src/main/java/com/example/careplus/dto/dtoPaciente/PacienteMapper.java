@@ -1,6 +1,5 @@
 package com.example.careplus.dto.dtoPaciente;
 
-import com.example.careplus.dto.dtoEndereco.EnderecoMapper;
 import com.example.careplus.model.Paciente;
 
 import java.time.LocalDate;
@@ -22,10 +21,6 @@ public class PacienteMapper {
         entity.setConvenio(dto.getConvenio());
         entity.setDataInicio(LocalDate.now()); // define data de início automaticamente
 
-        // Mapear endereco se presente
-        if (dto.getEndereco() != null) {
-            entity.setEndereco(EnderecoMapper.toEntity(dto.getEndereco()));
-        }
 
         return entity;
     }
@@ -44,10 +39,6 @@ public class PacienteMapper {
         entity.setConvenio(dto.getConvenio());
         entity.setDataInicio(dto.getDataInicio());
 
-        // Mapear endereco se presente
-        if (dto.getEndereco() != null) {
-            entity.setEndereco(EnderecoMapper.toEntity(dto.getEndereco()));
-        }
 
         return entity;
     }
@@ -65,8 +56,7 @@ public class PacienteMapper {
             entity.getTelefone(),
             entity.getDtNascimento(),
             entity.getConvenio(),
-            entity.getDataInicio(),
-            entity.getEndereco() != null ? EnderecoMapper.toResponseDto(entity.getEndereco()) : null
+            entity.getDataInicio()
         );
 
         return dto;

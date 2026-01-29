@@ -16,7 +16,7 @@ public class Responsavel {
     private LocalDate dtNascimento;
     private String cpf;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "id_endereco", referencedColumnName = "id")
     private Endereco endereco;
 

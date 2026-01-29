@@ -6,6 +6,7 @@ target/
 
 script-mysql-careplus.sql
 README-MySQL.md
+bruno-collection/
 
 ### STS ###
 .apt_generated

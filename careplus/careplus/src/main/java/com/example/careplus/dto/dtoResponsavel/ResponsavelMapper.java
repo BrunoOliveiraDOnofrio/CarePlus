@@ -20,11 +20,7 @@ public class ResponsavelMapper {
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setCpf(dto.getCpf());
 
-        // Mapear endereco se presente
-        if (dto.getEndereco() != null) {
-            entity.setEndereco(EnderecoMapper.toEntity(dto.getEndereco()));
-        }
-
+        // Endereço será tratado no service
         return entity;
     }
     //SAI ENTIDADE
@@ -67,23 +63,7 @@ public class ResponsavelMapper {
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setCpf(dto.getCpf());
 
-        // Atualizar endereco se presente
-        if (dto.getEndereco() != null) {
-            if (entity.getEndereco() != null) {
-                // Atualizar endereco existente
-                entity.getEndereco().setCep(dto.getEndereco().getCep());
-                entity.getEndereco().setLogradouro(dto.getEndereco().getLogradouro());
-                entity.getEndereco().setNumero(dto.getEndereco().getNumero());
-                entity.getEndereco().setComplemento(dto.getEndereco().getComplemento());
-                entity.getEndereco().setBairro(dto.getEndereco().getBairro());
-                entity.getEndereco().setCidade(dto.getEndereco().getCidade());
-                entity.getEndereco().setEstado(dto.getEndereco().getEstado());
-            } else {
-                // Criar novo endereco
-                entity.setEndereco(EnderecoMapper.toEntity(dto.getEndereco()));
-            }
-        }
-
+        // Endereço será tratado no service
         return entity;
     }
     //SAI DTO

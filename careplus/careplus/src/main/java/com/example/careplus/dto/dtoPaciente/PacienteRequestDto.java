@@ -1,6 +1,5 @@
 package com.example.careplus.dto.dtoPaciente;
 
-import com.example.careplus.dto.dtoEndereco.EnderecoRequestDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
@@ -25,20 +24,16 @@ public class PacienteRequestDto {
     @Schema(description = "Sul America")
     private String convenio;
 
-    @Schema(description = "Endereço do paciente")
-    private EnderecoRequestDto endereco;
-
     public PacienteRequestDto() {
     }
 
-    public PacienteRequestDto(String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio, EnderecoRequestDto endereco) {
+    public PacienteRequestDto(String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio) {
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
         this.telefone = telefone;
         this.dtNascimento = dtNascimento;
         this.convenio = convenio;
-        this.endereco = endereco;
     }
 
     public String getNome() {
@@ -87,14 +82,6 @@ public class PacienteRequestDto {
 
     public void setConvenio(String convenio) {
         this.convenio = convenio;
-    }
-
-    public EnderecoRequestDto getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(EnderecoRequestDto endereco) {
-        this.endereco = endereco;
     }
 }
 
