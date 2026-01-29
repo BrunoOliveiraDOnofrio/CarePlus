@@ -1,6 +1,6 @@
 package com.example.careplus.dto.dtoConsultaRecorrente;
 
-import com.example.careplus.dto.dtoConsulta.ConsultaResponseDto;
+import com.example.careplus.dto.dtoConsultaProntuario.ConsultaProntuarioResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,6 @@ import java.util.List;
 public class ConsultaRecorrenteResponseDto {
     private int totalConsultasCriadas;
     private int totalFalhas;
-    private List<ConsultaResponseDto> consultasCriadas = new ArrayList<>();
+    private List<ConsultaProntuarioResponseDto> consultasCriadas = new ArrayList<>();
     private List<ConflitoDatasDto> datasComConflito = new ArrayList<>();
 }

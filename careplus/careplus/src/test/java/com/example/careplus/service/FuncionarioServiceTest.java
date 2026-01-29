@@ -59,7 +59,8 @@ class FuncionarioServiceTest {
                 "123",
                 null,
                 "Estagiario",
-                "Fonoaudiologo"
+                "Fonoaudiologo",
+                "ABA"
         );
 
         Funcionario funcionarioSalvo = new Funcionario();
@@ -69,6 +70,7 @@ class FuncionarioServiceTest {
         funcionarioSalvo.setSenha("senhaCriptografada");
         funcionarioSalvo.setCargo("Estagiario");
         funcionarioSalvo.setEspecialidade("Fonoaudiologo");
+        funcionarioSalvo.setTipoAtendimento("ABA");
 
         Mockito.when(passwordEncoder.encode("123"))
                 .thenReturn("senhaCriptografada");
@@ -145,7 +147,8 @@ class FuncionarioServiceTest {
                 "123", // senha não é atualizada neste método
                 null,
                 "Gerente",
-                "Cardiologia"
+                "Cardiologia",
+                "Fono"
         );
 
         Funcionario funcionarioExistente = new Funcionario();
@@ -154,6 +157,7 @@ class FuncionarioServiceTest {
         funcionarioExistente.setEmail("joao.silva@example.com");
         funcionarioExistente.setCargo("Estagiario");
         funcionarioExistente.setEspecialidade("Fonoaudiologo");
+        funcionarioExistente.setTipoAtendimento("ABA");
 
 
         Funcionario funcionarioAtualizado = new Funcionario();
@@ -162,6 +166,7 @@ class FuncionarioServiceTest {
         funcionarioAtualizado.setEmail("joao.atualizado@example.com");
         funcionarioAtualizado.setCargo("Gerente");
         funcionarioAtualizado.setEspecialidade("Cardiologia");
+        funcionarioAtualizado.setTipoAtendimento("Fono");
 
         // Mocks
         Mockito.when(funcionarioRepository.findById(funcionarioId))

@@ -8,5 +8,5 @@ import java.util.List;
 public interface MaterialRepository extends JpaRepository<Material, Long> {
     List<Material> findByTempoExposicaoGreaterThan(Integer tempo);
 
-    List<Material> findByConsulta_Id(Long idConsulta);
+    List<Material> findByConsultaProntuario_Id(Long idConsultaProntuario);
 }

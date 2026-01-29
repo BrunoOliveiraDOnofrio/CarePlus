@@ -1,9 +1,9 @@
 package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoTratamento.TratamentoRequestDto;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Tratamento;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import com.example.careplus.repository.TratamentoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -27,23 +27,23 @@ class TratamentoServiceTest {
     private TratamentoRepository tratamentoRepository;
 
     @Mock
-    private ProntuarioRepository prontuarioRepository;
+    private FichaClinicaRepository fichaClinicaRepository;
 
     @Nested
     class CadastroTest {
 
-        private final Long ID_PRONTUARIO = 1L;
+        private final Long ID_FICHA_CLINICA = 1L;
         private final String TIPO_TRATAMENTO = "Linguagem Oral e Escrita";
 
         @Test
-        void cadastrarTratamentoCasoProntuarioExista (){
-            TratamentoRequestDto dto = new TratamentoRequestDto(TIPO_TRATAMENTO,  false,ID_PRONTUARIO );
+        void cadastrarTratamentoCasoFichaClinicaExista (){
+            TratamentoRequestDto dto = new TratamentoRequestDto(TIPO_TRATAMENTO,  false, ID_FICHA_CLINICA);
 
-            Prontuario prontuarioEncontrado = new Prontuario();
-            prontuarioEncontrado.setId(ID_PRONTUARIO);
+            FichaClinica fichaClinicaEncontrada = new FichaClinica();
+            fichaClinicaEncontrada.setId(ID_FICHA_CLINICA);
 
-            Mockito.when(prontuarioRepository.findById(ID_PRONTUARIO))
-                    .thenReturn(Optional.of(prontuarioEncontrado));
+            Mockito.when(fichaClinicaRepository.findById(ID_FICHA_CLINICA))
+                    .thenReturn(Optional.of(fichaClinicaEncontrada));
 
             Mockito.when(tratamentoRepository.save(Mockito.any(Tratamento.class)))
                     .thenAnswer(invocation -> invocation.getArgument(0));
@@ -56,30 +56,30 @@ class TratamentoServiceTest {
                     "O tipo de tratamento deve ser o mesmo do DTO.");
             Assertions.assertEquals(false, resultado.getFinalizado(),
                     "O status de finalizado deve ser o mesmo do DTO.");
-            Assertions.assertEquals(prontuarioEncontrado, resultado.getProntuario(),
-                    "O Prontuario correto deve ser setado no Tratamento.");
+            Assertions.assertEquals(fichaClinicaEncontrada, resultado.getFichaClinica(),
+                    "A Ficha Clínica correta deve ser setada no Tratamento.");
 
             Mockito.verify(tratamentoRepository, Mockito.times(1)).save(Mockito.any(Tratamento.class));
-            Mockito.verify(prontuarioRepository, Mockito.times(1)).findById(ID_PRONTUARIO);
+            Mockito.verify(fichaClinicaRepository, Mockito.times(1)).findById(ID_FICHA_CLINICA);
         }
 
         @Test
-        void cadastrarTratamentoCasoProntuarioNaoExista(){
-            Long prontuarioInexistenteId = 99L;
-            TratamentoRequestDto dto = new TratamentoRequestDto("Teste Falha", true, prontuarioInexistenteId);
+        void cadastrarTratamentoCasoFichaClinicaNaoExista(){
+            Long fichaClinicaInexistenteId = 99L;
+            TratamentoRequestDto dto = new TratamentoRequestDto("Teste Falha", true, fichaClinicaInexistenteId);
 
-            Mockito.when(prontuarioRepository.findById(prontuarioInexistenteId))
+            Mockito.when(fichaClinicaRepository.findById(fichaClinicaInexistenteId))
                     .thenReturn(Optional.empty());
 
             RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
                 tratamentoService.cadastrar(dto);
             });
 
-            Assertions.assertEquals("Prontuário não encontrado", exception.getMessage(),
+            Assertions.assertEquals("Ficha Clínica não encontrada", exception.getMessage(),
                     "A mensagem da exceção deve estar correta.");
 
             Mockito.verify(tratamentoRepository, Mockito.never()).save(Mockito.any());
-            Mockito.verify(prontuarioRepository, Mockito.times(1)).findById(prontuarioInexistenteId);
+            Mockito.verify(fichaClinicaRepository, Mockito.times(1)).findById(fichaClinicaInexistenteId);
         }
     }
 

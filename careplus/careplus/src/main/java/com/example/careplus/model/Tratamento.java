@@ -21,20 +21,20 @@ public class Tratamento {
     @Schema(description = "Última data de modificação do tratamento")
     private LocalDateTime dataModificacao;
 
-    // vários tratamentos pertencem a um prontuário
+    // vários tratamentos pertencem a uma ficha clínica
     @ManyToOne
     @JoinColumn(name = "prontuario_id")
     @JsonBackReference
-    private Prontuario prontuario;
+    private FichaClinica fichaClinica;
 
     public Tratamento() {}
 
-    public Tratamento(Long id, String tipoDeTratamento, Boolean finalizado, LocalDateTime dataModificacao, Prontuario prontuario) {
+    public Tratamento(Long id, String tipoDeTratamento, Boolean finalizado, LocalDateTime dataModificacao, FichaClinica fichaClinica) {
         this.id = id;
         this.tipoDeTratamento = tipoDeTratamento;
         this.finalizado = finalizado;
         this.dataModificacao = dataModificacao;
-        this.prontuario = prontuario;
+        this.fichaClinica = fichaClinica;
     }
 
     public Long getId() {
@@ -53,6 +53,6 @@ public class Tratamento {
     public LocalDateTime getDataModificacao() { return dataModificacao; }
     public void setDataModificacao(LocalDateTime dataModificacao) { this.dataModificacao = dataModificacao; }
 
-    public Prontuario getProntuario() { return prontuario; }
-    public void setProntuario(Prontuario prontuario) { this.prontuario = prontuario; }
+    public FichaClinica getFichaClinica() { return fichaClinica; }
+    public void setFichaClinica(FichaClinica fichaClinica) { this.fichaClinica = fichaClinica; }
 }

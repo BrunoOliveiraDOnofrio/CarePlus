@@ -1,4 +1,4 @@
-package com.example.careplus.dto.dtoConsulta;
+package com.example.careplus.dto.dtoConsultaProntuario;
 
 import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.dto.dtoFuncionario.FuncionarioMapper;
@@ -8,10 +8,9 @@ import com.example.careplus.model.ConsultaProntuario;
 
 import java.util.List;
 
+public class ConsultaProntuarioMapper {
 
-public class ConsultaMapper {
-
-    public static ConsultaProntuario toEntity(ConsultaRequestDto dto, PacienteResponseDto paciente, FuncionarioResponseDto funcionario){
+    public static ConsultaProntuario toEntity(ConsultaProntuarioRequestDto dto, PacienteResponseDto paciente, FuncionarioResponseDto funcionario){
         if (dto == null){
             return null;
         }
@@ -20,16 +19,15 @@ public class ConsultaMapper {
         entity.setPaciente(PacienteMapper.toEntityResponse(paciente));
         entity.setFuncionario(FuncionarioMapper.toEntityResponse(funcionario));
         entity.setDataHora(dto.getDataHora());
-        // Tipo inicial padrão se não informado
         entity.setTipo(entity.getTipo() == null ? "Pendente" : entity.getTipo());
         return entity;
     }
 
-    public static ConsultaResponseDto toResponseDto(ConsultaProntuario entity){
+    public static ConsultaProntuarioResponseDto toResponseDto(ConsultaProntuario entity){
         if (entity == null){
             return null;
         }
-        return new ConsultaResponseDto(
+        return new ConsultaProntuarioResponseDto(
                 entity.getId(),
                 PacienteMapper.toResponseDto(entity.getPaciente()),
                 FuncionarioMapper.toResponseDto(entity.getFuncionario()),
@@ -41,7 +39,8 @@ public class ConsultaMapper {
         );
     }
 
-    public static List<ConsultaResponseDto> toResponseDto(List<ConsultaProntuario> entity){
-        return entity.stream().map(ConsultaMapper::toResponseDto).toList();
+    public static List<ConsultaProntuarioResponseDto> toResponseDto(List<ConsultaProntuario> entity){
+        return entity.stream().map(ConsultaProntuarioMapper::toResponseDto).toList();
     }
 }
+

@@ -1,21 +1,18 @@
 package com.example.careplus.repository;
 
-import com.example.careplus.model.ClassificacaoDoencas;
-import com.example.careplus.model.Cuidador;
 import com.example.careplus.model.Tratamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TratamentoRepository extends JpaRepository<Tratamento, Long> {
 
-    @Query("SELECT COUNT(t) FROM Prontuario p LEFT JOIN p.tratamentos t WHERE p.id = :idProntuario")
-    Long buscarQuantidadeDeTratamentosPorId(@Param("idProntuario") Long idProntuario);
+    @Query("SELECT COUNT(t) FROM FichaClinica f LEFT JOIN f.tratamentos t WHERE f.id = :idFichaClinica")
+    Long buscarQuantidadeDeTratamentosPorId(@Param("idFichaClinica") Long idFichaClinica);
 
-    List<Tratamento> findByProntuario_Id(Long idProntuario);
+    List<Tratamento> findByFichaClinica_Id(Long idFichaClinica);
 
     List<Tratamento> findByTipoDeTratamento(String nome);
 }

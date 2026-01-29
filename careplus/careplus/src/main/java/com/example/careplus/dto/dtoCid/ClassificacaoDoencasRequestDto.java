@@ -1,8 +1,5 @@
 package com.example.careplus.dto.dtoCid;
 
-import com.example.careplus.model.Prontuario;
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 public class ClassificacaoDoencasRequestDto {

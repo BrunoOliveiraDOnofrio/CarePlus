@@ -1,8 +1,8 @@
-package com.example.careplus.dto.dtoProntuario;
+package com.example.careplus.dto.dtoFichaClinica;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class ProntuarioRequestDto {
+public class FichaClinicaRequestDto {
 
     @Schema(description = "1")
     private Long idPaciente;
@@ -25,11 +25,11 @@ public class ProntuarioRequestDto {
     @Schema(description = "2")
     private Integer nivelAgressividade;
 
-    public ProntuarioRequestDto(Long idPaciente) {
+    public FichaClinicaRequestDto(Long idPaciente) {
         this.idPaciente = idPaciente;
     }
 
-    public ProntuarioRequestDto(Long idPaciente, Boolean desfraldado, String hiperfoco, String anamnese, String diagnostico, String resumoClinico, Integer nivelAgressividade) {
+    public FichaClinicaRequestDto(Long idPaciente, Boolean desfraldado, String hiperfoco, String anamnese, String diagnostico, String resumoClinico, Integer nivelAgressividade) {
         this.idPaciente = idPaciente;
         this.desfraldado = desfraldado;
         this.hiperfoco = hiperfoco;
@@ -95,3 +95,4 @@ public class ProntuarioRequestDto {
         this.nivelAgressividade = nivelAgressividade;
     }
 }
+

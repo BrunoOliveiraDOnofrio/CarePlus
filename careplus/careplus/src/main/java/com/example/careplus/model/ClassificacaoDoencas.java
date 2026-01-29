@@ -14,11 +14,11 @@ public class ClassificacaoDoencas {
     private String cid;
     private LocalDate dtModificacao;
 
-    // 🔹 Várias classificações pertencem a um prontuário
+    // 🔹 Várias classificações pertencem a uma ficha clínica
     @ManyToOne
     @JoinColumn(name = "prontuario_id")
     @JsonBackReference
-    private Prontuario prontuario;
+    private FichaClinica fichaClinica;
 
     public ClassificacaoDoencas() {}
 
@@ -31,6 +31,6 @@ public class ClassificacaoDoencas {
     public LocalDate getDtModificacao() { return dtModificacao; }
     public void setDtModificacao(LocalDate dtModificacao) { this.dtModificacao = dtModificacao; }
 
-    public Prontuario getProntuario() { return prontuario; }
-    public void setProntuario(Prontuario prontuario) { this.prontuario = prontuario; }
+    public FichaClinica getFichaClinica() { return fichaClinica; }
+    public void setFichaClinica(FichaClinica fichaClinica) { this.fichaClinica = fichaClinica; }
 }

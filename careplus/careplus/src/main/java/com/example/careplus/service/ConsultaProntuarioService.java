@@ -1,24 +1,24 @@
 package com.example.careplus.service;
 
-import com.example.careplus.dto.dtoConsulta.*;
+import com.example.careplus.dto.dtoConsultaProntuario.*;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConflitoDatasDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
 import com.example.careplus.exception.ResourceNotFoundException;
-import com.example.careplus.model.Consulta;
+import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.model.Cuidador;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Material;
 import com.example.careplus.model.Medicacao;
 import com.example.careplus.model.Paciente;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Tratamento;
-import com.example.careplus.repository.ConsultaRepository;
+import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.CuidadorRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import com.example.careplus.repository.PacienteRepository;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -28,137 +28,134 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ConsultaService {
+public class ConsultaProntuarioService {
 
-    private final ConsultaRepository consultaRepository;
+    private final ConsultaProntuarioRepository consultaProntuarioRepository;
     private final PacienteRepository pacienteRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final EmailService emailService;
-    private final ProntuarioRepository prontuarioRepository;
+    private final FichaClinicaRepository fichaClinicaRepository;
     private final CuidadorRepository cuidadorRepository;
 
-    public ConsultaService(ConsultaRepository consultaRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, ProntuarioRepository prontuarioRepository, CuidadorRepository cuidadorRepository) {
-        this.consultaRepository = consultaRepository;
+    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository) {
+        this.consultaProntuarioRepository = consultaProntuarioRepository;
         this.pacienteRepository = pacienteRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.emailService = emailService;
-        this.prontuarioRepository = prontuarioRepository;
+        this.fichaClinicaRepository = fichaClinicaRepository;
         this.cuidadorRepository = cuidadorRepository;
     }
 
-    //montando a Consulta a partir do ConsultaRequest
-    public ConsultaResponseDto marcarConsulta(ConsultaRequestDto request){
+    public ConsultaProntuarioResponseDto marcarConsulta(ConsultaProntuarioRequestDto request){
         Optional<Paciente> usuarioOpt = pacienteRepository.findById(request.getPacienteId());
         Paciente paciente = usuarioOpt.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
         Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(request.getFuncionarioId());
         Funcionario funcionario = funcionarioOpt.orElseThrow(() -> new ResourceNotFoundException("Funcionario não encontrado!"));
 
-        Consulta novaConsulta = new Consulta();
+        ConsultaProntuario novaConsulta = new ConsultaProntuario();
         novaConsulta.setPaciente(paciente);
         novaConsulta.setFuncionario(funcionario);
         novaConsulta.setDataHora(request.getDataHora());
         novaConsulta.setConfirmada(null);
         novaConsulta.setTipo(request.getTipo() != null ? request.getTipo() : "Pendente");
 
-        Consulta salvo = consultaRepository.save(novaConsulta);
-        emailService.EnviarNotificacao(funcionario, novaConsulta, paciente);
-        return ConsultaMapper.toResponseDto(salvo);
+        ConsultaProntuario salvo = consultaProntuarioRepository.save(novaConsulta);
+        emailService.EnviarNotificacaoConsultaProntuario(funcionario, novaConsulta, paciente);
+        return ConsultaProntuarioMapper.toResponseDto(salvo);
     }
 
     public void removerConsulta(Long consultaId){
-        boolean consulta = consultaRepository.existsById(consultaId);
+        boolean consulta = consultaProntuarioRepository.existsById(consultaId);
         if (!consulta){
             throw new RuntimeException("Consulta não encontrada");
         }
-        consultaRepository.deleteById(consultaId);
+        consultaProntuarioRepository.deleteById(consultaId);
     }
 
-    public List<Consulta> listarConsultas(){
-        return consultaRepository.findAll();
+    public List<ConsultaProntuario> listarConsultas(){
+        return consultaProntuarioRepository.findAll();
     }
 
-    public List<ConsultaResponseDto> listarPorData(){
-        List<Consulta> consultas = consultaRepository.buscarPorData();
+    public List<ConsultaProntuarioResponseDto> listarPorData(){
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarPorData();
 
         if (consultas.isEmpty()){
             throw new ResourceNotFoundException("Nenhuma consulta cadastrada!");
         }
 
-        return ConsultaMapper.toResponseDto(consultas);
-
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public List<ConsultaResponseDto> listarPorPaciente(Long idPaciente){
-        List<Consulta> consultas = consultaRepository.buscarPorPaciente(idPaciente);
+    public List<ConsultaProntuarioResponseDto> listarPorPaciente(Long idPaciente){
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarPorPaciente(idPaciente);
         if (consultas.isEmpty()){
             throw new ResourceNotFoundException("Nenhuma consulta cadastrada para esse paciente!");
         }
-        return ConsultaMapper.toResponseDto(consultas);
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public List<ConsultaResponseDto> consultasDoDia(Long idFuncionario){
-        List<Consulta> consultas = consultaRepository.consultasDoDia(idFuncionario);
+    public List<ConsultaProntuarioResponseDto> consultasDoDia(Long idFuncionario){
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.consultasDoDia(idFuncionario);
         if (consultas.isEmpty()){
             throw new ResourceNotFoundException("Nenhuma consulta cadastrada para esse paciente!");
         }
-        return ConsultaMapper.toResponseDto(consultas);
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public ConsultaResponseDto editarConsulta(Long consultaId, ConsultaRequest request) {
+    public ConsultaProntuarioResponseDto editarConsulta(Long consultaId, ConsultaProntuarioRequest request) {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
         Funcionario funcionario = funcionarioRepository.findById(request.getFuncionarioId())
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionario não encontrado"));
-        Consulta consulta = consultaRepository.findById(consultaId)
+        ConsultaProntuario consulta = consultaProntuarioRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
         consulta.setPaciente(paciente);
         consulta.setFuncionario(funcionario);
         consulta.setDataHora(request.getDataHora());
         consulta.setTipo("Retorno");
-        // manter confirmada caso já esteja setada
         consulta.setConfirmada(consulta.getConfirmada() != null ? consulta.getConfirmada() : Boolean.FALSE);
 
-        Consulta salva = consultaRepository.save(consulta);
-        return ConsultaMapper.toResponseDto(salva);
+        ConsultaProntuario salva = consultaProntuarioRepository.save(consulta);
+        return ConsultaProntuarioMapper.toResponseDto(salva);
     }
 
-    public ConsultaResponseDto confirmarConsulta(Long consultaId){
-        Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
+    public ConsultaProntuarioResponseDto confirmarConsulta(Long consultaId){
+        Optional<ConsultaProntuario> consultaParaAtualizar = consultaProntuarioRepository.findById(consultaId);
         if (consultaParaAtualizar.isPresent()){
-            Consulta consulta = consultaParaAtualizar.get();
+            ConsultaProntuario consulta = consultaParaAtualizar.get();
             consulta.setConfirmada(true);
 
-            Consulta consultaSalva = consultaRepository.save(consulta);
-            return ConsultaMapper.toResponseDto(consultaSalva);
+            ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
+            return ConsultaProntuarioMapper.toResponseDto(consultaSalva);
         } else {
             throw new RuntimeException("Consulta não encontrada");
         }
     }
 
-    public ConsultaResponseDto recusarConsulta(Long consultaId, String justificativa){
-        Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
+    public ConsultaProntuarioResponseDto recusarConsulta(Long consultaId, String justificativa){
+        Optional<ConsultaProntuario> consultaParaAtualizar = consultaProntuarioRepository.findById(consultaId);
         if (consultaParaAtualizar.isPresent()){
-            Consulta consulta = consultaParaAtualizar.get();
+            ConsultaProntuario consulta = consultaParaAtualizar.get();
             consulta.setObservacoesComportamentais(justificativa);
             consulta.setConfirmada(false);
 
-            Consulta consultaSalva = consultaRepository.save(consulta);
-            return ConsultaMapper.toResponseDto(consultaSalva);
+            ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
+            return ConsultaProntuarioMapper.toResponseDto(consultaSalva);
         } else {
             throw new RuntimeException("Consulta não encontrada");
         }
     }
 
-    public ConsultaResponseDto salvarObservacoes(Long consultaId, RealizarConsultaDto info){
-        Optional<Consulta> consultaParaAtualizar = consultaRepository.findById(consultaId);
+    public ConsultaProntuarioResponseDto salvarObservacoes(Long consultaId, RealizarConsultaProntuarioDto info){
+        Optional<ConsultaProntuario> consultaParaAtualizar = consultaProntuarioRepository.findById(consultaId);
         if (consultaParaAtualizar.isPresent()){
-            Consulta consulta = consultaParaAtualizar.get();
+            ConsultaProntuario consulta = consultaParaAtualizar.get();
             consulta.setObservacoesComportamentais(info.getObservacao());
             consulta.setPresenca(true);
 
-            Consulta consultaSalva = consultaRepository.save(consulta);
-            return ConsultaMapper.toResponseDto(consultaSalva);
+            ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
+            return ConsultaProntuarioMapper.toResponseDto(consultaSalva);
         } else {
             throw new RuntimeException("Consulta não encontrada");
         }
@@ -168,26 +165,23 @@ public class ConsultaService {
     public ConsultaRecorrenteResponseDto criarConsultasRecorrentes(ConsultaRecorrenteRequestDto dto) {
         ConsultaRecorrenteResponseDto response = new ConsultaRecorrenteResponseDto();
 
-        // Verifica se paciente e funcionário existem
         Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado!"));
 
         Funcionario funcionario = funcionarioRepository.findById(dto.getFuncionarioId())
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado!"));
 
-        // PRIMEIRA FASE: Validar TODAS as datas
         for (LocalDate data : dto.getDatas()) {
             LocalDateTime dataHora = LocalDateTime.of(data, dto.getHorario());
 
-            List<Consulta> consultasExistentes = consultaRepository
+            List<ConsultaProntuario> consultasExistentes = consultaProntuarioRepository
                     .buscarConsultasPorFuncionarioEData(dto.getFuncionarioId(), data);
 
-            for (Consulta consulta : consultasExistentes) {
+            for (ConsultaProntuario consulta : consultasExistentes) {
                 LocalDateTime inicioConsulta = consulta.getDataHora();
                 LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
                 LocalDateTime fimNovaConsulta = dataHora.plusHours(1);
 
-                // Verifica sobreposição de horários
                 boolean temConflito = (dataHora.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta));
 
                 if (temConflito) {
@@ -202,26 +196,24 @@ public class ConsultaService {
             }
         }
 
-        // Se houver QUALQUER conflito, não cria NENHUMA consulta
         if (!response.getDatasComConflito().isEmpty()) {
             response.setTotalConsultasCriadas(0);
             response.setTotalFalhas(response.getDatasComConflito().size());
             return response;
         }
 
-        // SEGUNDA FASE: Criar TODAS as consultas (só chega aqui se NÃO houver conflitos)
         for (LocalDate data : dto.getDatas()) {
             LocalDateTime dataHora = LocalDateTime.of(data, dto.getHorario());
 
-            Consulta consulta = new Consulta();
+            ConsultaProntuario consulta = new ConsultaProntuario();
             consulta.setPaciente(paciente);
             consulta.setFuncionario(funcionario);
             consulta.setDataHora(dataHora);
             consulta.setTipo(dto.getTipo());
             consulta.setConfirmada(false);
 
-            Consulta consultaSalva = consultaRepository.save(consulta);
-            response.getConsultasCriadas().add(ConsultaMapper.toResponseDto(consultaSalva));
+            ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
+            response.getConsultasCriadas().add(ConsultaProntuarioMapper.toResponseDto(consultaSalva));
         }
 
         response.setTotalConsultasCriadas(response.getConsultasCriadas().size());
@@ -230,15 +222,14 @@ public class ConsultaService {
         return response;
     }
 
-    public List<ConsultaResponseDto> listarAgendaSemanal(Long funcionarioId, LocalDate dataReferencia) {
-        // acha a segunda-feira da semana da data de referência
+    public List<ConsultaProntuarioResponseDto> listarAgendaSemanal(Long funcionarioId, LocalDate dataReferencia) {
         LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
         LocalDate fimDaSemana = inicioDaSemana.plusDays(6);
 
         LocalDateTime inicioDateTime = inicioDaSemana.atStartOfDay();
         LocalDateTime fimDateTime = fimDaSemana.atTime(23, 59, 59);
 
-        List<Consulta> consultas = consultaRepository.buscarConsultasPorFuncionarioEPeriodo(
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
                 funcionarioId,
                 inicioDateTime,
                 fimDateTime
@@ -248,35 +239,34 @@ public class ConsultaService {
             throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
         }
 
-        return ConsultaMapper.toResponseDto(consultas);
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public List<ConsultaResponseDto> listarConsultasPendentes(Long idFuncionario) {
-        List<Consulta> consultas = consultaRepository.findByFuncionarioIdAndConfirmadaNull(idFuncionario);
-        return ConsultaMapper.toResponseDto(consultas);
+    public List<ConsultaProntuarioResponseDto> listarConsultasPendentes(Long idFuncionario) {
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.findByFuncionarioIdAndConfirmadaNull(idFuncionario);
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public ProximaConsultaResponseDto buscarProximaConsultaConfirmada(Long pacienteId) {
-        List<Consulta> consultas = consultaRepository.buscarProximaConsultaConfirmadaPorPaciente(pacienteId);
+    public ProximaConsultaProntuarioResponseDto buscarProximaConsultaConfirmada(Long pacienteId) {
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarProximaConsultaConfirmadaPorPaciente(pacienteId);
 
         if (consultas.isEmpty()) {
             throw new ResourceNotFoundException("Nenhuma consulta confirmada encontrada para este paciente!");
         }
 
-        Consulta proximaConsulta = consultas.get(0);
+        ConsultaProntuario proximaConsulta = consultas.get(0);
 
-        // Buscar o tratamento ativo do paciente (se existir)
         String tratamento = null;
-        Prontuario prontuario = prontuarioRepository.findByPacienteId(pacienteId).orElse(null);
-        if (prontuario != null && prontuario.getTratamentos() != null) {
-            tratamento = prontuario.getTratamentos().stream()
+        FichaClinica fichaClinica = fichaClinicaRepository.findByPacienteId(pacienteId).orElse(null);
+        if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
+            tratamento = fichaClinica.getTratamentos().stream()
                     .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
                     .map(Tratamento::getTipoDeTratamento)
                     .findFirst()
                     .orElse(null);
         }
 
-        return new ProximaConsultaResponseDto(
+        return new ProximaConsultaProntuarioResponseDto(
                 proximaConsulta.getId(),
                 proximaConsulta.getDataHora().toLocalDate(),
                 proximaConsulta.getDataHora().toLocalTime(),
@@ -287,19 +277,17 @@ public class ConsultaService {
         );
     }
 
-    public ConsultaAtualResponseDto buscarDetalhesConsultaAtual(Long consultaId) {
-        Consulta consulta = consultaRepository.findById(consultaId)
+    public ConsultaProntuarioAtualResponseDto buscarDetalhesConsultaAtual(Long consultaId) {
+        ConsultaProntuario consulta = consultaProntuarioRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada!"));
 
         Paciente paciente = consulta.getPaciente();
         Funcionario funcionario = consulta.getFuncionario();
 
-        // Buscar prontuário do paciente
-        Prontuario prontuario = prontuarioRepository.findByPacienteId(paciente.getId()).orElse(null);
+        FichaClinica fichaClinica = fichaClinicaRepository.findByPacienteId(paciente.getId()).orElse(null);
 
-        ConsultaAtualResponseDto response = new ConsultaAtualResponseDto();
+        ConsultaProntuarioAtualResponseDto response = new ConsultaProntuarioAtualResponseDto();
 
-        // Dados da consulta atual
         response.setConsultaId(consulta.getId());
         response.setData(consulta.getDataHora().toLocalDate());
         response.setHorarioInicio(consulta.getDataHora().toLocalTime());
@@ -308,9 +296,8 @@ public class ConsultaService {
         response.setEspecialidade(funcionario.getEspecialidade());
         response.setNomeProfissional(funcionario.getNome());
 
-        // Tratamento atual (do prontuário)
-        if (prontuario != null && prontuario.getTratamentos() != null) {
-            String tratamentoAtual = prontuario.getTratamentos().stream()
+        if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
+            String tratamentoAtual = fichaClinica.getTratamentos().stream()
                     .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
                     .map(Tratamento::getTipoDeTratamento)
                     .findFirst()
@@ -318,41 +305,35 @@ public class ConsultaService {
             response.setTratamentoAtual(tratamentoAtual);
         }
 
-        // Dados do paciente
-        ConsultaAtualResponseDto.DadosPaciente dadosPaciente = new ConsultaAtualResponseDto.DadosPaciente();
+        ConsultaProntuarioAtualResponseDto.DadosPaciente dadosPaciente = new ConsultaProntuarioAtualResponseDto.DadosPaciente();
         dadosPaciente.setPacienteId(paciente.getId());
         dadosPaciente.setNome(paciente.getNome());
 
-        // Buscar contato do 1º cuidador legal (responsável)
         List<Cuidador> cuidadores = cuidadorRepository.findByPacienteId(paciente.getId());
         if (!cuidadores.isEmpty() && cuidadores.get(0).getResponsavel() != null) {
             dadosPaciente.setContato(cuidadores.get(0).getResponsavel().getTelefone());
         }
 
-        // Calcular idade
         if (paciente.getDtNascimento() != null) {
             int idade = java.time.Period.between(paciente.getDtNascimento(), java.time.LocalDate.now()).getYears();
             dadosPaciente.setIdade(idade);
         }
 
-        // Dados do prontuário
-        if (prontuario != null) {
-            dadosPaciente.setDesfraldado(prontuario.getDesfraldado());
-            dadosPaciente.setHiperfocoAtual(prontuario.getHiperfoco());
-            dadosPaciente.setDiagnostico(prontuario.getDiagnostico());
+        if (fichaClinica != null) {
+            dadosPaciente.setDesfraldado(fichaClinica.getDesfraldado());
+            dadosPaciente.setHiperfocoAtual(fichaClinica.getHiperfoco());
+            dadosPaciente.setDiagnostico(fichaClinica.getDiagnostico());
 
-            // CID (pegar o primeiro ou concatenar)
-            if (prontuario.getCid() != null && !prontuario.getCid().isEmpty()) {
-                String cids = prontuario.getCid().stream()
+            if (fichaClinica.getCid() != null && !fichaClinica.getCid().isEmpty()) {
+                String cids = fichaClinica.getCid().stream()
                         .map(ClassificacaoDoencas::getCid)
                         .reduce((a, b) -> a + ", " + b)
                         .orElse(null);
                 dadosPaciente.setCid(cids);
             }
 
-            // Medicações ativas
-            if (prontuario.getMedicacoes() != null && !prontuario.getMedicacoes().isEmpty()) {
-                String medicacoes = prontuario.getMedicacoes().stream()
+            if (fichaClinica.getMedicacoes() != null && !fichaClinica.getMedicacoes().isEmpty()) {
+                String medicacoes = fichaClinica.getMedicacoes().stream()
                         .filter(Medicacao::getAtivo)
                         .map(Medicacao::getNomeMedicacao)
                         .reduce((a, b) -> a + ", " + b)
@@ -360,25 +341,22 @@ public class ConsultaService {
                 dadosPaciente.setMedicacoes(medicacoes);
             }
 
-            // Atendimento especial baseado no nível de agressividade
-            if (prontuario.getNivelAgressividade() != null && prontuario.getNivelAgressividade() > 0) {
+            if (fichaClinica.getNivelAgressividade() != null && fichaClinica.getNivelAgressividade() > 0) {
                 dadosPaciente.setAtendimentoEspecial("Lesivo");
             }
         }
 
         response.setDadosPaciente(dadosPaciente);
 
-        // Última consulta passada do paciente
-        List<Consulta> ultimasConsultas = consultaRepository.buscarUltimaConsultaPassadaPorPaciente(paciente.getId());
+        List<ConsultaProntuario> ultimasConsultas = consultaProntuarioRepository.buscarUltimaConsultaPassadaPorPaciente(paciente.getId());
         if (!ultimasConsultas.isEmpty()) {
-            Consulta ultimaConsultaEntity = ultimasConsultas.get(0);
-            ConsultaAtualResponseDto.UltimaConsulta ultimaConsulta = new ConsultaAtualResponseDto.UltimaConsulta();
+            ConsultaProntuario ultimaConsultaEntity = ultimasConsultas.get(0);
+            ConsultaProntuarioAtualResponseDto.UltimaConsulta ultimaConsulta = new ConsultaProntuarioAtualResponseDto.UltimaConsulta();
             ultimaConsulta.setConsultaId(ultimaConsultaEntity.getId());
             ultimaConsulta.setData(ultimaConsultaEntity.getDataHora().toLocalDate());
 
-            // Tratamento da última consulta (mesmo do prontuário por enquanto)
-            if (prontuario != null && prontuario.getTratamentos() != null) {
-                String tratamentoUltima = prontuario.getTratamentos().stream()
+            if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
+                String tratamentoUltima = fichaClinica.getTratamentos().stream()
                         .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
                         .map(Tratamento::getTipoDeTratamento)
                         .findFirst()
@@ -392,19 +370,17 @@ public class ConsultaService {
         return response;
     }
 
-    public DetalhesConsultaAnteriorResponseDto buscarDetalhesConsultaAnterior(Long consultaId) {
-        Consulta consulta = consultaRepository.findById(consultaId)
+    public DetalhesConsultaProntuarioAnteriorResponseDto buscarDetalhesConsultaAnterior(Long consultaId) {
+        ConsultaProntuario consulta = consultaProntuarioRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada!"));
 
         Paciente paciente = consulta.getPaciente();
         Funcionario funcionario = consulta.getFuncionario();
 
-        // Buscar prontuário do paciente para pegar o tratamento
-        Prontuario prontuario = prontuarioRepository.findByPacienteId(paciente.getId()).orElse(null);
+        FichaClinica fichaClinica = fichaClinicaRepository.findByPacienteId(paciente.getId()).orElse(null);
 
-        DetalhesConsultaAnteriorResponseDto response = new DetalhesConsultaAnteriorResponseDto();
+        DetalhesConsultaProntuarioAnteriorResponseDto response = new DetalhesConsultaProntuarioAnteriorResponseDto();
 
-        // Dados da consulta
         response.setConsultaId(consulta.getId());
         response.setData(consulta.getDataHora().toLocalDate());
         response.setHorarioInicio(consulta.getDataHora().toLocalTime());
@@ -414,9 +390,8 @@ public class ConsultaService {
         response.setTipo(consulta.getTipo());
         response.setObservacoesComportamentais(consulta.getObservacoesComportamentais());
 
-        // Tratamento atual (do prontuário)
-        if (prontuario != null && prontuario.getTratamentos() != null) {
-            String tratamentoAtual = prontuario.getTratamentos().stream()
+        if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
+            String tratamentoAtual = fichaClinica.getTratamentos().stream()
                     .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
                     .map(Tratamento::getTipoDeTratamento)
                     .findFirst()
@@ -424,7 +399,6 @@ public class ConsultaService {
             response.setTratamentoAtual(tratamentoAtual);
         }
 
-        // Materiais utilizados na consulta
         if (consulta.getMateriais() != null && !consulta.getMateriais().isEmpty()) {
             List<String> materiais = consulta.getMateriais().stream()
                     .map(Material::getItem)
@@ -436,3 +410,4 @@ public class ConsultaService {
     }
 
 }
+

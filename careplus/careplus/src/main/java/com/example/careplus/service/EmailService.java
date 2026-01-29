@@ -1,6 +1,6 @@
 package com.example.careplus.service;
 
-import com.example.careplus.model.Consulta;
+import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.utils.Notification;
@@ -30,7 +30,7 @@ public class EmailService implements Notification {
 
 
     @Override
-    public void EnviarNotificacao(Funcionario funcionario, Consulta consulta, Paciente paciente) {
+    public void EnviarNotificacao(Funcionario funcionario, ConsultaProntuario consulta, Paciente paciente) {
         try{
             Context contexto = new Context();
 
@@ -55,6 +55,10 @@ public class EmailService implements Notification {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void EnviarNotificacaoConsultaProntuario(Funcionario funcionario, ConsultaProntuario consulta, Paciente paciente) {
+        EnviarNotificacao(funcionario, consulta, paciente);
     }
 
     public String formatarData(LocalDateTime dataHora){

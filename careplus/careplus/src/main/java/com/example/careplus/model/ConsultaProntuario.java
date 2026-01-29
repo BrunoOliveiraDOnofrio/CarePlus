@@ -1,5 +1,6 @@
 package com.example.careplus.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -8,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Consulta {
+@Table(name = "consulta_prontuario")
+public class ConsultaProntuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // essa anotação associa com outro objeto
-    @ManyToOne //muitas consultas podem ser de um usuário
-    @JoinColumn(name = "funcionario_id") // define o nome no banco
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
     @ManyToOne
@@ -23,6 +24,7 @@ public class Consulta {
     private Paciente paciente;
 
     @Schema(description = "2026-01-15 10:00:00", example = "2026-01-15 10:00:00")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataHora;
 
     @Schema(description = "Retorno")
@@ -37,14 +39,14 @@ public class Consulta {
     @Schema(description = "Sim")
     private Boolean confirmada;
 
-    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "consultaProntuario", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Material> materiais = new ArrayList<>();
 
-    public Consulta() {
+    public ConsultaProntuario() {
     }
 
-    public Consulta(Long id, Funcionario funcionario, Paciente paciente, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca) {
+    public ConsultaProntuario(Long id, Funcionario funcionario, Paciente paciente, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca) {
         this.id = id;
         this.funcionario = funcionario;
         this.paciente = paciente;
@@ -86,7 +88,6 @@ public class Consulta {
         this.dataHora = dataHora;
     }
 
-
     public String getTipo() {
         return tipo;
     }
@@ -126,5 +127,5 @@ public class Consulta {
     public void setMateriais(List<Material> materiais) {
         this.materiais = materiais;
     }
-
 }
+

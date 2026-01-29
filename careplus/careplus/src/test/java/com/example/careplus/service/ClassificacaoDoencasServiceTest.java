@@ -2,9 +2,9 @@ package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoCid.ClassificacaoDoencasRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.repository.ClassificacaoDoencasRepository;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ class ClassificacaoDoencasServiceTest {
     @Mock
     private ClassificacaoDoencasRepository classificacaoDoencasRepository;
     @Mock
-    private ProntuarioRepository prontuarioRepository;
+    private FichaClinicaRepository fichaClinicaRepository;
     @InjectMocks
     private ClassificacaoDoencasService service;
 
@@ -62,8 +62,8 @@ class ClassificacaoDoencasServiceTest {
         doenca.setId(1L);
         doenca.setCid(cid);
         doenca.setDtModificacao(dtModificacao);
-        Prontuario prontuarioMock = mock(Prontuario.class);
-        doenca.setProntuario(prontuarioMock);
+        FichaClinica fichaClinicaMock = mock(FichaClinica.class);
+        doenca.setFichaClinica(fichaClinicaMock);
         List<ClassificacaoDoencas> esperado = new ArrayList<>();
         esperado.add(doenca);
 
@@ -79,11 +79,11 @@ class ClassificacaoDoencasServiceTest {
     }
 
     @Test
-    @DisplayName("Criar a classificação da doença quando existir um prontuário")
-    void deveCriarClassificacaoDoencasQuandoProntuarioExisteTeste(){
-        Prontuario prontuario = new Prontuario();
-        prontuario.setId(1L);
-        when(prontuarioRepository.findById(1L)).thenReturn(Optional.of(prontuario));
+    @DisplayName("Criar a classificação da doença quando existir uma ficha clínica")
+    void deveCriarClassificacaoDoencasQuandoFichaClinicaExisteTeste(){
+        FichaClinica fichaClinica = new FichaClinica();
+        fichaClinica.setId(1L);
+        when(fichaClinicaRepository.findById(1L)).thenReturn(Optional.of(fichaClinica));
 
         ClassificacaoDoencasRequestDto dto = Mockito.mock(ClassificacaoDoencasRequestDto.class);
         when(dto.getIdProntuario()).thenReturn(1L);
@@ -131,9 +131,9 @@ class ClassificacaoDoencasServiceTest {
         when(dto.getCid()).thenReturn("A60R");
         when(dto.getIdProntuario()).thenReturn(2L);
 
-        Prontuario prontuario = new Prontuario();
-        prontuario.setId(2L);
-        when(prontuarioRepository.findById(2L)).thenReturn(Optional.of(prontuario));
+        FichaClinica fichaClinica = new FichaClinica();
+        fichaClinica.setId(2L);
+        when(fichaClinicaRepository.findById(2L)).thenReturn(Optional.of(fichaClinica));
 
         when(classificacaoDoencasRepository.save(any(ClassificacaoDoencas.class))).thenAnswer(i -> i.getArgument(0));
 

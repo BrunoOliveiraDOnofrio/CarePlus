@@ -2,9 +2,9 @@ package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoMedicacao.MedicacaoRequestDto;
 import com.example.careplus.model.Medicacao;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.repository.MedicacaoRepository;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,16 +14,16 @@ import java.util.Optional;
 public class MedicacaoService {
 
     private final MedicacaoRepository repository;
-    private final ProntuarioRepository prontuarioRepository;
+    private final FichaClinicaRepository fichaClinicaRepository;
 
-    public MedicacaoService(MedicacaoRepository repository, ProntuarioRepository prontuarioRepository) {
+    public MedicacaoService(MedicacaoRepository repository, FichaClinicaRepository fichaClinicaRepository) {
         this.repository = repository;
-        this.prontuarioRepository = prontuarioRepository;
+        this.fichaClinicaRepository = fichaClinicaRepository;
     }
 
     public Medicacao adicionar(MedicacaoRequestDto medicacao) {
 
-        Optional<Prontuario> existe = prontuarioRepository.findById(medicacao.getIdProntuario());
+        Optional<FichaClinica> existe = fichaClinicaRepository.findById(medicacao.getIdProntuario());
 
         if(existe.isPresent()){
             Medicacao medicacaoAdicionada = new Medicacao();
@@ -31,12 +31,12 @@ public class MedicacaoService {
             medicacaoAdicionada.setDataFim(medicacao.getDataFim());
             medicacaoAdicionada.setDataInicio(medicacao.getDataInicio());
             medicacaoAdicionada.setNomeMedicacao(medicacao.getNomeMedicacao());
-            medicacaoAdicionada.setProntuario(existe.get());
+            medicacaoAdicionada.setFichaClinica(existe.get());
 
             return repository.save(medicacaoAdicionada);
 
         } else {
-            throw new RuntimeException("Prontuário não encontrado");
+            throw new RuntimeException("Ficha Clínica não encontrada");
         }
     }
 
@@ -62,8 +62,8 @@ public class MedicacaoService {
             medicacao.setAtivo(dto.getAtivo());
 
             if (dto.getIdProntuario() != null) {
-                Optional<Prontuario> prontuario = prontuarioRepository.findById(dto.getIdProntuario());
-                prontuario.ifPresent(medicacao::setProntuario);
+                Optional<FichaClinica> fichaClinica = fichaClinicaRepository.findById(dto.getIdProntuario());
+                fichaClinica.ifPresent(medicacao::setFichaClinica);
             }
             return repository.save(medicacao);
         } else {

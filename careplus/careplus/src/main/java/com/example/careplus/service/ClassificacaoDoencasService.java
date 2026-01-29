@@ -2,9 +2,9 @@ package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoCid.ClassificacaoDoencasRequestDto;
 import com.example.careplus.model.ClassificacaoDoencas;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.repository.ClassificacaoDoencasRepository;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -19,30 +19,30 @@ import static java.time.LocalTime.now;
 public class ClassificacaoDoencasService {
 
     private final ClassificacaoDoencasRepository classificacaoDoencasRepository;
-    private final ProntuarioRepository prontuarioRepository;
+    private final FichaClinicaRepository fichaClinicaRepository;
 
 
-    public ClassificacaoDoencasService(ClassificacaoDoencasRepository classificacaoDoencasRepository, ProntuarioRepository prontuarioRepository){
+    public ClassificacaoDoencasService(ClassificacaoDoencasRepository classificacaoDoencasRepository, FichaClinicaRepository fichaClinicaRepository){
         this.classificacaoDoencasRepository = classificacaoDoencasRepository;
-        this.prontuarioRepository = prontuarioRepository;
+        this.fichaClinicaRepository = fichaClinicaRepository;
     }
 
 
 
     public ClassificacaoDoencas cadastrar(ClassificacaoDoencasRequestDto doencaNew){
 
-        Optional<Prontuario> existe = prontuarioRepository.findById(doencaNew.getIdProntuario());
+        Optional<FichaClinica> existe = fichaClinicaRepository.findById(doencaNew.getIdProntuario());
 
         if(existe.isPresent()){
             ClassificacaoDoencas cidNovo = new ClassificacaoDoencas();
             cidNovo.setCid(doencaNew.getCid());
             cidNovo.setDtModificacao(LocalDate.now());
-            cidNovo.setProntuario(existe.get());
+            cidNovo.setFichaClinica(existe.get());
 
             return classificacaoDoencasRepository.save(cidNovo);
 
         } else {
-            throw new RuntimeException("Prontuário não encontrado");
+            throw new RuntimeException("Ficha Clínica não encontrada");
         }
 
     }
@@ -67,9 +67,9 @@ public class ClassificacaoDoencasService {
         existente.setCid(dadosAtualizados.getCid());
         existente.setDtModificacao(LocalDate.now());
         if (dadosAtualizados.getIdProntuario() != null) {
-            Prontuario prontuario = prontuarioRepository.findById(dadosAtualizados.getIdProntuario())
-                    .orElseThrow(() -> new EntityNotFoundException("Prontuário não encontrado"));
-            existente.setProntuario(prontuario);
+            FichaClinica fichaClinica = fichaClinicaRepository.findById(dadosAtualizados.getIdProntuario())
+                    .orElseThrow(() -> new EntityNotFoundException("Ficha Clínica não encontrada"));
+            existente.setFichaClinica(fichaClinica);
         }
         return classificacaoDoencasRepository.save(existente);
     }

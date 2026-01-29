@@ -3,13 +3,13 @@ package com.example.careplus.service;
 import com.example.careplus.dto.dtoDetalhes.AtualizarFichaClinicaDTO;
 import com.example.careplus.dto.dtoDetalhes.AtualizarObservacoesComportamentaisDTO;
 import com.example.careplus.dto.dtoPaciente.DetalhePacienteDTO;
-import com.example.careplus.model.Consulta;
+import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.Paciente;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Tratamento;
-import com.example.careplus.repository.ConsultaRepository;
+import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.PacienteRepository;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,42 +23,42 @@ import java.util.List;
 public class DetalhePacienteService {
 
     private final PacienteRepository pacienteRepository;
-    private final ConsultaRepository consultaRepository;
-    private final ProntuarioRepository prontuarioRepository;
-    private final ProntuarioService prontuarioService;
+    private final ConsultaProntuarioRepository consultaProntuarioRepository;
+    private final FichaClinicaRepository fichaClinicaRepository;
+    private final FichaClinicaService fichaClinicaService;
 
     public DetalhePacienteDTO buscarDetalhesCompletoPaciente(Long pacienteId) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        List<Consulta> consultas = consultaRepository.buscarUltimaConsultaPorPaciente(pacienteId);
-        Consulta ultimaConsulta = consultas.isEmpty() ? null : consultas.get(0);
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarUltimaConsultaPorPaciente(pacienteId);
+        ConsultaProntuario ultimaConsulta = consultas.isEmpty() ? null : consultas.get(0);
 
-        List<Consulta> proximasConsultas = consultaRepository.buscarProximaConsultaPorPaciente(pacienteId);
+        List<ConsultaProntuario> proximasConsultas = consultaProntuarioRepository.buscarProximaConsultaPorPaciente(pacienteId);
 
         DetalhePacienteDTO dto = new DetalhePacienteDTO();
         dto.setPacienteId(paciente.getId());
         dto.setNome(paciente.getNome());
 
         // Ficha Clínica
-        DetalhePacienteDTO.FichaClinicaDTO fichaClinica = new DetalhePacienteDTO.FichaClinicaDTO();
-        fichaClinica.setIdade(Period.between(paciente.getDtNascimento(), LocalDate.now()).getYears());
-        fichaClinica.setAnamnese(prontuarioService.buscarProntuarioPorId(pacienteId).getAnamnese());
-        fichaClinica.setDiagnostico(prontuarioService.buscarProntuarioPorId(pacienteId).getDiagnostico());
-        fichaClinica.setPlanoTerapeutico(paciente.getConvenio());
-        dto.setFichaClinica(fichaClinica);
+        DetalhePacienteDTO.FichaClinicaDTO fichaClinicaDTO = new DetalhePacienteDTO.FichaClinicaDTO();
+        fichaClinicaDTO.setIdade(Period.between(paciente.getDtNascimento(), LocalDate.now()).getYears());
+        fichaClinicaDTO.setAnamnese(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getAnamnese());
+        fichaClinicaDTO.setDiagnostico(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getDiagnostico());
+        fichaClinicaDTO.setPlanoTerapeutico(paciente.getConvenio());
+        dto.setFichaClinica(fichaClinicaDTO);
 
         // Observações Comportamentais
-        dto.setObservacoesComportamentais(prontuarioService.buscarProntuarioPorId(pacienteId).getResumoClinico());
+        dto.setObservacoesComportamentais(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getResumoClinico());
 
         if (ultimaConsulta != null) {
             // Observações da Última Consulta
             DetalhePacienteDTO.ObservacoesDTO observacoes = new DetalhePacienteDTO.ObservacoesDTO();
-            observacoes.setCid(prontuarioService.buscarProntuarioPorId(pacienteId).getCid().getLast().getCid());
-            observacoes.setMedicacao(prontuarioService.buscarProntuarioPorId(pacienteId).getMedicacoes().getLast().getNomeMedicacao());
-            observacoes.setAtendimentoEspecial(prontuarioService.buscarProntuarioPorId(pacienteId).getNivelAgressividade());
-            observacoes.setDesfraldada(prontuarioService.buscarProntuarioPorId(pacienteId).getDesfraldado());
-            observacoes.setHiperfoco(prontuarioService.buscarProntuarioPorId(pacienteId).getHiperfoco());
+            observacoes.setCid(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getCid().getLast().getCid());
+            observacoes.setMedicacao(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getMedicacoes().getLast().getNomeMedicacao());
+            observacoes.setAtendimentoEspecial(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getNivelAgressividade());
+            observacoes.setDesfraldada(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getDesfraldado());
+            observacoes.setHiperfoco(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getHiperfoco());
             dto.setObservacoes(observacoes);
 
             // Última Consulta
@@ -71,8 +71,8 @@ public class DetalhePacienteService {
         // Progresso do Tratamento
         DetalhePacienteDTO.ProgressoTratamentoDTO progresso = new DetalhePacienteDTO.ProgressoTratamentoDTO();
         progresso.setPercentual(calcularProgresso(paciente));
-        progresso.setTratamentoFeito(prontuarioService.buscarProntuarioPorId(pacienteId).getTratamentos());
-        progresso.setTratamentoAtual(prontuarioService.buscarProntuarioPorId(pacienteId).getTratamentos().getLast().getTipoDeTratamento());
+        progresso.setTratamentoFeito(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getTratamentos());
+        progresso.setTratamentoAtual(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getTratamentos().getLast().getTipoDeTratamento());
         dto.setProgresso(progresso);
 
         // Próxima Consulta
@@ -93,13 +93,13 @@ public class DetalhePacienteService {
         Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        Prontuario prontuario = prontuarioService.buscarProntuarioPorId(pacienteId);
+        FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorId(pacienteId);
 
-        prontuario.setAnamnese(dto.getAnamnese());
-        prontuario.setDiagnostico(dto.getDiagnostico());
+        fichaClinica.setAnamnese(dto.getAnamnese());
+        fichaClinica.setDiagnostico(dto.getDiagnostico());
         paciente.setConvenio(dto.getPlanoTerapeutico());
 
-        prontuarioRepository.save(prontuario);
+        fichaClinicaRepository.save(fichaClinica);
         pacienteRepository.save(paciente);
     }
 
@@ -107,18 +107,18 @@ public class DetalhePacienteService {
     public void atualizarObservacoesComportamentais(Long pacienteId, AtualizarObservacoesComportamentaisDTO dto) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
-        Prontuario prontuario = prontuarioService.buscarProntuarioPorId(pacienteId);
+        FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorId(pacienteId);
 
-        prontuario.setResumoClinico(dto.getObservacoesComportamentais());
+        fichaClinica.setResumoClinico(dto.getObservacoesComportamentais());
 
-        prontuarioRepository.save(prontuario);
+        fichaClinicaRepository.save(fichaClinica);
         pacienteRepository.save(paciente);
     }
 
     @Transactional
     public void atualizarTratamento(Long pacienteId, Tratamento dto) {
-        Prontuario prontuario = prontuarioService.buscarProntuarioPorId(pacienteId);
-        prontuario.getTratamentos().add(dto);
-        prontuarioRepository.save(prontuario);
+        FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorId(pacienteId);
+        fichaClinica.getTratamentos().add(dto);
+        fichaClinicaRepository.save(fichaClinica);
     }
 }

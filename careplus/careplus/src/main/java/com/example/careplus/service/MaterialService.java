@@ -3,10 +3,10 @@ package com.example.careplus.service;
 import com.example.careplus.dto.dtoMaterial.MaterialMapper;
 import com.example.careplus.dto.dtoMaterial.MaterialRequestDto;
 import com.example.careplus.dto.dtoMaterial.MaterialResponseDto;
-import com.example.careplus.model.Consulta;
+import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.Material;
 
-import com.example.careplus.repository.ConsultaRepository;
+import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.MaterialRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -19,32 +19,32 @@ import java.util.Optional;
 public class MaterialService {
 
     private final MaterialRepository materialRepository;
-    private final ConsultaRepository consultaRepository;
+    private final ConsultaProntuarioRepository consultaProntuarioRepository;
 
-    public MaterialService(MaterialRepository materialRepository, ConsultaRepository consultaRepository) {
+    public MaterialService(MaterialRepository materialRepository, ConsultaProntuarioRepository consultaProntuarioRepository) {
         this.materialRepository = materialRepository;
-        this.consultaRepository = consultaRepository;
+        this.consultaProntuarioRepository = consultaProntuarioRepository;
     }
 
     public List<MaterialResponseDto> cadastrar(List<MaterialRequestDto> dto) {
-        Optional<Consulta> existe = consultaRepository.findById(dto.getFirst().getIdConsulta());
+        Optional<ConsultaProntuario> existe = consultaProntuarioRepository.findById(dto.getFirst().getIdConsulta());
         List<Material> materiasParaAdicionar = MaterialMapper.toEntityList(dto);
         if(existe.isPresent()){
 
-            Consulta consulta = existe.get();
+            ConsultaProntuario consultaProntuario = existe.get();
 
             // Setar a referência da consulta em cada material
             for (Material material : materiasParaAdicionar) {
-                material.setConsulta(consulta);
+                material.setConsultaProntuario(consultaProntuario);
             }
 
-            consulta.setMateriais(materiasParaAdicionar);
+            consultaProntuario.setMateriais(materiasParaAdicionar);
 
-            consultaRepository.save(consulta);
+            consultaProntuarioRepository.save(consultaProntuario);
             return MaterialMapper.toResponseDto(materiasParaAdicionar);
 
         } else {
-            throw new RuntimeException("Consulta não encontrado");
+            throw new RuntimeException("Consulta não encontrada");
         }
 
 

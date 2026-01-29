@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class Prontuario {
+@Table(name = "fichaClinica")
+public class FichaClinica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,26 +37,23 @@ public class Prontuario {
     @Schema(description = "2")
     private Integer nivelAgressividade;
 
-    @OneToMany(mappedBy = "prontuario", cascade = CascadeType.ALL) // permite modificar
+    @OneToMany(mappedBy = "fichaClinica", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ClassificacaoDoencas> cid;
 
-    @OneToMany(mappedBy = "prontuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fichaClinica", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Tratamento> tratamentos;
 
-
-
-    @OneToMany(mappedBy = "prontuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fichaClinica", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Medicacao> medicacoes;
 
-
-    public Prontuario() {
+    public FichaClinica() {
     }
 
-    public Prontuario(Long id, Paciente paciente, Boolean desfraldado, String hiperfoco,
-                      String anamnese, String diagnostico, String resumoClinico, Integer nivelAgressividade) {
+    public FichaClinica(Long id, Paciente paciente, Boolean desfraldado, String hiperfoco,
+                        String anamnese, String diagnostico, String resumoClinico, Integer nivelAgressividade) {
         this.id = id;
         this.paciente = paciente;
         this.desfraldado = desfraldado;
@@ -96,8 +94,6 @@ public class Prontuario {
     public List<Tratamento> getTratamentos() { return tratamentos; }
     public void setTratamentos(List<Tratamento> tratamentos) { this.tratamentos = tratamentos; }
 
-
-
     public List<Medicacao> getMedicacoes() {
         return medicacoes;
     }
@@ -106,3 +102,4 @@ public class Prontuario {
         this.medicacoes = medicacoes;
     }
 }
+

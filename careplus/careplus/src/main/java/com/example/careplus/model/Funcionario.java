@@ -37,6 +37,10 @@ public class Funcionario {
     @Schema(description = "Fonoaudiolgia")
     private String especialidade;
 
+    @Schema(description = "ABA, Fono, TO, etc")
+    @Column(name = "tipo_atendimento")
+    private String tipoAtendimento;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "funcionario_roles",
@@ -103,6 +107,14 @@ public class Funcionario {
 
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
+    }
+
+    public String getTipoAtendimento() {
+        return tipoAtendimento;
+    }
+
+    public void setTipoAtendimento(String tipoAtendimento) {
+        this.tipoAtendimento = tipoAtendimento;
     }
 
     public Set<Role> getRoles() {

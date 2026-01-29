@@ -1,9 +1,9 @@
 package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoTratamento.TratamentoRequestDto;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Tratamento;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import com.example.careplus.repository.TratamentoRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,28 +16,28 @@ public class TratamentoService {
 
 
     private final TratamentoRepository tratamentoRepository;
-    private final ProntuarioRepository prontuarioRepository;
+    private final FichaClinicaRepository fichaClinicaRepository;
 
-    public TratamentoService(TratamentoRepository tratamentoRepository, ProntuarioRepository prontuarioRepository) {
+    public TratamentoService(TratamentoRepository tratamentoRepository, FichaClinicaRepository fichaClinicaRepository) {
         this.tratamentoRepository = tratamentoRepository;
-        this.prontuarioRepository = prontuarioRepository;
+        this.fichaClinicaRepository = fichaClinicaRepository;
     }
 
     public Tratamento cadastrar(TratamentoRequestDto tratamento){
 
-        Optional<Prontuario> existe = prontuarioRepository.findById(tratamento.getIdProntuario());
+        Optional<FichaClinica> existe = fichaClinicaRepository.findById(tratamento.getIdProntuario());
 
         if(existe.isPresent()){
             Tratamento tratamento1 = new Tratamento();
             tratamento1.setDataModificacao(LocalDateTime.now());
             tratamento1.setFinalizado(tratamento.getFinalizado());
             tratamento1.setTipoDeTratamento(tratamento.getTipoDeTratamento());
-            tratamento1.setProntuario(existe.get());
+            tratamento1.setFichaClinica(existe.get());
 
             return tratamentoRepository.save(tratamento1);
 
         } else {
-            throw new RuntimeException("Prontuário não encontrado");
+            throw new RuntimeException("Ficha Clínica não encontrada");
         }
     }
 
@@ -50,8 +50,8 @@ public class TratamentoService {
         return tratamentoEncontrado;
     }
 
-    public Long buscarPeloIdProntuario(Long idProntuario){
-        Long tratamentoContagem = tratamentoRepository.buscarQuantidadeDeTratamentosPorId(idProntuario);
+    public Long buscarPeloIdFichaClinica(Long idFichaClinica){
+        Long tratamentoContagem = tratamentoRepository.buscarQuantidadeDeTratamentosPorId(idFichaClinica);
         if (tratamentoContagem == null || tratamentoContagem == 0){
             return 0L;
         }

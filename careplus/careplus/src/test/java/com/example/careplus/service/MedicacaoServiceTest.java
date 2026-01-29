@@ -2,9 +2,9 @@ package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoMedicacao.MedicacaoRequestDto;
 import com.example.careplus.model.Medicacao;
-import com.example.careplus.model.Prontuario;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.repository.MedicacaoRepository;
-import com.example.careplus.repository.ProntuarioRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,24 +27,24 @@ class MedicacaoServiceTest {
     private MedicacaoRepository medicacaoRepository;
 
     @Mock
-    private ProntuarioRepository prontuarioRepository;
+    private FichaClinicaRepository fichaClinicaRepository;
 
     @InjectMocks
     private MedicacaoService service;
 
 
     @Test
-    @DisplayName("Deve adicionar medicação quando o prontuário existe")
-    void adicionarComProntuarioExistenteTest() {
+    @DisplayName("Deve adicionar medicação quando a ficha clínica existe")
+    void adicionarComFichaClinicaExistenteTest() {
         MedicacaoRequestDto dto = new MedicacaoRequestDto();
         dto.setNomeMedicacao("Med1");
         dto.setDataInicio(LocalDate.of(2024, 1, 1));
         dto.setAtivo(true);
         dto.setIdProntuario(1L);
 
-        Prontuario prontuario = new Prontuario();
-        Mockito.when(prontuarioRepository.findById(1L))
-                .thenReturn(Optional.of(prontuario));
+        FichaClinica fichaClinica = new FichaClinica();
+        Mockito.when(fichaClinicaRepository.findById(1L))
+                .thenReturn(Optional.of(fichaClinica));
 
         Medicacao salvada = new Medicacao();
         salvada.setNomeMedicacao("Med1");
@@ -58,12 +58,12 @@ class MedicacaoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar erro ao adicionar quando prontuário não existe")
-    void adicionarSemProntuarioTest() {
+    @DisplayName("Deve lançar erro ao adicionar quando ficha clínica não existe")
+    void adicionarSemFichaClinicaTest() {
         MedicacaoRequestDto dto = new MedicacaoRequestDto();
         dto.setIdProntuario(2L);
 
-        Mockito.when(prontuarioRepository.findById(2L))
+        Mockito.when(fichaClinicaRepository.findById(2L))
                 .thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class,

@@ -1,7 +1,6 @@
 package com.example.careplus.repository;
 
 import com.example.careplus.model.Medicacao;
-import com.example.careplus.model.Tratamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,5 +11,5 @@ public interface MedicacaoRepository extends JpaRepository<Medicacao, Long>{
 
     List<Medicacao> findAllByOrderByNomeMedicacaoAsc();
 
-    List<Medicacao> findByProntuario_Id(Long idProntuario);
+    List<Medicacao> findByFichaClinica_Id(Long idFichaClinica);
 }

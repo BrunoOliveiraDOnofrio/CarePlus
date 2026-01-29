@@ -22,13 +22,17 @@ public class FuncionarioResponseDto {
     @Schema(description = "Fonoaudiologa")
     private String especialidade;
 
-    public FuncionarioResponseDto(Long id, String nome, String email, SupervisorDto supervisor, String cargo, String especialidade) {
+    @Schema(description = "ABA, Fono, TO, etc")
+    private String tipoAtendimento;
+
+    public FuncionarioResponseDto(Long id, String nome, String email, SupervisorDto supervisor, String cargo, String especialidade, String tipoAtendimento) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.supervisor = supervisor;
         this.cargo = cargo;
         this.especialidade = especialidade;
+        this.tipoAtendimento = tipoAtendimento;
     }
 
     public Long getId() {
@@ -77,5 +81,13 @@ public class FuncionarioResponseDto {
 
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
+    }
+
+    public String getTipoAtendimento() {
+        return tipoAtendimento;
+    }
+
+    public void setTipoAtendimento(String tipoAtendimento) {
+        this.tipoAtendimento = tipoAtendimento;
     }
 }

@@ -16,16 +16,16 @@ public class Material {
     private LocalDate dataImplementacao;
 
     @ManyToOne
-    @JoinColumn(name = "fkConsulta")
+    @JoinColumn(name = "fk_consulta")
     @JsonBackReference
-    private Consulta consulta;
+    private ConsultaProntuario consultaProntuario;
 
-    public Consulta getConsulta() {
-        return consulta;
+    public ConsultaProntuario getConsultaProntuario() {
+        return consultaProntuario;
     }
 
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
+    public void setConsultaProntuario(ConsultaProntuario consultaProntuario) {
+        this.consultaProntuario = consultaProntuario;
     }
 
     public Long getId() {

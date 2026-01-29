@@ -24,7 +24,7 @@ public class Medicacao implements Comparable<Medicacao> {
     @ManyToOne
     @JoinColumn(name = "prontuario_id")
     @JsonBackReference
-    private Prontuario prontuario;
+    private FichaClinica fichaClinica;
 
     public Medicacao() {
     }
@@ -38,12 +38,12 @@ public class Medicacao implements Comparable<Medicacao> {
         this.dataModificacao = LocalDateTime.now();
     }
 
-    public Prontuario getProntuario() {
-        return prontuario;
+    public FichaClinica getFichaClinica() {
+        return fichaClinica;
     }
 
-    public void setProntuario(Prontuario prontuario) {
-        this.prontuario = prontuario;
+    public void setFichaClinica(FichaClinica fichaClinica) {
+        this.fichaClinica = fichaClinica;
     }
 
     public Long getIdMedicacao() {
@@ -132,4 +132,3 @@ public class Medicacao implements Comparable<Medicacao> {
     }
 
 }
-

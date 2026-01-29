@@ -1,4 +1,5 @@
 package com.example.careplus.dto.dtoPaciente;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 public class PacienteResponseDto {
@@ -12,10 +13,12 @@ public class PacienteResponseDto {
     @Schema(description = "(11) 98215-0272")
     private String telefone;
     @Schema(description = "2025-10-14")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dtNascimento;
     @Schema(description = "Sul America")
     private String convenio;
     @Schema(description = "2025-11-25")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataInicio;
     public PacienteResponseDto() {
     }

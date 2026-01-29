@@ -6,9 +6,9 @@ import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.dto.dtoFuncionario.FuncionarioResquestDto;
 import com.example.careplus.dto.dtoFuncionario.FuncionarioTokenDto;
 import com.example.careplus.exception.ResourceNotFoundException;
-import com.example.careplus.model.Consulta;
+import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.Funcionario;
-import com.example.careplus.repository.ConsultaRepository;
+import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,12 +38,12 @@ public class FuncionarioService {
     private AuthenticationManager authenticationManager;
 
     private final FuncionarioRepository repository;
-    private final ConsultaRepository consultaRepository;
+    private final ConsultaProntuarioRepository consultaProntuarioRepository;
 
-    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder, ConsultaRepository consultaRepository) {
+    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder, ConsultaProntuarioRepository consultaProntuarioRepository) {
         this.repository = repository;
         this.passwordEncoder = encoder;
-        this.consultaRepository = consultaRepository;
+        this.consultaProntuarioRepository = consultaProntuarioRepository;
     }
 
     public List<FuncionarioResponseDto> listarSubordinados(Long id, List<Funcionario> todos) {
@@ -163,6 +163,7 @@ public class FuncionarioService {
             funcExistente.setEmail(funcionario.getEmail());
             funcExistente.setCargo(funcionario.getCargo());
             funcExistente.setEspecialidade(funcionario.getEspecialidade());
+            funcExistente.setTipoAtendimento(funcionario.getTipoAtendimento());
             Funcionario atualizado = repository.save(funcExistente);
 
             return FuncionarioMapper.toResponseDto(atualizado);
@@ -217,7 +218,7 @@ public class FuncionarioService {
         }
 
         // Busca todas as consultas do funcionário nessa data
-        List<Consulta> consultas = consultaRepository.buscarConsultasPorFuncionarioEData(idFuncionario, data);
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEData(idFuncionario, data);
 
         // Define horário de funcionamento: 8h às 18h
         LocalTime horarioInicio = LocalTime.of(8, 0);
@@ -235,7 +236,7 @@ public class FuncionarioService {
             // Verifica se o horário está ocupado
             boolean ocupado = false;
 
-            for (Consulta consulta : consultas){
+            for (ConsultaProntuario consulta : consultas){
                 LocalDateTime inicioConsulta = consulta.getDataHora();
                 LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
 
