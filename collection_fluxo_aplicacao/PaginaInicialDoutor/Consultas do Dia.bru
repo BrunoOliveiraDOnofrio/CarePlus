@@ -1,0 +1,15 @@
+meta {
+  name: Consultas do Dia
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/consultasDoDia/2
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

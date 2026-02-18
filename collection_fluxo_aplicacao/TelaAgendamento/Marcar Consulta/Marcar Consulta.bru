@@ -1,0 +1,24 @@
+meta {
+  name: Marcar Consulta
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/consultas-prontuario
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "pacienteId": 1,
+    "funcionarioId": 2,
+    "dataHora": "2026-02-17 16:00:00",
+    "tipo": "Retorno"
+  }
+}

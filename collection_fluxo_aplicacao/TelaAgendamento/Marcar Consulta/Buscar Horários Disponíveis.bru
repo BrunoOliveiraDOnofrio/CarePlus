@@ -1,0 +1,22 @@
+meta {
+  name: Buscar Horários Disponíveis
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/funcionarios/disponiveis
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "especialidade": "Linguagem Infantil",
+    "dataHora": "2026-01-30 17:00:00"
+  }
+}

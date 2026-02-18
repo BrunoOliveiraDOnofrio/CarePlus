@@ -1,0 +1,19 @@
+meta {
+  name: Buscar Paciente por Nome
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/pacientes/por-nome/Maria?nome=A
+  body: none
+  auth: bearer
+}
+
+params:query {
+  nome: A
+}
+
+auth:bearer {
+  token: {{token}}
+}

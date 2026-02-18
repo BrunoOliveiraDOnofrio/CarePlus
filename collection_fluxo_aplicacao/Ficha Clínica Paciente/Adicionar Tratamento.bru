@@ -1,0 +1,23 @@
+meta {
+  name: Adicionar Tratamento
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/tratamentos
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "tipoDeTratamento": "Terapia",
+    "finalizado": false,
+    "idFichaClinica": 1
+  }
+}

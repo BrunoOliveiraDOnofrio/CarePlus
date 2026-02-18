@@ -1,0 +1,21 @@
+meta {
+  name: Atualizar Observações Comportamentais
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/detalhes-pacientes/1/observacoes-comportamentais
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "observacoesComportamentais": "indo bem"
+  }
+}

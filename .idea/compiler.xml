@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="careplus" target="21" />
+      <module name="CarePlus" target="" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

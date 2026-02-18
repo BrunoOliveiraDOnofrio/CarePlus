@@ -1,0 +1,15 @@
+meta {
+  name: Buscar Informações de Contato
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/cuidadores/contato/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

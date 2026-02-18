@@ -1,0 +1,25 @@
+meta {
+  name: Salvar Materiais utilizados na consulta atual
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/materiais
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+      "item": "Bola",
+      "idConsulta": 10
+  }
+  
+  
+  
+}

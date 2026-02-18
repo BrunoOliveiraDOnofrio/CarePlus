@@ -1,0 +1,22 @@
+meta {
+  name: Atualizar Ficha Clínica
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/detalhes-pacientes/1/ficha-clinica
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "anamnese": "é isso ai",
+    "diagnostico": "complicado"
+  }
+}
