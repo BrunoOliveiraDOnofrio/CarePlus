@@ -1,0 +1,15 @@
+meta {
+  name: Selecione uma área
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/funcionarios/especialidades
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

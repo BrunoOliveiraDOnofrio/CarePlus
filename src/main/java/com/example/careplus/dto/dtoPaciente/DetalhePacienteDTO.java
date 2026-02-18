@@ -39,6 +39,7 @@ public class DetalhePacienteDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FichaClinicaDTO {
+        private Long id;
         private Integer idade;
         private String anamnese;
         private String diagnostico;

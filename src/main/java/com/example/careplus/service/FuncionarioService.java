@@ -260,6 +260,62 @@ public class FuncionarioService {
         return horariosDisponiveis;
     }
 
+    public List<FuncionarioResponseDto> buscarFuncionariosDisponiveis(String especialidade, String dataHoraStr){
+        // Parse do dataHora (formato: "2026-01-30 16:00:00" ou "2026-01-30T16:00:00")
+        LocalDateTime dataHora;
+        try {
+            // Tenta com espaço primeiro
+            if (dataHoraStr.contains(" ")) {
+                dataHoraStr = dataHoraStr.replace(" ", "T");
+            }
+            dataHora = LocalDateTime.parse(dataHoraStr);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Formato de data/hora inválido. Use: yyyy-MM-ddTHH:mm:ss ou yyyy-MM-dd HH:mm:ss");
+        }
+
+        // Busca todos os funcionários da especialidade
+        List<Funcionario> funcionariosDaEspecialidade = repository.findByEspecialidadeIgnoreCase(especialidade);
+
+        if (funcionariosDaEspecialidade.isEmpty()){
+            throw new ResourceNotFoundException("Nenhum funcionário encontrado para a especialidade: " + especialidade);
+        }
+
+        // Filtra os funcionários que estão disponíveis no horário solicitado
+        List<FuncionarioResponseDto> funcionariosDisponiveis = new ArrayList<>();
+
+        for (Funcionario funcionario : funcionariosDaEspecialidade){
+            // Busca as consultas do funcionário na data especificada
+            List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEData(
+                    funcionario.getId(), dataHora.toLocalDate());
+
+            // Verifica se o horário está livre
+            boolean disponivel = true;
+
+            for (ConsultaProntuario consulta : consultas){
+                LocalDateTime inicioConsulta = consulta.getDataHora();
+                LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
+
+                // Verifica se o horário solicitado conflita com alguma consulta existente
+                if ((dataHora.isEqual(inicioConsulta) || dataHora.isAfter(inicioConsulta))
+                        && dataHora.isBefore(fimConsulta)){
+                    disponivel = false;
+                    break;
+                }
+            }
+
+            // Se está disponível, adiciona à lista
+            if (disponivel){
+                funcionariosDisponiveis.add(FuncionarioMapper.toResponseDto(funcionario));
+            }
+        }
+
+        if (funcionariosDisponiveis.isEmpty()){
+            throw new ResourceNotFoundException("Nenhum funcionário disponível para " + especialidade + " no horário " + dataHora);
+        }
+
+        return funcionariosDisponiveis;
+    }
+
 
 
 }

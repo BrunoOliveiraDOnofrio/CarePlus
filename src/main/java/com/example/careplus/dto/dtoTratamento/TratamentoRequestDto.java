@@ -1,8 +1,6 @@
 package com.example.careplus.dto.dtoTratamento;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDateTime;
-
 public class TratamentoRequestDto {
 
     @Schema(description = "Colocar o nome do tratamento. Exemplo: Intervenção do fonoaudiólogo.")
@@ -11,12 +9,12 @@ public class TratamentoRequestDto {
     @Schema(description = "Campo de status se a o tratamento está ativo ou não.")
     private Boolean finalizado;
 
-    private Long idProntuario;
+    private Long idFichaClinica;
 
-    public TratamentoRequestDto(String tipoDeTratamento, Boolean finalizado, Long idProntuario) {
+    public TratamentoRequestDto(String tipoDeTratamento, Boolean finalizado, Long idFichaClinica) {
         this.tipoDeTratamento = tipoDeTratamento;
         this.finalizado = finalizado;
-        this.idProntuario = idProntuario;
+        this.idFichaClinica = idFichaClinica;
     }
 
     public TratamentoRequestDto(String tipoDeTratamento) {
@@ -39,12 +37,12 @@ public class TratamentoRequestDto {
         this.finalizado = finalizado;
     }
 
-    public Long getIdProntuario() {
-        return idProntuario;
+    public Long getIdFichaClinica() {
+        return idFichaClinica;
     }
 
-    public void setIdProntuario(Long idProntuario) {
-        this.idProntuario = idProntuario;
+    public void setIdFichaClinica(Long idFichaClinica) {
+        this.idFichaClinica = idFichaClinica;
     }
 }
 

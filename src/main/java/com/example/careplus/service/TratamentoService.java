@@ -25,7 +25,7 @@ public class TratamentoService {
 
     public Tratamento cadastrar(TratamentoRequestDto tratamento){
 
-        Optional<FichaClinica> existe = fichaClinicaRepository.findById(tratamento.getIdProntuario());
+        Optional<FichaClinica> existe = fichaClinicaRepository.findById(tratamento.getIdFichaClinica());
 
         if(existe.isPresent()){
             Tratamento tratamento1 = new Tratamento();
@@ -57,5 +57,14 @@ public class TratamentoService {
         }
 
         return tratamentoContagem;
+    }
+
+    public void deletar(Long id) {
+        // verifica se o tratamento existe
+        Tratamento tratamento = tratamentoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tratamento não encontrado"));
+
+        // deleta o tratamento
+        tratamentoRepository.delete(tratamento);
     }
 }

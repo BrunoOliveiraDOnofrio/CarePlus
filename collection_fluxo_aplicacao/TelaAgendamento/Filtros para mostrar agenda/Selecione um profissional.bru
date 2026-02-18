@@ -1,0 +1,21 @@
+meta {
+  name: Selecione um profissional
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/funcionarios/nomesPorEspecialidade
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "especialidade": "Linguagem Infantil"
+  }
+}

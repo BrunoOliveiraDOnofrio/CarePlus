@@ -1,6 +1,5 @@
 package com.example.careplus.dto.dtoDetalhes;
 
-import com.example.careplus.model.Tratamento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,5 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AtualizarTratamentoDTO {
-    private Tratamento tratamentoAtual;
+    private String tipoDeTratamento;
+    private Boolean finalizado;
+    private Long idFichaClinica;
 }
+

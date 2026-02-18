@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -84,20 +83,20 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(especialidades);
     }
 
-    @GetMapping("/nomesPorEspecialidade/{especialidade}")
+    @GetMapping("/nomesPorEspecialidade")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<FuncionarioResponseDto>> listarNomesPorEspecialidade(@PathVariable String especialidade){
-        List<FuncionarioResponseDto> nomes = funcionarioService.nomesFuncionariosPorEspecialidade(especialidade);
+    public ResponseEntity<List<FuncionarioResponseDto>> listarNomesPorEspecialidade(@RequestBody FuncionarioResquestDto especialidade){
+        List<FuncionarioResponseDto> nomes = funcionarioService.nomesFuncionariosPorEspecialidade(especialidade.getEspecialidade());
         return ResponseEntity.status(200).body(nomes);
     }
 
-    @GetMapping("/{id}/horarios-disponiveis")
+    @GetMapping("/disponiveis")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<String>> buscarHorariosDisponiveis(
-            @PathVariable Long id,
-            @RequestParam String data){
-        LocalDate dataConsulta = LocalDate.parse(data);
-        List<String> horarios = funcionarioService.buscarHorariosDisponiveis(id, dataConsulta);
-        return ResponseEntity.status(200).body(horarios);
+    public ResponseEntity<List<FuncionarioResponseDto>> buscarFuncionariosDisponiveis(
+            @RequestBody FuncionarioDisponivelRequestDto requestDto){
+        List<FuncionarioResponseDto> funcionarios = funcionarioService.buscarFuncionariosDisponiveis(
+                requestDto.getEspecialidade(),
+                requestDto.getDataHora());
+        return ResponseEntity.status(200).body(funcionarios);
     }
 }

@@ -1,0 +1,19 @@
+meta {
+  name: Cancelar Consulta
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/consultas/recusar/15
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  Não vai rolar
+}

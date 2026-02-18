@@ -1,0 +1,23 @@
+meta {
+  name: Atualizar Tratamento
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/detalhes-pacientes/1/tratamento
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "tipoDeTratamento": "Terapia Fonoaudiológica",
+    "finalizado": true,
+    "idFichaClinica": 1
+  }
+}

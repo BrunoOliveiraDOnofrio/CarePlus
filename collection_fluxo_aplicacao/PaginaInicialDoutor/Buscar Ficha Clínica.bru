@@ -1,0 +1,15 @@
+meta {
+  name: Buscar Ficha Clínica
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/pacientes/1/detalhes-completos
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Confirmar Consulta
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/consultas/confirmar/13
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  true
+}

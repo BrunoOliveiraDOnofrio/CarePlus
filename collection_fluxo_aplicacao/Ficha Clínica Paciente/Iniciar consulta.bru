@@ -1,0 +1,15 @@
+meta {
+  name: Iniciar consulta
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/detalhes/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

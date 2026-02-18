@@ -30,6 +30,13 @@ public class ConsultaProntuarioController {
         return ResponseEntity.ok(consulta);
     }
 
+    @GetMapping("/revisar")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ConsultaProntuarioResponseDto> revisarConsulta(@RequestBody ConsultaProntuarioRequestDto request) {
+        ConsultaProntuarioResponseDto consulta = service.revisarConsulta(request);
+        return ResponseEntity.ok(consulta);
+    }
+
     @DeleteMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<?> deletarConsulta(@PathVariable Long id){

@@ -1,0 +1,29 @@
+meta {
+  name: Marcar Consulta Recorrênte
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/consultas-prontuario/recorrentes
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "pacienteId": 3,
+    "funcionarioId": 4,
+    "datas": [
+      "2026-02-25",
+      "2026-02-26",
+      "2026-02-27"
+    ],
+    "horario": "10:00:00",
+    "tipo": "Retorno"
+  }
+}

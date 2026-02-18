@@ -1,0 +1,25 @@
+meta {
+  name: Consultas Da Semana
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-semanal?funcionarioId=2&dataReferencia=2026-01-30
+  body: none
+  auth: bearer
+}
+
+params:query {
+  funcionarioId: 2
+  dataReferencia: 2026-01-30
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

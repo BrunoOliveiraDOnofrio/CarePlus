@@ -34,7 +34,12 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
 
     List<ConsultaProntuario> findByFuncionarioIdAndConfirmadaNull(Long funcionarioId);
 
-    @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId ORDER BY c.dataHora DESC")
+    @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId " +
+            "AND c.observacoesComportamentais IS NOT NULL " +
+            "AND c.observacoesComportamentais != '' " +
+            "AND c.presenca = true " +
+            "AND c.confirmada = true " +
+            "ORDER BY c.dataHora DESC")
     List<ConsultaProntuario> buscarUltimaConsultaPorPaciente(@Param("pacienteId") Long pacienteId);
 
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId AND c.dataHora < CURRENT_TIMESTAMP ORDER BY c.dataHora DESC")

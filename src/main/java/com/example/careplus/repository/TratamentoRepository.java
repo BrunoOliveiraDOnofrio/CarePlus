@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TratamentoRepository extends JpaRepository<Tratamento, Long> {
 
@@ -15,4 +16,7 @@ public interface TratamentoRepository extends JpaRepository<Tratamento, Long> {
     List<Tratamento> findByFichaClinica_Id(Long idFichaClinica);
 
     List<Tratamento> findByTipoDeTratamento(String nome);
+
+    // busca o tratamento por tipo e ficha clínica específicos
+    Optional<Tratamento> findByTipoDeTratamentoAndFichaClinica_Id(String tipoDeTratamento, Long idFichaClinica);
 }

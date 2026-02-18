@@ -1,0 +1,21 @@
+meta {
+  name: Editar Observações
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/consultas-prontuario/realizarObservacoes/9
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "observacao": "Tá indo bem"
+  }
+}
