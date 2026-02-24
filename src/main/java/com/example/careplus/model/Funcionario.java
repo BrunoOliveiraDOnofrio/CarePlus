@@ -38,6 +38,12 @@ public class Funcionario {
     @Schema(description = "Fonoaudiolgia")
     private String especialidade;
 
+    @Schema(description = "(11)94002-8922")
+    private String telefone;
+
+    @Schema(description = "134122241")
+    private String documento;
+
     @Schema(description = "ABA, Fono, TO, etc")
     @Column(name = "tipo_atendimento")
     private String tipoAtendimento;
@@ -126,4 +132,19 @@ public class Funcionario {
         this.roles = roles;
     }
 
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
 }

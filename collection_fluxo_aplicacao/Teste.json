@@ -1,0 +1,24 @@
+{
+  "name": "Teste",
+  "variables": [
+    {
+      "name": "tokenId",
+      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjbGluaWNhLmNvbSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc3MTUzNDQ2NiwiZXhwIjoxNzc1MTM0NDY2fQ.a0BhNT8xJzfkfHzQ9gKc2k70GPil5aFXMBbcNASjETAgRHy8LRGZyKAusL905AHZVvXKBCQzOPND42U6Mau6Eg",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    }
+  ],
+  "info": {
+    "type": "bruno-environment",
+    "exportedAt": "2026-02-24T20:59:42.233Z",
+    "exportedUsing": "Bruno/v3.0.2"
+  }
+}

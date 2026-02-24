@@ -29,7 +29,7 @@ import java.util.Optional;
 @Service
 public class FuncionarioService {
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private GerenciadorTokenJwt gerenciadorTokenJwt;
@@ -71,20 +71,6 @@ public class FuncionarioService {
 
     public FuncionarioResponseDto salvar(FuncionarioResquestDto dto){
 
-// Modelo de JSON
-//        {
-//            "id": 2,
-//                "nome": "Dra. Ana Souza",
-//                "email": "ana.souza@clinica.com",
-//                "senha": "12322",
-//                "cargo": "Residente",
-//                "especialidade": "Cardiologia",
-//                "supervisor": {
-//                 "id": 1
-//                 }
-//        }
-// Caso não tiver o especialista não tiver um supervisor, basta não enviar o campo
-
         Funcionario supervisor = null;
 
         if (dto.getSupervisor() != null && dto.getSupervisor().getId() != null) {
@@ -101,7 +87,6 @@ public class FuncionarioService {
 
         return FuncionarioMapper.toResponseDto(salvo);
     }
-
     // autenticar usuário
     public FuncionarioTokenDto autenticar(Funcionario usuario){
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -117,7 +102,16 @@ public class FuncionarioService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
+        String nomeSupervisor = funcionarioAtenticado.getSupervisor() != null ? funcionarioAtenticado.getSupervisor().getNome() : "N/A";
+
+        final String token = gerenciadorTokenJwt.generateToken(
+                authentication,
+                funcionarioAtenticado.getId(),
+                funcionarioAtenticado.getNome(),
+                funcionarioAtenticado.getCargo(),
+                funcionarioAtenticado.getEspecialidade(),
+                nomeSupervisor
+        );
 
         return FuncionarioMapper.of(funcionarioAtenticado, token);
     }
@@ -163,6 +157,8 @@ public class FuncionarioService {
             funcExistente.setEmail(funcionario.getEmail());
             funcExistente.setCargo(funcionario.getCargo());
             funcExistente.setEspecialidade(funcionario.getEspecialidade());
+            funcExistente.setTelefone(funcionario.getTelefone());
+            funcExistente.setDocumento(funcionario.getDocumento());
             funcExistente.setTipoAtendimento(funcionario.getTipoAtendimento());
             Funcionario atualizado = repository.save(funcExistente);
 
