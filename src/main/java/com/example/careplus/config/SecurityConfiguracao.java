@@ -63,8 +63,17 @@ public class SecurityConfiguracao {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(URLS_PERMITIDAS).permitAll()
                                 // URLs protegidas por ROLE
+                                .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/pacientes/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/classificacao-doencas/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/cuidadores/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/consultas-prontuario/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/enderecos/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/fichas-clinicas/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/materiais/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/**").hasRole("ADMIN")
-                        .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN")
+
+
 //                                .requestMatchers("/funcionarios/**").hasRole("USER")
 
                                 .requestMatchers("/public/**").permitAll()

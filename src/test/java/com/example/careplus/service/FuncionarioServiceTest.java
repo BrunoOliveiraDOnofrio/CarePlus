@@ -60,6 +60,8 @@ class FuncionarioServiceTest {
                 null,
                 "Estagiario",
                 "Fonoaudiologo",
+                "(11)98765-4321",
+                "123456789",
                 "ABA"
         );
 
@@ -148,6 +150,8 @@ class FuncionarioServiceTest {
                 null,
                 "Gerente",
                 "Cardiologia",
+                "(11)98765-4321",
+                "987654321",
                 "Fono"
         );
 

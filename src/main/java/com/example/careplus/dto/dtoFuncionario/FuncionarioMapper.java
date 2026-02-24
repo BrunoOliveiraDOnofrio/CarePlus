@@ -45,6 +45,8 @@ public class FuncionarioMapper {
         entity.setSupervisor(supervisor);
         entity.setCargo(dto.getCargo());
         entity.setEspecialidade(dto.getEspecialidade());
+        entity.setTelefone(dto.getTelefone());
+        entity.setDocumento(dto.getDocumento());
         entity.setTipoAtendimento(dto.getTipoAtendimento());
 
 
@@ -78,6 +80,8 @@ public class FuncionarioMapper {
         entity.setEmail(dto.getEmail());
         entity.setCargo(dto.getCargo());
         entity.setEspecialidade(dto.getEspecialidade());
+        entity.setTelefone(dto.getTelefone());
+        entity.setDocumento(dto.getDocumento());
         entity.setTipoAtendimento(dto.getTipoAtendimento());
 
 
@@ -107,6 +111,8 @@ public class FuncionarioMapper {
                 supervisorDto,
                 entity.getCargo(),
                 entity.getEspecialidade(),
+                entity.getTelefone(),
+                entity.getDocumento(),
                 entity.getTipoAtendimento()
         );
     }

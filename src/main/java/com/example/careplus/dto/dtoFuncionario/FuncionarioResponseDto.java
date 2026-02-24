@@ -22,16 +22,24 @@ public class FuncionarioResponseDto {
     @Schema(description = "Fonoaudiologa")
     private String especialidade;
 
+    @Schema(description = "(11)94002-8922")
+    private String telefone;
+
+    @Schema(description = "134122241")
+    private String documento;
+
     @Schema(description = "ABA, Fono, TO, etc")
     private String tipoAtendimento;
 
-    public FuncionarioResponseDto(Long id, String nome, String email, SupervisorDto supervisor, String cargo, String especialidade, String tipoAtendimento) {
+    public FuncionarioResponseDto(Long id, String nome, String email, SupervisorDto supervisor, String cargo, String especialidade, String telefone, String documento, String tipoAtendimento) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.supervisor = supervisor;
         this.cargo = cargo;
         this.especialidade = especialidade;
+        this.telefone = telefone;
+        this.documento = documento;
         this.tipoAtendimento = tipoAtendimento;
     }
 
@@ -89,5 +97,21 @@ public class FuncionarioResponseDto {
 
     public void setTipoAtendimento(String tipoAtendimento) {
         this.tipoAtendimento = tipoAtendimento;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
 }
