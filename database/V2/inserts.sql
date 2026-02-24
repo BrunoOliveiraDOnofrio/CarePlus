@@ -18,10 +18,11 @@ INSERT INTO responsavel (id, nome, email, telefone, dt_nascimento, cpf, id_ender
 (1,'Clara','email2@gmail.com','1140028922','2002-01-16','49927132810',3);
 
 -- funcionario
-INSERT INTO funcionario (id, nome, email, senha, supervisor_id, cargo, especialidade) VALUES
-(1,'Dra. Helena Castro','helena.castro@clinica.com','SenhaForte@2024',NULL,'Supervisora de Fonoaudiologia','Motricidade Orofacial'),
-(2,'Juliana Almeida','admin@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Fonoaudióloga','Linguagem Infantil'),
-(3,'Marcos Ribeiro','marcos.ribeiro@clinica.com','HASH',2,'Fonoaudiólogo','Voz e Reabilitação Vocal');
+-- funcionario
+INSERT INTO funcionario (id, nome, email, senha, supervisor_id, cargo, especialidade, tipo_atendimento, telefone, documento) VALUES
+(1,'Dra. Helena Castro','helena.castro@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',NULL,'Supervisora','Fonoaudiologia', 'TO', '11940028922', '40028922'),
+(2,'Juliana Almeida','admin@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Funcionário','Fonoaudiologia', 'TO', '11940028922', '40028922'),
+(3,'Marcos Ribeiro','marcos.ribeiro@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',2,'Estagiário','Psicologia', 'ABA', '11940028922', '40028922');
 
 -- role
 INSERT INTO role (id, nome) VALUES
@@ -31,7 +32,7 @@ INSERT INTO role (id, nome) VALUES
 
 -- funcionario_roles
 INSERT INTO funcionario_roles (funcionario_id, role_id) VALUES
-(2,1),(3,2),(1,3);
+(2,1),(3,2),(1,1);
 
 -- fichaClinica
 INSERT INTO fichaClinica (id, paciente_id, desfraldado, hiperfoco, anamnese, diagnostico, resumo_clinico, nivel_agressividade) VALUES
