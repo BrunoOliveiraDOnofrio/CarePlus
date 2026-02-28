@@ -67,6 +67,7 @@ CREATE TABLE funcionario (
     tipo_atendimento VARCHAR(45),
     telefone VARCHAR(45),
     documento VARCHAR(45),
+    foto VARCHAR(255),
     CONSTRAINT fk_funcionario_supervisor
         FOREIGN KEY (supervisor_id)
         REFERENCES funcionario(id)

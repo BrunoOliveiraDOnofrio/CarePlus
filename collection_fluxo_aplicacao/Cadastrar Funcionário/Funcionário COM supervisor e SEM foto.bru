@@ -1,0 +1,32 @@
+meta {
+  name: Funcionário COM supervisor e SEM foto
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/funcionarios
+  body: multipartForm
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer SEU_TOKEN
+  Content-Type: multipart/form-data
+}
+
+body:multipart-form {
+  nome: Marcos Ribeiro
+  senha: 123456
+  cargo: Estagiário
+  especialidade: Psicologia
+  telefone: 11940028922
+  documento: 555444333
+  tipoAtendimento: ABA
+  supervisor.id: 2
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

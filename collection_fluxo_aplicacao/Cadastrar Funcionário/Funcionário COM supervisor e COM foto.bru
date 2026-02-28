@@ -1,0 +1,33 @@
+meta {
+  name: Funcionário COM supervisor e COM foto
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/funcionarios
+  body: multipartForm
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer SEU_TOKEN
+  Content-Type: multipart/form-data
+}
+
+body:multipart-form {
+  nome: Juliana Almeida
+  senha: 123456
+  cargo: Funcionário
+  especialidade: Fonoaudiologia
+  telefone: 11940028922
+  documento: 987654321
+  tipoAtendimento: TO
+  supervisor.id: 1
+  foto: @file()
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

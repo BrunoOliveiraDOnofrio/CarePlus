@@ -1,14 +1,17 @@
 package com.example.careplus.config;
 
+import com.example.careplus.service.S3Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.crypto.SecretKey;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
@@ -41,8 +44,8 @@ public class GerenciadorTokenJwt {
                 .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000)).compact();
     }
 
-    public String generateToken(final Authentication authentication, Long userId, String nome, String cargo, String especialidade, String nomeSupervisor){
-        // Para verificação de permissões
+    public String generateToken(final Authentication authentication, Long userId, String nome, String cargo, String especialidade, String nomeSupervisor, String documento){
+
         final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         return Jwts.builder().setSubject(authentication.getName())
                 .claim("roles", authorities)
@@ -51,6 +54,7 @@ public class GerenciadorTokenJwt {
                 .claim("cargo", cargo)
                 .claim("especialidade", especialidade)
                 .claim("nomeSupervisor", nomeSupervisor)
+                .claim("documento", documento)
                 .signWith(parseSecret()).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000)).compact();
     }

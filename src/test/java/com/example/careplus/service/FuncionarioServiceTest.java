@@ -180,7 +180,7 @@ class FuncionarioServiceTest {
                 .thenReturn(funcionarioAtualizado);
 
         // Act
-        FuncionarioResponseDto resultado = funcionarioService.atualizar(dtoAtualizado, funcionarioId);
+        FuncionarioResponseDto resultado = funcionarioService.atualizarFuncionario(dtoAtualizado, funcionarioId);
 
         // Assert
         Assertions.assertNotNull(resultado);
