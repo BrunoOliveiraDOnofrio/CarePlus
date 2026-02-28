@@ -20,12 +20,26 @@ public class FuncionarioController {
         this.funcionarioService = funcionarioService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FuncionarioResponseDto> salvarFuncionario(@RequestBody @Valid FuncionarioResquestDto funcionario){
+    public ResponseEntity<FuncionarioResponseDto> salvarFuncionario(
+            @ModelAttribute @Valid FuncionarioResquestDto funcionario
+    ) {
         FuncionarioResponseDto funcionarioSalvo = funcionarioService.salvar(funcionario);
         return ResponseEntity.status(201).body(funcionarioSalvo);
     }
+
+    @PutMapping(consumes = "multipart/form-data")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<FuncionarioResponseDto> atualizarFuncionario(
+            @RequestParam Long idFuncionario,
+            @ModelAttribute @Valid FuncionarioResquestDto funcionario
+    ) {
+        FuncionarioResponseDto funcionarioAtualizado = funcionarioService.atualizarFuncionario(funcionario, idFuncionario);
+        return ResponseEntity.status(200).body(funcionarioAtualizado);
+    }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<FuncionarioTokenDto> login(@RequestBody FuncionarioLoginDto funcionarioLoginDto){
@@ -62,12 +76,12 @@ public class FuncionarioController {
         }
     }
 
-    @PutMapping("/{id}")
-    @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<?> atualizarFuncionario(@RequestBody FuncionarioResquestDto funcionario, @PathVariable Long id){
-            funcionarioService.atualizar(funcionario, id);
-            return ResponseEntity.status(200).build();
-    }
+//    @PutMapping("/{id}")
+//    @SecurityRequirement(name = "Bearer")
+//    public ResponseEntity<?> atualizarFuncionario(@RequestBody FuncionarioResquestDto funcionario, @PathVariable Long id){
+//            funcionarioService.atualizar(funcionario, id);
+//            return ResponseEntity.status(200).build();
+//    }
 
     @GetMapping("/subordinados/{id}")
     @SecurityRequirement(name = "Bearer")

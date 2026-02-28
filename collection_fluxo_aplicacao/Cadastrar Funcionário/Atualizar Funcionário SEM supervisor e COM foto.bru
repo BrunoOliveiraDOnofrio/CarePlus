@@ -1,0 +1,36 @@
+meta {
+  name: Atualizar Funcionário SEM supervisor e COM foto
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:8080/funcionarios?idFuncionario=12
+  body: multipartForm
+  auth: bearer
+}
+
+params:query {
+  idFuncionario: 12
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  nome: Gabriel Oliveira
+  senha: 123123
+  cargo: Supervisor
+  especialidade: Fonoaudiologia
+  telefone: 11940028922
+  documento: 123456789
+  tipoAtendimento: ABA
+  foto: @file(C:\Users\gibie\OneDrive\Imagens\Screenshots\Captura de tela 2026-02-13 211055.png)
+  email: iago@gmail.com
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

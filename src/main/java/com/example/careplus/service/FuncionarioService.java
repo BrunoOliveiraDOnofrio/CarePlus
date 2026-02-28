@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,11 +40,13 @@ public class FuncionarioService {
 
     private final FuncionarioRepository repository;
     private final ConsultaProntuarioRepository consultaProntuarioRepository;
+    private final S3Service s3Service;
 
-    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder, ConsultaProntuarioRepository consultaProntuarioRepository) {
+    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder, ConsultaProntuarioRepository consultaProntuarioRepository, S3Service s3Service) {
         this.repository = repository;
         this.passwordEncoder = encoder;
         this.consultaProntuarioRepository = consultaProntuarioRepository;
+        this.s3Service = s3Service;
     }
 
     public List<FuncionarioResponseDto> listarSubordinados(Long id, List<Funcionario> todos) {
@@ -69,7 +72,7 @@ public class FuncionarioService {
         return repository.findAll();
     }
 
-    public FuncionarioResponseDto salvar(FuncionarioResquestDto dto){
+    public FuncionarioResponseDto salvar(FuncionarioResquestDto dto) {
 
         Funcionario supervisor = null;
 
@@ -78,10 +81,20 @@ public class FuncionarioService {
                     .orElseThrow(() -> new RuntimeException("Supervisor não encontrado"));
         }
 
-        // criptografa senha
         String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
+
         Funcionario novoFuncionario = FuncionarioMapper.toEntity(dto, supervisor);
         novoFuncionario.setSenha(senhaCriptografada);
+
+        // UPLOAD DA IMAGEM
+        if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+            try {
+                String nomeArquivo = s3Service.uploadImagem(dto.getFoto(), dto.getDocumento());
+                novoFuncionario.setFoto(nomeArquivo);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage(), e);
+            }
+        }
 
         Funcionario salvo = repository.save(novoFuncionario);
 
@@ -147,23 +160,46 @@ public class FuncionarioService {
         repository.deleteById(id);
     }
 
-    public FuncionarioResponseDto atualizar(FuncionarioResquestDto funcionario, Long id){
-        Optional<Funcionario> existe = repository.findById(id);
+    public FuncionarioResponseDto atualizarFuncionario(FuncionarioResquestDto dto, Long idFuncionario) {
 
-        if (existe.isPresent()){
+        Funcionario supervisor = null;
+
+        if (dto.getSupervisor() != null && dto.getSupervisor().getId() != null) {
+            supervisor = repository.findById(dto.getSupervisor().getId())
+                    .orElseThrow(() -> new RuntimeException("Supervisor não encontrado"));
+        }
+
+        Optional<Funcionario> existe = repository.findById(idFuncionario);
+
+        if (existe.isPresent()) {
             Funcionario funcExistente = existe.get();
 
-            funcExistente.setNome(funcionario.getNome());
-            funcExistente.setEmail(funcionario.getEmail());
-            funcExistente.setCargo(funcionario.getCargo());
-            funcExistente.setEspecialidade(funcionario.getEspecialidade());
-            funcExistente.setTelefone(funcionario.getTelefone());
-            funcExistente.setDocumento(funcionario.getDocumento());
-            funcExistente.setTipoAtendimento(funcionario.getTipoAtendimento());
-            Funcionario atualizado = repository.save(funcExistente);
+            funcExistente.setNome(dto.getNome());
+            funcExistente.setEmail(dto.getEmail());
+            funcExistente.setCargo(dto.getCargo());
+            funcExistente.setEspecialidade(dto.getEspecialidade());
+            funcExistente.setTelefone(dto.getTelefone());
+            funcExistente.setDocumento(dto.getDocumento());
+            funcExistente.setTipoAtendimento(dto.getTipoAtendimento());
+            funcExistente.setSupervisor(supervisor);
 
-            return FuncionarioMapper.toResponseDto(atualizado);
-        }else{
+            // Atualiza a senha criptografada
+            String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
+            funcExistente.setSenha(senhaCriptografada);
+
+            // UPLOAD DA IMAGEM
+            if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+                try {
+                    String nomeArquivo = s3Service.uploadImagem(dto.getFoto(), dto.getDocumento());
+                    funcExistente.setFoto(nomeArquivo);
+                } catch (IOException e) {
+                    throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage(), e);
+                }
+            }
+
+            Funcionario salvo = repository.save(funcExistente);
+            return FuncionarioMapper.toResponseDto(salvo);
+        } else {
             throw new ResourceNotFoundException("Usuario nao encontrado!");
         }
     }

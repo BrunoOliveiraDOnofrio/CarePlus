@@ -2,6 +2,7 @@ package com.example.careplus.dto.dtoFuncionario;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.web.multipart.MultipartFile;
 
 public class FuncionarioResquestDto {
 
@@ -30,6 +31,16 @@ public class FuncionarioResquestDto {
 
     @Schema(description = "ABA, Fono, TO, etc")
     private String tipoAtendimento;
+
+    private MultipartFile foto;
+
+    public MultipartFile getFoto() {
+        return foto;
+    }
+
+    public void setFoto(MultipartFile foto) {
+        this.foto = foto;
+    }
 
     public FuncionarioResquestDto(String nome, String email, String senha, SupervisorDto supervisor, String cargo, String especialidade, String telefone, String documento, String tipoAtendimento) {
         this.nome = nome;

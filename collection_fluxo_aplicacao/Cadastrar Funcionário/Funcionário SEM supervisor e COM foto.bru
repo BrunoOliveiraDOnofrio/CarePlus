@@ -1,0 +1,32 @@
+meta {
+  name: Funcionário SEM supervisor e COM foto
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/funcionarios
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  nome: Gabriel Santos
+  senha: 123456
+  cargo: Supervisor
+  especialidade: Fonoaudiologia
+  telefone: 11940028922
+  documento: 123456789
+  tipoAtendimento: ABA
+  foto: @file(C:\Users\gibie\Downloads\perfil.jpg)
+  email: iago@gmail.com
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}
