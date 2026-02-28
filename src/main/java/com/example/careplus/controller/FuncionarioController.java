@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -39,6 +40,32 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarioAtualizado);
     }
 
+    @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity deletarFuncionario(@PathVariable Long id){
+        try{
+            funcionarioService.deletar(id);
+            return ResponseEntity.status(200).build();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/foto")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<byte[]> buscarFotoPorDocumento(
+            @RequestParam String documento
+    ) {
+        try {
+            byte[] foto = funcionarioService.buscarFoto(documento);
+
+            return ResponseEntity.ok()
+                    .header("Content-Type", "image/jpeg")
+                    .body(foto);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
     @PostMapping("/login")
@@ -48,7 +75,6 @@ public class FuncionarioController {
         FuncionarioTokenDto funcionarioTokenDto = this.funcionarioService.autenticar(funcionario);
 
         return ResponseEntity.status(200).body(funcionarioTokenDto);
-
     }
 
     @GetMapping("/por-email")
@@ -65,23 +91,6 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarios);
     }
 
-    @DeleteMapping("/{id}")
-    @SecurityRequirement(name = "Bearer")
-    public ResponseEntity deletarFuncionario(@PathVariable Long id){
-        try{
-            funcionarioService.deletar(id);
-            return ResponseEntity.status(200).build();
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-//    @PutMapping("/{id}")
-//    @SecurityRequirement(name = "Bearer")
-//    public ResponseEntity<?> atualizarFuncionario(@RequestBody FuncionarioResquestDto funcionario, @PathVariable Long id){
-//            funcionarioService.atualizar(funcionario, id);
-//            return ResponseEntity.status(200).build();
-//    }
 
     @GetMapping("/subordinados/{id}")
     @SecurityRequirement(name = "Bearer")
