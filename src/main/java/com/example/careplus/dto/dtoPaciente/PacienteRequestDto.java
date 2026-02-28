@@ -1,23 +1,36 @@
 package com.example.careplus.dto.dtoPaciente;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
 public class PacienteRequestDto {
 
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
     @Schema(description = "Vitor Miguel Raimundo Ribeiro")
     private String nome;
 
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Email deve ser válido")
     @Schema(description = "vitor_ribeiro@performa.com.br")
     private String email;
 
+    @NotBlank(message = "CPF é obrigatório")
+    @Pattern(regexp = "^\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}$", message = "CPF deve ser válido (formato: 000.000.000-00)")
     @Schema(description = "191.644.388-56")
     private String cpf;
 
+    @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?\\d{4,5}-?\\d{4}$", message = "Telefone deve ser válido")
     @Schema(description = "(11) 99182-8249")
     private String telefone;
 
+    @NotNull(message = "Data de nascimento é obrigatória")
     @Schema(description = "2025-10-14")
     private LocalDate dtNascimento;
 

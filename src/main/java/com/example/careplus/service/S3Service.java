@@ -41,11 +41,14 @@ public class S3Service {
 
     public String uploadImagem(MultipartFile file, String documentoFuncionario) throws IOException {
 
+        // Sanitiza o documento para prevenir path traversal
+        String documentoSanitizado = sanitizarDocumento(documentoFuncionario);
+
         String nomeArquivo = LocalDateTime.now().toString() + "-" + file.getOriginalFilename();
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key("funcionarios/documento_" + documentoFuncionario + "/ " + nomeArquivo)
+                .key("funcionarios/documento_" + documentoSanitizado + "/ " + nomeArquivo)
                 .contentType(file.getContentType())
                 .build();
 
@@ -58,7 +61,9 @@ public class S3Service {
     }
 
     public byte[] buscarUltimaFoto(String documento) throws IOException {
-        String prefix = "funcionarios/documento_" + documento + "/";
+        // Sanitiza o documento para prevenir path traversal
+        String documentoSanitizado = sanitizarDocumento(documento);
+        String prefix = "funcionarios/documento_" + documentoSanitizado + "/";
 
         // Listar todos os objetos no prefixo
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
@@ -87,5 +92,20 @@ public class S3Service {
         ResponseInputStream<GetObjectResponse> response = s3Client.getObject(getObjectRequest);
 
         return response.readAllBytes();
+    }
+
+    /**
+     * Sanitiza o parâmetro documento, permitindo apenas caracteres alfanuméricos.
+     * Previne ataques de path traversal no bucket S3.
+     */
+    private String sanitizarDocumento(String documento) {
+        if (documento == null || documento.isBlank()) {
+            throw new IllegalArgumentException("Documento não pode ser vazio");
+        }
+        String sanitizado = documento.replaceAll("[^a-zA-Z0-9]", "");
+        if (sanitizado.isEmpty()) {
+            throw new IllegalArgumentException("Documento contém apenas caracteres inválidos");
+        }
+        return sanitizado;
     }
 }

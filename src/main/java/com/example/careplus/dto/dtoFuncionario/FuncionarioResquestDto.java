@@ -2,30 +2,44 @@ package com.example.careplus.dto.dtoFuncionario;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FuncionarioResquestDto {
 
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
     @Schema(description = "Iago Benedito Barbosa")
     private String nome;
 
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Email deve ser válido")
     @Schema(description = "iago_benedito_barbosa@navescorat.com.br")
     private String email;
 
+    @NotBlank(message = "Senha é obrigatória")
+    @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
     @Schema(description = "olgyT0E7nH")
     private String senha;
 
     private SupervisorDto supervisor;
 
+    @NotBlank(message = "Cargo é obrigatório")
     @Schema(description = "Estagiaria")
     private String cargo;
 
     @Schema(description = "Fonoaudiologa")
     private String especialidade;
 
+    @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?\\d{4,5}-?\\d{4}$", message = "Telefone deve ser válido")
     @Schema(description = "(11)94002-8922")
     private String telefone;
 
+    @NotBlank(message = "Documento é obrigatório")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Documento deve conter apenas letras e números")
     @Schema(description = "134122241")
     private String documento;
 

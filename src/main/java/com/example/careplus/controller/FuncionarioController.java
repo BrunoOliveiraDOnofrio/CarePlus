@@ -69,7 +69,7 @@ public class FuncionarioController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<FuncionarioTokenDto> login(@RequestBody FuncionarioLoginDto funcionarioLoginDto){
+    public ResponseEntity<FuncionarioTokenDto> login(@RequestBody @Valid FuncionarioLoginDto funcionarioLoginDto){
 
         final Funcionario funcionario = FuncionarioMapper.of(funcionarioLoginDto);
         FuncionarioTokenDto funcionarioTokenDto = this.funcionarioService.autenticar(funcionario);

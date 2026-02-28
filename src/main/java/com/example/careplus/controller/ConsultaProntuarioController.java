@@ -122,6 +122,7 @@ public class ConsultaProntuarioController {
     }
 
     @GetMapping("/agenda-semanal")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarAgendaSemanal(
             @RequestParam Long funcionarioId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
