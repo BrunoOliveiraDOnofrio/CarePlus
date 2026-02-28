@@ -37,9 +37,9 @@ public class ConsultaProntuarioController {
         return ResponseEntity.ok(consulta);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<?> deletarConsulta(@PathVariable Long id){
+    public ResponseEntity<?> deletarConsulta(@RequestParam Long id){
         try{
             service.removerConsulta(id);
             return ResponseEntity.status(204).build();
@@ -85,30 +85,30 @@ public class ConsultaProntuarioController {
 
     }
 
-    @PutMapping("/confirmar/{idConsulta}")
+    @PutMapping("/confirmar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaProntuarioResponseDto> confirmarConsulta(@PathVariable Long idConsulta){
+    public ResponseEntity<ConsultaProntuarioResponseDto> confirmarConsulta(@RequestParam Long idConsulta){
         ConsultaProntuarioResponseDto consultaResponseDto = service.confirmarConsulta(idConsulta);
         return ResponseEntity.status(200).body(consultaResponseDto);
     }
 
-    @PutMapping("/recusar/{idConsulta}")
+    @PutMapping("/recusar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaProntuarioResponseDto> recusarConsulta(@PathVariable Long idConsulta, @RequestBody String justificativa){
+    public ResponseEntity<ConsultaProntuarioResponseDto> recusarConsulta(@RequestParam Long idConsulta, @RequestBody String justificativa){
         ConsultaProntuarioResponseDto consultaResponseDto = service.recusarConsulta(idConsulta, justificativa);
         return ResponseEntity.status(200).body(consultaResponseDto);
     }
 
-    @PutMapping("/realizarObservacoes/{idConsulta}")
+    @PutMapping("/realizarObservacoes")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaProntuarioResponseDto> editarObervacoes(@PathVariable Long idConsulta, @RequestBody RealizarConsultaProntuarioDto obs) throws JsonProcessingException {
+    public ResponseEntity<ConsultaProntuarioResponseDto> editarObervacoes(@RequestParam Long idConsulta, @RequestBody RealizarConsultaProntuarioDto obs) throws JsonProcessingException {
         ConsultaProntuarioResponseDto consultaResponseDto = service.salvarObservacoes(idConsulta, obs);
         return ResponseEntity.status(200).body(consultaResponseDto);
     }
 
-    @GetMapping("/consultasDoDia/{idFuncionario}")
+    @GetMapping("/consultasDoDia")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ConsultaProntuarioResponseDto>> buscarConsultasDoDia(@PathVariable Long idFuncionario){
+    public ResponseEntity<List<ConsultaProntuarioResponseDto>> buscarConsultasDoDia(@RequestParam Long idFuncionario){
         List<ConsultaProntuarioResponseDto> consultaResponseDtos = service.consultasDoDia(idFuncionario);
         return ResponseEntity.status(200).body(consultaResponseDtos);
     }
@@ -131,9 +131,9 @@ public class ConsultaProntuarioController {
         return ResponseEntity.ok(agenda);
     }
 
-    @GetMapping("/pendentes/{idFuncionario}")
+    @GetMapping("/pendentes")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarConsultasPendentes(@PathVariable Long idFuncionario) {
+    public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarConsultasPendentes(@RequestParam Long idFuncionario) {
         List<ConsultaProntuarioResponseDto> consultasPendentes = service.listarConsultasPendentes(idFuncionario);
 
         if (consultasPendentes.isEmpty()) {
@@ -143,26 +143,25 @@ public class ConsultaProntuarioController {
         return ResponseEntity.status(200).body(consultasPendentes);
     }
 
-    @GetMapping("/proxima/{idPaciente}")
+    @GetMapping("/proxima")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ProximaConsultaProntuarioResponseDto> buscarProximaConsultaConfirmada(@PathVariable Long idPaciente) {
+    public ResponseEntity<ProximaConsultaProntuarioResponseDto> buscarProximaConsultaConfirmada(@RequestParam Long idPaciente) {
         ProximaConsultaProntuarioResponseDto proximaConsulta = service.buscarProximaConsultaConfirmada(idPaciente);
         return ResponseEntity.ok(proximaConsulta);
     }
 
-    @GetMapping("/detalhes/{idConsulta}")
+    @GetMapping("/detalhes")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaProntuarioAtualResponseDto> buscarDetalhesConsultaAtual(@PathVariable Long idConsulta) {
+    public ResponseEntity<ConsultaProntuarioAtualResponseDto> buscarDetalhesConsultaAtual(@RequestParam Long idConsulta) {
         ConsultaProntuarioAtualResponseDto detalhes = service.buscarDetalhesConsultaAtual(idConsulta);
         return ResponseEntity.ok(detalhes);
     }
 
-    @GetMapping("/detalhes-anterior/{idConsulta}")
+    @GetMapping("/detalhes-anterior")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<DetalhesConsultaProntuarioAnteriorResponseDto> buscarDetalhesConsultaAnterior(@PathVariable Long idConsulta) {
+    public ResponseEntity<DetalhesConsultaProntuarioAnteriorResponseDto> buscarDetalhesConsultaAnterior(@RequestParam Long idConsulta) {
         DetalhesConsultaProntuarioAnteriorResponseDto detalhes = service.buscarDetalhesConsultaAnterior(idConsulta);
         return ResponseEntity.ok(detalhes);
     }
 
 }
-

@@ -31,9 +31,9 @@ public class MedicacaoController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Medicacao> atualizar(@PathVariable Long id, @RequestBody MedicacaoRequestDto dto) {
+    public ResponseEntity<Medicacao> atualizar(@RequestParam Long id, @RequestBody MedicacaoRequestDto dto) {
 
         try {
             Medicacao medicacaoAtualizada = service.atualizar(id, dto);
@@ -43,9 +43,9 @@ public class MedicacaoController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@RequestParam Long id) {
         try {
             service.deletar(id);
             return ResponseEntity.status(204).build();

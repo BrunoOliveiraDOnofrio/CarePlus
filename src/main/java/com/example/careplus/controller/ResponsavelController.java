@@ -52,9 +52,9 @@ public class ResponsavelController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Responsavel> atualizar(@PathVariable Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
+    public ResponseEntity<Responsavel> atualizar(@RequestParam Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
         try {
             return ResponseEntity.status(200).body(responsavelService.atualizar(id, responsavelAtt));
         } catch (NoSuchElementException e) {
@@ -64,9 +64,9 @@ public class ResponsavelController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> deletar(@PathVariable Long id){
+    public ResponseEntity<Void> deletar(@RequestParam Long id){
         try {
             responsavelService.deletar(id);
             return ResponseEntity.status(204).build();

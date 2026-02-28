@@ -40,9 +40,9 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarioAtualizado);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity deletarFuncionario(@PathVariable Long id){
+    public ResponseEntity deletarFuncionario(@RequestParam Long id){
         try{
             funcionarioService.deletar(id);
             return ResponseEntity.status(200).build();
@@ -92,9 +92,9 @@ public class FuncionarioController {
     }
 
 
-    @GetMapping("/subordinados/{id}")
+    @GetMapping("/subordinados")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<FuncionarioResponseDto>> listarTodosSubordinados(@PathVariable Long id){
+    public ResponseEntity<List<FuncionarioResponseDto>> listarTodosSubordinados(@RequestParam Long id){
         List<FuncionarioResponseDto> funcionarios = funcionarioService.listarSubordinados(id, funcionarioService.buscarTodos());
         return ResponseEntity.status(200).body(funcionarios);
     }

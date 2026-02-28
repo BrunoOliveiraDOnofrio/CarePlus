@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/consultas-prontuario/detalhes/1
+  url: {{baseUrl}}/consultas-prontuario/detalhes?idConsulta=1
   body: none
   auth: bearer
+}
+
+params:query {
+  idConsulta: 1
 }
 
 auth:bearer {

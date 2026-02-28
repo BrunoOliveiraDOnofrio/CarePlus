@@ -32,9 +32,9 @@ public class PacienteController {
         return ResponseEntity.ok().body(pacientes);
     }
 
-    @GetMapping("/{id}") // OK
+    @GetMapping("/por-id") // OK
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<PacienteResponseDto> listarPorId(@PathVariable Long id){
+    public ResponseEntity<PacienteResponseDto> listarPorId(@RequestParam Long id){
             PacienteResponseDto paciente = service.listarPorId(id);
             return ResponseEntity.ok().body(paciente);
     }
@@ -53,9 +53,9 @@ public class PacienteController {
         }
     }
 
-    @DeleteMapping("/{id}") // OK
+    @DeleteMapping // OK
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity deletarPaciente(@PathVariable Long id){
+    public ResponseEntity deletarPaciente(@RequestParam Long id){
         try{
             service.deletar(id);
             return ResponseEntity.status(204).build();
@@ -64,9 +64,9 @@ public class PacienteController {
         }
     }
 
-    @PutMapping("/{id}") //OK
+    @PutMapping //OK
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<?> atualizarPaciente(@RequestBody PacienteRequestDto paciente, @PathVariable Long id){
+    public ResponseEntity<?> atualizarPaciente(@RequestBody PacienteRequestDto paciente, @RequestParam Long id){
         try{
             service.atualizar(paciente, id);
             return ResponseEntity.ok().build();
@@ -82,7 +82,7 @@ public class PacienteController {
         return ResponseEntity.ok().body(paciente);
     }
 
-    @GetMapping("/por-nome/{nome}")
+    @GetMapping("/por-nome")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<PacienteResponseDto>> buscarPorNome(@RequestParam String nome){
         List<PacienteResponseDto> pacientes = service.buscarPorNome(nome);

@@ -37,9 +37,9 @@ public class FichaClinicaController {
         }
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/id")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> buscarFichaClinicaPorId(@PathVariable Long id){
+    public ResponseEntity<FichaClinica> buscarFichaClinicaPorId(@RequestParam Long id){
         try {
             FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorId(id);
             return ResponseEntity.status(200).body(fichaClinica);
@@ -48,9 +48,9 @@ public class FichaClinicaController {
         }
     }
 
-    @GetMapping("/nome/{nome}")
+    @GetMapping("/nome")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> buscarFichaClinicaPorNome(@PathVariable String nome){
+    public ResponseEntity<FichaClinica> buscarFichaClinicaPorNome(@RequestParam String nome){
         try {
             FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorNome(nome);
             return ResponseEntity.status(200).body(fichaClinica);
@@ -59,9 +59,9 @@ public class FichaClinicaController {
         }
     }
 
-    @GetMapping("/cpf/{cpf}")
+    @GetMapping("/cpf")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> buscarFichaClinicaPorCpf(@PathVariable String cpf){
+    public ResponseEntity<FichaClinica> buscarFichaClinicaPorCpf(@RequestParam String cpf){
         try {
             FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorCpf(cpf);
             return ResponseEntity.status(200).body(fichaClinica);
@@ -70,9 +70,9 @@ public class FichaClinicaController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> atualizarFichaClinica(@RequestBody FichaClinicaRequestDto fichaClinica, @PathVariable Long id){
+    public ResponseEntity<FichaClinica> atualizarFichaClinica(@RequestBody FichaClinicaRequestDto fichaClinica, @RequestParam Long id){
         try {
             FichaClinica fichaClinicaAtualizada = fichaClinicaService.atualizarFichaClinica(fichaClinica, id);
             return ResponseEntity.status(201).body(fichaClinicaAtualizada);
@@ -81,9 +81,9 @@ public class FichaClinicaController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> deletarPorId(@PathVariable Long id){
+    public ResponseEntity<Void> deletarPorId(@RequestParam Long id){
         try {
             fichaClinicaService.deletarPorId(id);
             return ResponseEntity.status(204).build();
