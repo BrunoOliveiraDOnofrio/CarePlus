@@ -1,0 +1,34 @@
+meta {
+  name: Atualizar Paciente COM foto
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/pacientes?id=1
+  body: multipartForm
+  auth: bearer
+}
+
+params:query {
+  id: 1
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  nome: Gabriel Oliveira
+  email: gabriel.oliveira@email.com
+  cpf: 123.456.789-09
+  telefone: 11940028922
+  dtNascimento: 2000-05-15
+  convenio: Sul America
+  foto: @file()
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

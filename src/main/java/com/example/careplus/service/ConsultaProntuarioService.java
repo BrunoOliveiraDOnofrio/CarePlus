@@ -273,7 +273,7 @@ public class ConsultaProntuarioService {
 
             s3Service.uploadJson(
                     "bucket-prontuarios-1",
-                    "pacienteId" + consultaSalva.getPaciente().getId() + "/" + consultaSalva.getDataHora() + ".json",
+                    "prontuarios/pacienteId" + consultaSalva.getPaciente().getId() + "/" + consultaSalva.getDataHora() + ".json",
                     json
             );
 

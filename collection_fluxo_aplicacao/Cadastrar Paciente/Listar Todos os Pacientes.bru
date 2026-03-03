@@ -1,0 +1,24 @@
+meta {
+  name: Listar Todos os Pacientes
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8080/pacientes/todos-pacientes?pagina=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  pagina: 0
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.util.List;
 
@@ -120,6 +123,15 @@ public class FuncionarioController {
         List<FuncionarioResponseDto> funcionarios = funcionarioService.buscarFuncionariosDisponiveis(
                 requestDto.getEspecialidade(),
                 requestDto.getDataHora());
+        return ResponseEntity.status(200).body(funcionarios);
+    }
+
+    @GetMapping("/todos-funcionarios")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Page<FuncionarioResponseDto>> listarTodosFuncionariosPaginado(
+            @RequestParam(defaultValue = "0") Integer pagina) {
+        Pageable pageable = PageRequest.of(pagina, 10);
+        Page<FuncionarioResponseDto> funcionarios = funcionarioService.listarTodosPaginado(pageable);
         return ResponseEntity.status(200).body(funcionarios);
     }
 }

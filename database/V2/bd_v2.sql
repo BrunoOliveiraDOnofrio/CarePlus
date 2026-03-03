@@ -30,7 +30,8 @@ CREATE TABLE paciente (
     telefone VARCHAR(255),
     dt_nascimento DATE,
     convenio VARCHAR(255),
-    data_inicio DATE
+    data_inicio DATE,
+    foto VARCHAR(255)
 );
 
 -- =========================

@@ -60,10 +60,65 @@ public class S3Service {
         return nomeArquivo;
     }
 
+    public String uploadImagemPaciente(MultipartFile file, String documentoFuncionario) throws IOException {
+
+        // Sanitiza o documento para prevenir path traversal
+        String documentoSanitizado = sanitizarDocumento(documentoFuncionario);
+
+        String nomeArquivo = LocalDateTime.now().toString() + "-" + file.getOriginalFilename();
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key("pacientes/documento_" + documentoSanitizado + "/ " + nomeArquivo)
+                .contentType(file.getContentType())
+                .build();
+
+        s3Client.putObject(
+                putObjectRequest,
+                software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes())
+        );
+
+        return nomeArquivo;
+    }
+
     public byte[] buscarUltimaFoto(String documento) throws IOException {
         // Sanitiza o documento para prevenir path traversal
         String documentoSanitizado = sanitizarDocumento(documento);
         String prefix = "funcionarios/documento_" + documentoSanitizado + "/";
+
+        // Listar todos os objetos no prefixo
+        ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .prefix(prefix)
+                .build();
+
+        ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
+        List<S3Object> objects = listResponse.contents();
+
+        if (objects.isEmpty()) {
+            throw new RuntimeException("Nenhuma foto encontrada para o documento: " + documento);
+        }
+
+        // Ordenar por data de modificação e pegar o último arquivo
+        S3Object ultimoArquivo = objects.stream()
+                .max(Comparator.comparing(S3Object::lastModified))
+                .orElseThrow(() -> new RuntimeException("Erro ao buscar última foto"));
+
+        // Baixar o arquivo
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(ultimoArquivo.key())
+                .build();
+
+        ResponseInputStream<GetObjectResponse> response = s3Client.getObject(getObjectRequest);
+
+        return response.readAllBytes();
+    }
+
+    public byte[] buscarUltimaFotoPaciente(String documento) throws IOException {
+        // Sanitiza o documento para prevenir path traversal
+        String documentoSanitizado = sanitizarDocumento(documento);
+        String prefix = "pacientes/documento_" + documentoSanitizado + "/";
 
         // Listar todos os objetos no prefixo
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()

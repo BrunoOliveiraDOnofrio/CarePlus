@@ -7,11 +7,11 @@ INSERT INTO endereco (id, cep, logradouro, numero, complemento, bairro, cidade, 
 (3,'03928090','logradouro_9b248d9dfa6f','numero_5bf79a305363','complemento_6a920f3c1e3c','bairro_ba3946537bb6','cidade_f01caf541f4c','estado_c09d4e91f03e');
 
 -- paciente
-INSERT INTO paciente (id, nome, email, cpf, telefone, dt_nascimento, convenio, data_inicio) VALUES
-(1,'Lucas Silva','lucas.silva@email.com','123.456.789-00','(11) 91234-5678','1990-05-15','Bradesco','2025-12-05'),
-(2,'Mariana Costa','mariana.costa@email.com','987.654.321-00','(21) 99876-5432','1985-11-22','Bradesco Saúde','2025-12-05'),
-(3,'Pedro Oliveira','pedro.oliveira@email.com','456.789.123-11','(31) 91234-8765','1978-02-10','Unimed','2025-12-05'),
-(7,'Maria Santos','maria.santos@email.com','98765432100','11988887777','1980-05-15','Bradesco Saúde','2026-01-16');
+INSERT INTO paciente (id, nome, email, cpf, telefone, dt_nascimento, convenio, data_inicio, foto) VALUES
+(1,'Lucas Silva','lucas.silva@email.com','123.456.789-00','(11) 91234-5678','1990-05-15','Bradesco','2025-12-05', NULL),
+(2,'Mariana Costa','mariana.costa@email.com','987.654.321-00','(21) 99876-5432','1985-11-22','Bradesco Saúde','2025-12-05', NULL),
+(3,'Pedro Oliveira','pedro.oliveira@email.com','456.789.123-11','(31) 91234-8765','1978-02-10','Unimed','2025-12-05', NULL),
+(7,'Maria Santos','maria.santos@email.com','98765432100','11988887777','1980-05-15','Bradesco Saúde','2026-01-16', NULL);
 
 -- responsavel
 INSERT INTO responsavel (id, nome, email, telefone, dt_nascimento, cpf, id_endereco) VALUES
@@ -19,7 +19,7 @@ INSERT INTO responsavel (id, nome, email, telefone, dt_nascimento, cpf, id_ender
 
 -- funcionario
 -- funcionario
-INSERT INTO funcionario (id, nome, email, senha, supervisor_id, cargo, especialidade, tipo_atendimento, telefone, documento) VALUES
+INSERT INTO funcionario (id, nome, email, senha, supervisor_id, cargo, especialidade, tipo_atendimento, telefone, documento, foto) VALUES
 (1,'Dra. Helena Castro','helena.castro@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',NULL,'Supervisora','Fonoaudiologia', 'TO', '11940028922', '40028922', 'fotoPerfil.png'),
 (2,'Juliana Almeida','admin@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Funcionário','Fonoaudiologia', 'TO', '11940028922', '40028922', 'fotoPerfil.png'),
 (3,'Marcos Ribeiro','marcos.ribeiro@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',2,'Estagiário','Psicologia', 'ABA', '11940028922', '40028922', 'fotoPerfil.png');
@@ -88,7 +88,7 @@ INSERT INTO cuidador (id, paciente_id, responsavel_id, parentesco) VALUES
 
 
 -- material
-INSERT INTO material (id, item, tempo_exposicao, data_implementacao, fk_consulta) VALUES
-(1, 'Cartões de Comunicação', 30, '2026-01-10', 1),
-(2, 'Jogos Sensoriais', 20, '2026-01-12', 2),
-(3, 'Espelho Terapêutico', 25, '2026-02-05', 3);
+INSERT INTO material (id, item, data_implementacao, fk_consulta) VALUES
+(1, 'Cartões de Comunicação', '2026-01-10', 1),
+(2, 'Jogos Sensoriais', '2026-01-12', 2),
+(3, 'Espelho Terapêutico', '2026-02-05', 3);

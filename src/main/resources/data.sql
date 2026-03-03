@@ -21,13 +21,13 @@
 --     'Supervisora de Terapia', 'Motricidade Orofacial');
 --
 ---- Inserção de pacientes com convenio e data_inicio (data do cadastro)
---INSERT INTO paciente (nome, email, cpf, telefone, dt_nascimento, convenio, data_inicio)
+--INSERT INTO paciente (nome, email, cpf, telefone, dt_nascimento, convenio, data_inicio, foto)
 --VALUES
---   ('Lucas Silva', 'lucas.silva@email.com', '123.456.789-00',  '(11) 91234-5678', '1990-05-15', 'Sul America', CURRENT_DATE),
---   ('Mariana Costa', 'mariana.costa@email.com', '987.654.321-00',  '(21) 99876-5432', '1985-11-22', 'Bradesco Saúde', CURRENT_DATE),
---   ('Pedro Oliveira', 'pedro.oliveira@email.com', '456.789.123-11',  '(31) 91234-8765', '1978-02-10', 'Unimed', CURRENT_DATE),
---   ('Ana Paula Lima', 'ana.lima@email.com', '321.654.987-22',  '(41) 98765-4321', '1992-08-30', 'NotreDame Intermédica', CURRENT_DATE),
---   ('Rafael Souza', 'rafael.souza@email.com', '654.321.987-33',  '(51) 91234-0987', '1988-03-12', 'Porto Saúde', CURRENT_DATE);
+--   ('Lucas Silva', 'lucas.silva@email.com', '123.456.789-00',  '(11) 91234-5678', '1990-05-15', 'Sul America', CURRENT_DATE, NULL),
+--   ('Mariana Costa', 'mariana.costa@email.com', '987.654.321-00',  '(21) 99876-5432', '1985-11-22', 'Bradesco Saúde', CURRENT_DATE, NULL),
+--   ('Pedro Oliveira', 'pedro.oliveira@email.com', '456.789.123-11',  '(31) 91234-8765', '1978-02-10', 'Unimed', CURRENT_DATE, NULL),
+--   ('Ana Paula Lima', 'ana.lima@email.com', '321.654.987-22',  '(41) 98765-4321', '1992-08-30', 'NotreDame Intermédica', CURRENT_DATE, NULL),
+--   ('Rafael Souza', 'rafael.souza@email.com', '654.321.987-33',  '(51) 91234-0987', '1988-03-12', 'Porto Saúde', CURRENT_DATE, NULL);
 --
 ---- Tabela intermediária funcionario_roles (caso ainda não exista)
 --CREATE TABLE IF NOT EXISTS funcionario_roles (

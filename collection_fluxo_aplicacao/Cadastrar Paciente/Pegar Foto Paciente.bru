@@ -1,0 +1,24 @@
+meta {
+  name: Pegar Foto Paciente
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8080/pacientes/foto?cpf=123.456.789-19
+  body: none
+  auth: bearer
+}
+
+params:query {
+  cpf: 123.456.789-19
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

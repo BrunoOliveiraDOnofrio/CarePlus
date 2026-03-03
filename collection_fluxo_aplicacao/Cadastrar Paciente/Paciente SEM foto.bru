@@ -1,0 +1,29 @@
+meta {
+  name: Paciente SEM foto
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/pacientes
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  nome: Ana Souza
+  email: ana.souza@email.com
+  cpf: 987.654.321-00
+  telefone: 11940028922
+  dtNascimento: 1995-03-20
+  convenio: Unimed
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

@@ -33,6 +33,7 @@ public class Paciente {
     @Schema(description = "2025-11-25")
     private LocalDate dataInicio;
 
+    private String foto;
 
     public Paciente() {
     }
@@ -99,5 +100,13 @@ public class Paciente {
 
     public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }
