@@ -4,6 +4,7 @@ import com.example.careplus.dto.dtoConsultaProntuario.*;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConflitoDatasDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
+import com.example.careplus.messaging.ConsultaKafkaProducerService;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.ClassificacaoDoencas;
@@ -40,8 +41,9 @@ public class ConsultaProntuarioService {
     private final CuidadorRepository cuidadorRepository;
     private final S3Service s3Service;
     private final ObjectMapper objectMapper;
+    private final ConsultaKafkaProducerService consultaKafkaProducerService;
 
-    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper) {
+    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaKafkaProducerService consultaKafkaProducerService) {
         this.consultaProntuarioRepository = consultaProntuarioRepository;
         this.pacienteRepository = pacienteRepository;
         this.funcionarioRepository = funcionarioRepository;
@@ -51,6 +53,7 @@ public class ConsultaProntuarioService {
         this.s3Service = s3Service;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.findAndRegisterModules();
+        this.consultaKafkaProducerService = consultaKafkaProducerService;
     }
 
     public ConsultaProntuarioResponseDto marcarConsulta(ConsultaProntuarioRequestDto request){
@@ -156,7 +159,12 @@ public class ConsultaProntuarioService {
         emailService.EnviarNotificacaoConsultaProntuario(funcionarioAtribuido, novaConsulta, paciente);
 
         // retorna a consulta criada com todos os detalhes
-        return ConsultaProntuarioMapper.toResponseDto(salvo);
+        ConsultaProntuarioResponseDto responseDto = ConsultaProntuarioMapper.toResponseDto(salvo);
+
+        // publica os detalhes da nova consulta no tópico Kafka
+        consultaKafkaProducerService.publicarConsultaCriada(responseDto);
+
+        return responseDto;
     }
 
 
@@ -467,6 +475,10 @@ public class ConsultaProntuarioService {
         // atualiza os totais e retorna tudo certinho
         response.setTotalConsultasCriadas(response.getConsultasCriadas().size());
         response.setTotalFalhas(0);
+
+        // publica todas as consultas recorrentes criadas no tópico Kafka
+        consultaKafkaProducerService.publicarConsultasRecorrentesCriadas(response.getConsultasCriadas());
+
         return response;
     }
 
