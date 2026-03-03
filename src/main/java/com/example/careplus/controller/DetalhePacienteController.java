@@ -16,31 +16,31 @@ public class DetalhePacienteController {
 
     private final DetalhePacienteService detalhePacienteService;
 
-    @GetMapping("/{id}/detalhes-completos")
-    public ResponseEntity<DetalhePacienteDTO> buscarDetalhesCompletos(@PathVariable Long id) {
+    @GetMapping("/detalhes-completos")
+    public ResponseEntity<DetalhePacienteDTO> buscarDetalhesCompletos(@RequestParam Long id) {
         DetalhePacienteDTO detalhes = detalhePacienteService.buscarDetalhesCompletoPaciente(id);
         return ResponseEntity.ok(detalhes);
     }
 
-    @PutMapping("/{id}/ficha-clinica")
+    @PutMapping("/ficha-clinica")
     public ResponseEntity<Void> atualizarFichaClinica(
-            @PathVariable Long id,
+            @RequestParam Long id,
             @RequestBody AtualizarFichaClinicaDTO dto) {
         detalhePacienteService.atualizarFichaClinica(id, dto);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/observacoes-comportamentais")
+    @PutMapping("/observacoes-comportamentais")
     public ResponseEntity<Void> atualizarObservacoesComportamentais(
-            @PathVariable Long id,
+            @RequestParam Long id,
             @RequestBody AtualizarObservacoesComportamentaisDTO dto) {
         detalhePacienteService.atualizarObservacoesComportamentais(id, dto);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/tratamento")
+    @PutMapping("/tratamento")
     public ResponseEntity<Void> atualizarTratamento(
-            @PathVariable Long id,
+            @RequestParam Long id,
             @RequestBody AtualizarTratamentoDTO dto) {
         detalhePacienteService.atualizarTratamento(id, dto);
         return ResponseEntity.noContent().build();

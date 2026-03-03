@@ -30,9 +30,9 @@ public class MaterialController {
         return ResponseEntity.ok(materialService.listar());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<MaterialResponseDto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<MaterialResponseDto> buscarPorId(@RequestParam Long id) {
         return ResponseEntity.ok(
                 materialService.listar().stream()
                         .filter(a -> a.getId().equals(id))
@@ -41,15 +41,15 @@ public class MaterialController {
         );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<MaterialResponseDto> atualizar(@PathVariable Long id, @RequestBody MaterialRequestDto dto) {
+    public ResponseEntity<MaterialResponseDto> atualizar(@RequestParam Long id, @RequestBody MaterialRequestDto dto) {
         return ResponseEntity.ok(materialService.atualizar(id, dto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@RequestParam Long id) {
         materialService.deletar(id);
         return ResponseEntity.noContent().build();
     }

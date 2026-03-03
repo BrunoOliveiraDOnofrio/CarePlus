@@ -5,9 +5,13 @@ meta {
 }
 
 delete {
-  url: {{baseUrl}}/tratamentos/1
+  url: {{baseUrl}}/tratamentos?id=1
   body: none
   auth: bearer
+}
+
+params:query {
+  id: 1
 }
 
 auth:bearer {

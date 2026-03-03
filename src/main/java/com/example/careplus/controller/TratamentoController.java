@@ -9,10 +9,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -37,9 +37,9 @@ public class TratamentoController {
         }
     }
 
-    @GetMapping("/{nomeTratamento}")
+    @GetMapping("/buscar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<Tratamento>> buscarPeloNome(@PathVariable String nomeTratamento){
+    public ResponseEntity<List<Tratamento>> buscarPeloNome(@RequestParam String nomeTratamento){
         try{
             return ResponseEntity.status(200).body(tratamentoService.buscarByNome(nomeTratamento));
         } catch (Exception e) {
@@ -47,9 +47,9 @@ public class TratamentoController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> deletarTratamento(@PathVariable Long id){
+    public ResponseEntity<Void> deletarTratamento(@RequestParam Long id){
         try{
             tratamentoService.deletar(id);
             return ResponseEntity.status(204).build();

@@ -1,0 +1,30 @@
+meta {
+  name: Paciente COM foto
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/pacientes
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  nome: Gabriel Santos
+  email: gabriel.santoas@email.com
+  cpf: 123.456.789-19
+  telefone: 11940028922
+  dtNascimento: 2000-05-15
+  convenio: Sul America
+  foto: @file(C:\Users\gibie\OneDrive\Imagens\Screenshots\Captura de tela 2026-03-02 164344.png)
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

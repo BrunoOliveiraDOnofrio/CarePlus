@@ -39,9 +39,9 @@ public class ClassificacaoDoencasController {
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ClassificacaoDoencas> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ClassificacaoDoencas> buscarPorId(@RequestParam Long id) {
         ClassificacaoDoencas achado = classificacaoDoencasService.buscarPorId(id);
         if (achado != null) {
             return ResponseEntity.ok(achado);
@@ -50,9 +50,9 @@ public class ClassificacaoDoencasController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ClassificacaoDoencas> atualizar(@PathVariable Long id,
+    public ResponseEntity<ClassificacaoDoencas> atualizar(@RequestParam Long id,
                                                           @RequestBody ClassificacaoDoencasRequestDto dadosAtualizados) {
         ClassificacaoDoencas atualizada = classificacaoDoencasService.atualizar(id, dadosAtualizados);
         if (atualizada != null) {
@@ -63,9 +63,9 @@ public class ClassificacaoDoencasController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@RequestParam Long id) {
         try {
             classificacaoDoencasService.deletar(id);
             return ResponseEntity.status(204).build();

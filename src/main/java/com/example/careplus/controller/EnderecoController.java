@@ -41,14 +41,14 @@ public class EnderecoController {
         return ResponseEntity.ok(enderecos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/por-id")
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Buscar endereço por ID", description = "Retorna um endereço específico pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Endereço encontrado"),
             @ApiResponse(responseCode = "404", description = "Endereço não encontrado")
     })
-    public ResponseEntity<EnderecoResponseDto> listarPorId(@PathVariable Long id) {
+    public ResponseEntity<EnderecoResponseDto> listarPorId(@RequestParam Long id) {
         EnderecoResponseDto endereco = service.listarPorId(id);
         return ResponseEntity.ok(endereco);
     }
@@ -69,14 +69,14 @@ public class EnderecoController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Atualizar endereço", description = "Atualiza os dados de um endereço existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Endereço atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Endereço não encontrado")
     })
-    public ResponseEntity<EnderecoResponseDto> atualizar(@RequestBody EnderecoRequestDto enderecoDto, @PathVariable Long id) {
+    public ResponseEntity<EnderecoResponseDto> atualizar(@RequestBody EnderecoRequestDto enderecoDto, @RequestParam Long id) {
         try {
             EnderecoResponseDto enderecoAtualizado = service.atualizar(enderecoDto, id);
             return ResponseEntity.ok(enderecoAtualizado);
@@ -85,14 +85,14 @@ public class EnderecoController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Deletar endereço", description = "Remove um endereço do sistema")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Endereço deletado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Endereço não encontrado")
     })
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@RequestParam Long id) {
         try {
             service.deletar(id);
             return ResponseEntity.noContent().build();

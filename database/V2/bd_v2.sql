@@ -30,7 +30,8 @@ CREATE TABLE paciente (
     telefone VARCHAR(255),
     dt_nascimento DATE,
     convenio VARCHAR(255),
-    data_inicio DATE
+    data_inicio DATE,
+    foto VARCHAR(255)
 );
 
 -- =========================
@@ -222,3 +223,7 @@ CREATE TABLE material (
         FOREIGN KEY (fk_consulta)
         REFERENCES consulta_prontuario(id)
 );
+
+CREATE USER 'careplus_user'@'localhost' IDENTIFIED BY 'SenhaForte123!';
+GRANT ALL PRIVILEGES ON careplus_novo.* TO 'careplus_user'@'localhost';
+FLUSH PRIVILEGES;

@@ -1,5 +1,6 @@
 package com.example.careplus.dto.dtoPaciente;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 public class PacienteResponseDto {
@@ -20,9 +21,11 @@ public class PacienteResponseDto {
     @Schema(description = "2025-11-25")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataInicio;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String foto;
     public PacienteResponseDto() {
     }
-    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio, LocalDate dataInicio) {
+    public PacienteResponseDto(Long id, String nome, String email, String cpf, String telefone, LocalDate dtNascimento, String convenio, LocalDate dataInicio, String foto) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -31,6 +34,7 @@ public class PacienteResponseDto {
         this.dtNascimento = dtNascimento;
         this.convenio = convenio;
         this.dataInicio = dataInicio;
+        this.foto = foto;
     }
     public Long getId() {
         return id;
@@ -79,5 +83,11 @@ public class PacienteResponseDto {
     }
     public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
+    }
+    public String getFoto() {
+        return foto;
+    }
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }

@@ -47,10 +47,7 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/api/public/authenticate"),
             new AntPathRequestMatcher("/webjars/**"),
             new AntPathRequestMatcher("/v3/api-docs/**"),
-            new AntPathRequestMatcher("/actuator/*"),
             new AntPathRequestMatcher("/funcionarios/login/**"),
-            new AntPathRequestMatcher("/h2-console/**"),
-            new AntPathRequestMatcher("/h2-console/**/**"),
             new AntPathRequestMatcher("/error/**")
     };
 
@@ -120,7 +117,12 @@ public class SecurityConfiguracao {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
-        configuracao.applyPermitDefaultValues();
+        configuracao.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000",
+                "http://localhost:5173"
+        ));
+        configuracao.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        configuracao.setAllowCredentials(true);
         configuracao.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
@@ -128,8 +130,7 @@ public class SecurityConfiguracao {
                 HttpMethod.PATCH.name(),
                 HttpMethod.DELETE.name(),
                 HttpMethod.OPTIONS.name(),
-                HttpMethod.HEAD.name(),
-                HttpMethod.TRACE.name()
+                HttpMethod.HEAD.name()
         ));
         configuracao.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
 

@@ -40,9 +40,9 @@ public class CuidadorController {
             return ResponseEntity.status(200).body(cuidadorService.listar());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/por-id")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<CuidadorResponseDto>> listarPacientesPorResponsavel_Id(@PathVariable Long id){
+    public ResponseEntity<List<CuidadorResponseDto>> listarPacientesPorResponsavel_Id(@RequestParam Long id){
         try {
             return ResponseEntity.status(200).body(cuidadorService.listarPacientesPorResponsavel_Id(id));
         } catch (Exception e) {
@@ -60,9 +60,9 @@ public class CuidadorController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Cuidador> atualizar(@PathVariable Long id , @RequestBody CuidadorRequestDto cuidadorAtt){
+    public ResponseEntity<Cuidador> atualizar(@RequestParam Long id , @RequestBody CuidadorRequestDto cuidadorAtt){
         try {
             return ResponseEntity.status(200).body(cuidadorService.atualizar(id, cuidadorAtt));
         } catch (Exception e){
@@ -70,9 +70,9 @@ public class CuidadorController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> deletar(@PathVariable Long id){
+    public ResponseEntity<Void> deletar(@RequestParam Long id){
         try{
             cuidadorService.deletar(id);
             return ResponseEntity.status(204).build();
@@ -81,9 +81,9 @@ public class CuidadorController {
         }
     }
 
-    @GetMapping("contato/{idPaciente}")
+    @GetMapping("/contato")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<CuidadorContatoResponseDto>> contatosPorPaciente(@PathVariable Long idPaciente){
+    public ResponseEntity<List<CuidadorContatoResponseDto>> contatosPorPaciente(@RequestParam Long idPaciente){
         try {
             List<CuidadorContatoResponseDto> cuidadorContatoResponseDto = cuidadorService.buscarContato(idPaciente);
             return ResponseEntity.status(200).body(cuidadorContatoResponseDto);

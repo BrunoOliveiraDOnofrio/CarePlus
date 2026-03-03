@@ -10,25 +10,32 @@ import org.springframework.stereotype.Service;
 import com.example.careplus.exception.MissingFieldException;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.PacienteRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PacienteService {
     private final PacienteRepository repository;
+    private final S3Service s3Service;
 
-    public PacienteService(PacienteRepository repository) {
+    public PacienteService(PacienteRepository repository, S3Service s3Service) {
         this.repository = repository;
+        this.s3Service = s3Service;
     }
 
     public List<PacienteResponseDto> listarTodos(){
-
         List<Paciente> pacientes = repository.findAll();
-
         List<PacienteResponseDto> dtos = PacienteMapper.toResponseDto(pacientes);
-
         return dtos;
+    }
+
+    public Page<PacienteResponseDto> listarTodosPaginado(Pageable pageable) {
+        return repository.findAll(pageable)
+                .map(PacienteMapper::toResponseDto);
     }
 
     public PacienteResponseDto listarPorId(Long id){
@@ -58,7 +65,14 @@ public class PacienteService {
 
         Paciente entity = PacienteMapper.toEntity(paciente);
 
-//        Paciente pacienteSalvo = repository.save(entity);
+        if (paciente.getFoto() != null && !paciente.getFoto().isEmpty()) {
+            try {
+                String nomeArquivo = s3Service.uploadImagemPaciente(paciente.getFoto(), paciente.getCpf());
+                entity.setFoto(nomeArquivo);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage(), e);
+            }
+        }
 
         return PacienteMapper.toResponseDto(repository.save(entity));
     }
@@ -86,12 +100,24 @@ public class PacienteService {
             pacienteExistente.setTelefone(paciente.getTelefone());
             pacienteExistente.setConvenio(paciente.getConvenio());
 
+            if (paciente.getFoto() != null && !paciente.getFoto().isEmpty()) {
+                try {
+                    String nomeArquivo = s3Service.uploadImagemPaciente(paciente.getFoto(), pacienteExistente.getCpf());
+                    pacienteExistente.setFoto(nomeArquivo);
+                } catch (IOException e) {
+                    throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage(), e);
+                }
+            }
 
             Paciente atualizado = repository.save(pacienteExistente);
             return PacienteMapper.toResponseDto(atualizado);
         }else {
             throw new RuntimeException("Paciente não encontrado");
         }
+    }
+
+    public byte[] buscarFoto(String cpf) throws IOException {
+        return s3Service.buscarUltimaFotoPaciente(cpf);
     }
 
     public List<PacienteResponseDto> listarPorEmail(String email){

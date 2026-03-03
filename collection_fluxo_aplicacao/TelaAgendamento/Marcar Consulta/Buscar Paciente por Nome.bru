@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/pacientes/por-nome/Maria?nome=A
+  url: {{baseUrl}}/pacientes/por-nome?nome=Maria
   body: none
   auth: bearer
 }
 
 params:query {
-  nome: A
+  nome: Maria
 }
 
 auth:bearer {

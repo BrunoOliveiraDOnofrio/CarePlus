@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.util.List;
 
@@ -40,9 +43,9 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarioAtualizado);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity deletarFuncionario(@PathVariable Long id){
+    public ResponseEntity deletarFuncionario(@RequestParam Long id){
         try{
             funcionarioService.deletar(id);
             return ResponseEntity.status(200).build();
@@ -69,7 +72,7 @@ public class FuncionarioController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<FuncionarioTokenDto> login(@RequestBody FuncionarioLoginDto funcionarioLoginDto){
+    public ResponseEntity<FuncionarioTokenDto> login(@RequestBody @Valid FuncionarioLoginDto funcionarioLoginDto){
 
         final Funcionario funcionario = FuncionarioMapper.of(funcionarioLoginDto);
         FuncionarioTokenDto funcionarioTokenDto = this.funcionarioService.autenticar(funcionario);
@@ -92,9 +95,9 @@ public class FuncionarioController {
     }
 
 
-    @GetMapping("/subordinados/{id}")
+    @GetMapping("/subordinados")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<FuncionarioResponseDto>> listarTodosSubordinados(@PathVariable Long id){
+    public ResponseEntity<List<FuncionarioResponseDto>> listarTodosSubordinados(@RequestParam Long id){
         List<FuncionarioResponseDto> funcionarios = funcionarioService.listarSubordinados(id, funcionarioService.buscarTodos());
         return ResponseEntity.status(200).body(funcionarios);
     }
@@ -120,6 +123,15 @@ public class FuncionarioController {
         List<FuncionarioResponseDto> funcionarios = funcionarioService.buscarFuncionariosDisponiveis(
                 requestDto.getEspecialidade(),
                 requestDto.getDataHora());
+        return ResponseEntity.status(200).body(funcionarios);
+    }
+
+    @GetMapping("/todos-funcionarios")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Page<FuncionarioResponseDto>> listarTodosFuncionariosPaginado(
+            @RequestParam(defaultValue = "0") Integer pagina) {
+        Pageable pageable = PageRequest.of(pagina, 10);
+        Page<FuncionarioResponseDto> funcionarios = funcionarioService.listarTodosPaginado(pageable);
         return ResponseEntity.status(200).body(funcionarios);
     }
 }

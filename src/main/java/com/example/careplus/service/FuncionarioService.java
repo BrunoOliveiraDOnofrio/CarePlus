@@ -11,6 +11,8 @@ import com.example.careplus.model.Funcionario;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -207,6 +209,11 @@ public class FuncionarioService {
         }else{
             throw new RuntimeException("Nenhum usuario cadastrado");
         }
+    }
+
+    public Page<FuncionarioResponseDto> listarTodosPaginado(Pageable pageable) {
+        return repository.findAll(pageable)
+                .map(FuncionarioMapper::toResponseDto);
     }
 
     public List<String> listarEspecialidades(){

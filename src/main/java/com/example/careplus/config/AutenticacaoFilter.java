@@ -49,6 +49,7 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
                 LOGGER.trace("Falha na autenticação - stack trace", exception);
 
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
 

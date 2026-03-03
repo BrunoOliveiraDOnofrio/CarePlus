@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/detalhes-pacientes/1/detalhes-completos
+  url: {{baseUrl}}/detalhes-pacientes/detalhes-completos?id=1
   body: none
   auth: bearer
+}
+
+params:query {
+  id: 1
 }
 
 auth:bearer {

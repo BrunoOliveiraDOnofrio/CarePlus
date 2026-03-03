@@ -5,9 +5,13 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/consultas-prontuario/realizarObservacoes/9
+  url: {{baseUrl}}/consultas-prontuario/realizarObservacoes?idConsulta=9
   body: json
   auth: bearer
+}
+
+params:query {
+  idConsulta: 9
 }
 
 auth:bearer {

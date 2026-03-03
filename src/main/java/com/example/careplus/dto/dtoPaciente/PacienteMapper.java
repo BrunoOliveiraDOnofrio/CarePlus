@@ -38,7 +38,7 @@ public class PacienteMapper {
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setConvenio(dto.getConvenio());
         entity.setDataInicio(dto.getDataInicio());
-
+        entity.setFoto(dto.getFoto());
 
         return entity;
     }
@@ -56,7 +56,8 @@ public class PacienteMapper {
             entity.getTelefone(),
             entity.getDtNascimento(),
             entity.getConvenio(),
-            entity.getDataInicio()
+            entity.getDataInicio(),
+            entity.getFoto()
         );
 
         return dto;
