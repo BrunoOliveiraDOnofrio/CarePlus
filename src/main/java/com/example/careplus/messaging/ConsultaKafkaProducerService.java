@@ -1,9 +1,12 @@
 package com.example.careplus.messaging;
+
 import com.example.careplus.dto.dtoConsultaProntuario.ConsultaProntuarioResponseDto;
 import com.example.careplus.dto.kafka.ConsultaCriadaKafkaDto;
 import com.example.careplus.dto.kafka.EventoConsultaCriadaDto;
 import com.example.careplus.dto.kafka.PacienteKafkaDto;
 import com.example.careplus.dto.kafka.ProfissionalKafkaDto;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ConsultaKafkaProducerService {
@@ -23,12 +28,29 @@ public class ConsultaKafkaProducerService {
 
     private final KafkaTemplate<String, EventoConsultaCriadaDto> kafkaTemplate;
 
+    @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
+    private String bootstrapServers;
+
     // Nome do tópico configurável via application.properties
     @Value("${app.kafka.topic.consultas-criadas:consultas-criadas}")
     private String topicConsultasCriadas;
 
     public ConsultaKafkaProducerService(KafkaTemplate<String, EventoConsultaCriadaDto> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
+    }
+
+    // Verifica se o broker Kafka está acessível antes de tentar enviar
+    private boolean isBrokerDisponivel() {
+        Properties props = new Properties();
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, "2000");
+        props.put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, "2000");
+        try (AdminClient adminClient = AdminClient.create(props)) {
+            adminClient.listTopics().names().get(2, TimeUnit.SECONDS);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     // Chamado ao marcar uma consulta simples
@@ -38,13 +60,16 @@ public class ConsultaKafkaProducerService {
 
     // Chamado ao criar consultas recorrentes
     public void publicarConsultasRecorrentesCriadas(List<ConsultaProntuarioResponseDto> consultas) {
-        log.info("[Kafka] Publicando {} consulta(s) recorrente(s) no tópico '{}'", consultas.size(), topicConsultasCriadas);
         publicarEvento(consultas);
     }
 
     // Monta o EventoConsultaCriadaDto com os campos exatos que o consumer espera e envia ao tópico
     private void publicarEvento(List<ConsultaProntuarioResponseDto> consultas) {
-        log.info("[Kafka] Tentando publicar {} consulta(s) no tópico '{}'", consultas.size(), topicConsultasCriadas);
+        if (!isBrokerDisponivel()) {
+            log.warn("[Kafka] Broker indisponível em '{}' — evento não enviado. A consulta foi criada normalmente.", bootstrapServers);
+            return;
+        }
+
         try {
             // Converte cada ConsultaProntuarioResponseDto para o DTO específico do Kafka
             // usando apenas os campos conhecidos pelo consumer (evita UnrecognizedPropertyException)
@@ -82,8 +107,8 @@ public class ConsultaKafkaProducerService {
             kafkaTemplate.send(topicConsultasCriadas, evento)
                     .whenComplete((result, ex) -> {
                         if (ex != null) {
-                            log.error("[Kafka] ERRO ao publicar evento com {} consulta(s) no tópico '{}': {}",
-                                    consultaDtos.size(), topicConsultasCriadas, ex.getMessage(), ex);
+                            log.warn("[Kafka] Falha ao publicar evento com {} consulta(s) no tópico '{}': {}",
+                                    consultaDtos.size(), topicConsultasCriadas, ex.getMessage());
                         } else {
                             log.info("[Kafka] Evento com {} consulta(s) publicado com sucesso no tópico '{}' [partition={}, offset={}]",
                                     consultaDtos.size(),
@@ -93,7 +118,7 @@ public class ConsultaKafkaProducerService {
                         }
                     });
         } catch (Exception ex) {
-            log.error("[Kafka] Exceção ao tentar publicar evento: {}", ex.getMessage(), ex);
+            log.warn("[Kafka] Erro inesperado ao publicar evento: {}", ex.getMessage());
         }
     }
 }

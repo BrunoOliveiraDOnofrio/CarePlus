@@ -57,37 +57,37 @@ public class ConsultaProntuarioService {
     }
 
     public ConsultaProntuarioResponseDto marcarConsulta(ConsultaProntuarioRequestDto request){
-        // busca o paciente no banco
+
         Optional<Paciente> usuarioOpt = pacienteRepository.findById(request.getPacienteId());
         Paciente paciente = usuarioOpt.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
-        // busca o funcionário que foi escolhido
+
         Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(request.getFuncionarioId());
         Funcionario funcionario = funcionarioOpt.orElseThrow(() -> new ResourceNotFoundException("Funcionario não encontrado!"));
 
-        // pega a data e hora da consulta que querem marcar
+
         LocalDateTime dataHoraConsulta = request.getDataHora();
         LocalDate dataConsulta = dataHoraConsulta.toLocalDate();
 
-        // busca todas as consultas que esse funcionário já tem nessa data
+
         List<ConsultaProntuario> consultasExistentes = consultaProntuarioRepository
                 .buscarConsultasPorFuncionarioEData(funcionario.getId(), dataConsulta);
 
-        // vamos ver se o funcionário escolhido tá livre no horário
+
         boolean temConflito = false;
         for (ConsultaProntuario consulta : consultasExistentes) {
             LocalDateTime inicioConsulta = consulta.getDataHora();
-            LocalDateTime fimConsulta = inicioConsulta.plusHours(1); // consultas duram 1 hora
+            LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
             LocalDateTime fimNovaConsulta = dataHoraConsulta.plusHours(1);
 
-            // verifica se os horários se sobrepõem
+
             if (dataHoraConsulta.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta)) {
                 temConflito = true;
-                break; // já achou conflito, pode parar
+                break;
             }
         }
 
-        // variável pra guardar qual funcionário vai atender (pode ser o original ou um substituto)
+
         Funcionario funcionarioAtribuido = funcionario;
 
         // se o funcionário escolhido tá ocupado, vamos procurar outro da mesma especialidade
@@ -156,7 +156,7 @@ public class ConsultaProntuarioService {
         ConsultaProntuario salvo = consultaProntuarioRepository.save(novaConsulta);
 
         // envia email de notificação pro funcionário que vai atender
-        emailService.EnviarNotificacaoConsultaProntuario(funcionarioAtribuido, novaConsulta, paciente);
+//        emailService.EnviarNotificacaoConsultaProntuario(funcionarioAtribuido, novaConsulta, paciente);
 
         // retorna a consulta criada com todos os detalhes
         ConsultaProntuarioResponseDto responseDto = ConsultaProntuarioMapper.toResponseDto(salvo);
