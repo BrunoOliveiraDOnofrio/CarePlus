@@ -2,6 +2,7 @@ package com.example.careplus.controller;
 
 import com.example.careplus.dto.dtoPaciente.PacienteRequestDto;
 import com.example.careplus.dto.dtoPaciente.PacienteResponseDto;
+import com.example.careplus.dto.dtoPaciente.TudoPacienteDto;
 import com.example.careplus.service.PacienteService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -109,9 +110,17 @@ public class PacienteController {
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Page<PacienteResponseDto>> listarTodosPacientesPaginado(
             @RequestParam(defaultValue = "0") Integer pagina) {
-        Pageable pageable = PageRequest.of(pagina, 10);
+        Pageable pageable = PageRequest.of(pagina, 8);
         Page<PacienteResponseDto> pacientes = service.listarTodosPaginado(pageable);
         return ResponseEntity.status(200).body(pacientes);
+    }
+
+    @PostMapping(path = "/formCadastro", consumes = "multipart/form-data")
+    public ResponseEntity<PacienteResponseDto> teste(
+            @ModelAttribute TudoPacienteDto dto
+    ) {
+        PacienteResponseDto pacienteResponseDto = service.cadastrarPacienteFormulário(dto);
+        return ResponseEntity.status(200).body(pacienteResponseDto);
     }
 
 }
