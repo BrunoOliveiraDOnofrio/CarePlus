@@ -28,7 +28,8 @@ INSERT INTO funcionario (id, nome, email, senha, supervisor_id, cargo, especiali
 INSERT INTO role (id, nome) VALUES
 (1,'ADMIN'),
 (2,'USER'),
-(3,'MANAGER');
+(3,'MANAGER'),
+(4, 'SCHEDULER');
 
 -- funcionario_roles
 INSERT INTO funcionario_roles (funcionario_id, role_id) VALUES
