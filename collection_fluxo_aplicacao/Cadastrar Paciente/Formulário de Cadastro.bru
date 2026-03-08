@@ -1,0 +1,43 @@
+meta {
+  name: Formulário de Cadastro
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8080/pacientes/formCadastro
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  parentesco: Mãe
+  cep: 01310-100
+  logradouro: Avenida Paulista
+  numero: 1578
+  complemento: Apartamento 42
+  bairro: Bela Vista
+  cidade: São Paulo
+  estado: SP
+  nomeResponsavel: Ana Josefa
+  telefoneResponsavel: 11985593381
+  dtNascimentoResponsavel: 1985-06-20
+  cpfResponsavel: 847.961.981-16
+  nomePaciente: Gabriel Santos
+  cpfPaciente: 392.081.981-42
+  telefonePaciente: 11940028922
+  dtNascimentoPaciente: 2000-05-15
+  convenioPaciente: Sul America
+  fotoPaciente: @file(C:\Users\gibie\OneDrive\Imagens\Screenshots\Captura de tela 2026-03-05 164540.png)
+  emailPaciente: emailReaalAaqui@email.com
+  emailResponsavel: EmailDeVeerdaade@email.com
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

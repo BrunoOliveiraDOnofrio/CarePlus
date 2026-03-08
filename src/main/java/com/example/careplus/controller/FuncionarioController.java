@@ -130,7 +130,7 @@ public class FuncionarioController {
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Page<FuncionarioResponseDto>> listarTodosFuncionariosPaginado(
             @RequestParam(defaultValue = "0") Integer pagina) {
-        Pageable pageable = PageRequest.of(pagina, 10);
+        Pageable pageable = PageRequest.of(pagina, 8);
         Page<FuncionarioResponseDto> funcionarios = funcionarioService.listarTodosPaginado(pageable);
         return ResponseEntity.status(200).body(funcionarios);
     }

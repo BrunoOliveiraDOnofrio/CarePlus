@@ -25,10 +25,24 @@ public class ResponsavelService {
         this.responsavelRepository = responsavelRepository;
         this.enderecoRepository = enderecoRepository;
     }
+    public Responsavel buscarOuCadastrar(ResponsavelRequestDto responsavelNew) {
+        if (responsavelNew.getCpf() != null) {
+            Optional<Responsavel> existentePorCpf = responsavelRepository.findByCpf(responsavelNew.getCpf());
+            if (existentePorCpf.isPresent()) {
+                return existentePorCpf.get();
+            }
+        }
+        return cadastrar(responsavelNew);
+    }
+
     // CRUD SIMPLES
     public Responsavel cadastrar(ResponsavelRequestDto responsavelNew){
         Responsavel paraRegistrar = ResponsavelMapper.toEntity(responsavelNew);
-        if(responsavelRepository.existsByEmail(paraRegistrar.getEmail()) || responsavelRepository.existsByCpf(paraRegistrar.getCpf())){
+
+        boolean cpfDuplicado = paraRegistrar.getCpf() != null
+                && responsavelRepository.existsByCpf(paraRegistrar.getCpf());
+
+        if (cpfDuplicado) {
             throw new IllegalArgumentException();
         }
 
