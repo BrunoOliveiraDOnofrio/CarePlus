@@ -154,7 +154,7 @@ public class PacienteService {
     }
 
 
-    public PacienteResponseDto cadastrarPacienteFormulário(TudoPacienteDto dto) {
+    public PacienteResponseDto cadastrarPacienteFormulario(TudoPacienteDto dto) {
 
         EnderecoRequestDto enderecoRequestDto = new EnderecoRequestDto();
         enderecoRequestDto.setCep(dto.getCep());

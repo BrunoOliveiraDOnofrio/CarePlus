@@ -33,7 +33,7 @@ INSERT INTO role (id, nome) VALUES
 
 -- funcionario_roles
 INSERT INTO funcionario_roles (funcionario_id, role_id) VALUES
-(2,1),(3,2),(1,1);
+(2,1),(3,2),(1,4);
 
 -- fichaClinica
 INSERT INTO fichaClinica (id, paciente_id, desfraldado, hiperfoco, anamnese, diagnostico, resumo_clinico, nivel_agressividade) VALUES

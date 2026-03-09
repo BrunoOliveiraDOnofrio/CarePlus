@@ -1,6 +1,6 @@
 # Maven
 HELP.md
-target/
+../target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -39,6 +39,9 @@ bruno-collection
 .DS_Store
 Thumbs.db
 
+# Variaveis de ambiente — nunca commitar com valores reais
+.env
+
 # Logs
 *.log
 
@@ -47,3 +50,6 @@ Thumbs.db
 *.swp
 *~
 
+/docker/
+
+*.jar

@@ -61,11 +61,11 @@ public class SecurityConfiguracao {
                                 .requestMatchers(URLS_PERMITIDAS).permitAll()
                                 // URLs protegidas por ROLE
                                 .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/pacientes/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/pacientes/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/classificacao-doencas/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/cuidadores/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/consultas-prontuario/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/enderecos/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/enderecos/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/fichas-clinicas/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/materiais/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/**").hasRole("ADMIN")

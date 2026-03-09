@@ -119,7 +119,7 @@ public class PacienteController {
     public ResponseEntity<PacienteResponseDto> teste(
             @ModelAttribute TudoPacienteDto dto
     ) {
-        PacienteResponseDto pacienteResponseDto = service.cadastrarPacienteFormulário(dto);
+        PacienteResponseDto pacienteResponseDto = service.cadastrarPacienteFormulario(dto);
         return ResponseEntity.status(200).body(pacienteResponseDto);
     }
 
