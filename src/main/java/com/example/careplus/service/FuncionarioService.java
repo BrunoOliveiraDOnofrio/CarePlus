@@ -81,13 +81,11 @@ public class FuncionarioService {
     }
 
     public void deletar(Long id){
-        boolean existe = repository.existsById(id);
+        Funcionario funcionario = repository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if(!existe){
-            throw new RuntimeException("Usuário não encontrado");
-        }
-
-        repository.deleteById(id);
+        funcionario.setAtivo(false);
+        repository.save(funcionario);
     }
 
     public FuncionarioResponseDto atualizarFuncionario(FuncionarioResquestDto dto, Long idFuncionario) {
@@ -187,12 +185,12 @@ public class FuncionarioService {
     }
 
     public List<Funcionario> buscarTodos(){
-        return repository.findAll();
+        return repository.findAllByAtivoTrue();
     }
 
     public List<FuncionarioResponseDto> buscarPorEmail(String email){
 
-        List<Funcionario> funcionariosEncontrados = repository.findByEmailContainingIgnoreCase(email);
+        List<Funcionario> funcionariosEncontrados = repository.findByEmailContainingIgnoreCaseAndAtivoTrue(email);
 
         if (!funcionariosEncontrados.isEmpty()){
             return FuncionarioMapper.toResponseDto(funcionariosEncontrados);
@@ -202,7 +200,7 @@ public class FuncionarioService {
     }
 
     public List<FuncionarioResponseDto> listarTodos(){
-        List<Funcionario> funcionarios = repository.findAll();
+        List<Funcionario> funcionarios = repository.findAllByAtivoTrue();
 
         if (!funcionarios.isEmpty()){
             return FuncionarioMapper.toResponseDto(funcionarios);
@@ -212,13 +210,13 @@ public class FuncionarioService {
     }
 
     public Page<FuncionarioResponseDto> listarTodosPaginado(Pageable pageable) {
-        return repository.findAll(pageable)
+        return repository.findAllByAtivoTrue(pageable)
                 .map(FuncionarioMapper::toResponseDto);
     }
 
     public List<String> listarEspecialidades(){
 
-        List<Funcionario> funcionarios = repository.findAll();
+        List<Funcionario> funcionarios = repository.findAllByAtivoTrue();
 
         if (funcionarios.isEmpty()){
             throw new ResourceNotFoundException("Nenhum funcionario cadastrado!");
@@ -238,13 +236,12 @@ public class FuncionarioService {
     }
 
     public List<FuncionarioResponseDto> nomesFuncionariosPorEspecialidade(String especialidade){
-        List<Funcionario> funcionarios = repository.findAll();
+        List<Funcionario> funcionarios = repository.findByEspecialidadeIgnoreCaseAndAtivoTrue(especialidade);
         if (funcionarios.isEmpty()){
             throw new ResourceNotFoundException("Nenhum funcionario cadastrado!");
         }
 
         List<FuncionarioResponseDto> nomes = funcionarios.stream()
-                .filter(f -> f.getEspecialidade() != null && f.getEspecialidade().equalsIgnoreCase(especialidade))
                 .map(FuncionarioMapper::toResponseDto)
                 .toList();
 
@@ -256,10 +253,9 @@ public class FuncionarioService {
     }
 
     public List<String> buscarHorariosDisponiveis(Long idFuncionario, LocalDate data){
-        // Verifica se o funcionário existe
-        if (!repository.existsById(idFuncionario)){
-            throw new ResourceNotFoundException("Funcionário não encontrado!");
-        }
+        // Verifica se o funcionário existe e está ativo
+        repository.findByIdAndAtivoTrue(idFuncionario)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado!"));
 
         // Busca todas as consultas do funcionário nessa data
         List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEData(idFuncionario, data);
@@ -317,8 +313,8 @@ public class FuncionarioService {
             throw new IllegalArgumentException("Formato de data/hora inválido. Use: yyyy-MM-ddTHH:mm:ss ou yyyy-MM-dd HH:mm:ss");
         }
 
-        // Busca todos os funcionários da especialidade
-        List<Funcionario> funcionariosDaEspecialidade = repository.findByEspecialidadeIgnoreCase(especialidade);
+        // Busca todos os funcionários DA ESPECIALIDADE e ATIVOS
+        List<Funcionario> funcionariosDaEspecialidade = repository.findByEspecialidadeIgnoreCaseAndAtivoTrue(especialidade);
 
         if (funcionariosDaEspecialidade.isEmpty()){
             throw new ResourceNotFoundException("Nenhum funcionário encontrado para a especialidade: " + especialidade);

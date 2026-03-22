@@ -35,6 +35,9 @@ public class Paciente {
 
     private String foto;
 
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo = true;
+
     public Paciente() {
     }
 
@@ -108,5 +111,13 @@ public class Paciente {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }

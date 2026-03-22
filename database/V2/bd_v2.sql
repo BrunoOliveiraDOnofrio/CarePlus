@@ -31,7 +31,8 @@ CREATE TABLE paciente (
     dt_nascimento DATE,
     convenio VARCHAR(255),
     data_inicio DATE,
-    foto VARCHAR(255)
+    foto VARCHAR(255),
+    ativo TINYINT(1) NOT NULL DEFAULT 1
 );
 
 -- =========================
@@ -69,6 +70,7 @@ CREATE TABLE funcionario (
     telefone VARCHAR(45),
     documento VARCHAR(45),
     foto VARCHAR(255),
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
     CONSTRAINT fk_funcionario_supervisor
         FOREIGN KEY (supervisor_id)
         REFERENCES funcionario(id)
