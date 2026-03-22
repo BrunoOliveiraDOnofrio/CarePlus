@@ -64,7 +64,14 @@ public class ResponsavelService {
 
     public Responsavel buscarPorEmail(String email){
         Responsavel responsavelEncontrado = responsavelRepository.findByEmailStartingWith(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado!"));
+
+        return responsavelEncontrado;
+    }
+
+    public Responsavel buscarPorCpf(String cpf){
+        Responsavel responsavelEncontrado = responsavelRepository.findByCpf(cpf)
+                .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado!"));
 
         return responsavelEncontrado;
     }

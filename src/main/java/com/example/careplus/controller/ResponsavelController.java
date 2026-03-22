@@ -52,6 +52,16 @@ public class ResponsavelController {
         }
     }
 
+    @GetMapping("/por-cpf")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Responsavel> buscarPorCpf(@RequestParam String cpf){
+        try {
+            return ResponseEntity.status(200).body(responsavelService.buscarPorCpf(cpf));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
     @PutMapping
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Responsavel> atualizar(@RequestParam Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
