@@ -51,6 +51,9 @@ public class Funcionario {
     @Column(name = "foto")
     private String foto;
 
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo = true;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "funcionario_roles",
@@ -157,5 +160,13 @@ public class Funcionario {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }

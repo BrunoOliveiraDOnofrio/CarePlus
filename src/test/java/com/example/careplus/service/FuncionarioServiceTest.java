@@ -17,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class FuncionarioServiceTest {
 
@@ -117,26 +120,15 @@ class FuncionarioServiceTest {
         funcionario1.setNome("João Silva");
         funcionario1.setEmail("joao.silva@example.com");
         funcionario1.setCargo("Fonoaudiologa");
+        funcionario1.setAtivo(true);
 
-        Funcionario funcionario2 = new Funcionario();
-        funcionario2.setNome("Maria Oliveira");
-        funcionario2.setEmail("maria.oliveira@example.com");
-        funcionario2.setCargo("Recepcionista");
-
-        Mockito.when(funcionarioRepository.existsById(funcionario1.getId())).thenReturn(true);
-
-        Mockito.when(funcionarioRepository.findAll()).thenReturn(List.of(funcionario1, funcionario2));
-
-        List<Funcionario> antesDelete = funcionarioRepository.findAll();
-        Assertions.assertEquals(2, antesDelete.size());
+        Mockito.when(funcionarioRepository.findByIdAndAtivoTrue(funcionario1.getId()))
+                .thenReturn(Optional.of(funcionario1));
 
         funcionarioService.deletar(1L);
 
-        Mockito.verify(funcionarioRepository, Mockito.times(1)).deleteById(1L);
-
-        Mockito.when(funcionarioRepository.findAll()).thenReturn(List.of());
-        List<Funcionario> depoisDelete = funcionarioRepository.findAll();
-        Assertions.assertTrue(depoisDelete.isEmpty());
+        Assertions.assertFalse(funcionario1.getAtivo());
+        verify(funcionarioRepository, times(1)).save(funcionario1);
     }
 
     @Test

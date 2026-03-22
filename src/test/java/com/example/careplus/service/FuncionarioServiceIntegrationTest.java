@@ -8,13 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class FuncionarioServiceIntegrationTest {
     @Autowired
     private FuncionarioService funcionarioService;
@@ -23,7 +21,7 @@ public class FuncionarioServiceIntegrationTest {
     private FuncionarioRepository funcionarioRepository;
 
     @Test
-    @DisplayName("Deve deletar um funcionario e a lista ficar vazia")
+    @DisplayName("Deve marcar funcionario como inativo ao deletar")
     void deletar(){
         Funcionario funcionario = new Funcionario();
         funcionario.setNome("Teste Deletar");
@@ -32,10 +30,11 @@ public class FuncionarioServiceIntegrationTest {
         funcionario = funcionarioRepository.save(funcionario);
 
         Assertions.assertEquals(1, funcionarioRepository.findAll().size());
+        Assertions.assertTrue(funcionario.getAtivo());
 
         funcionarioService.deletar(funcionario.getId());
 
-        Assertions.assertTrue(funcionarioRepository.findAll().isEmpty());
-
+        Funcionario funcionarioInativo = funcionarioRepository.findById(funcionario.getId()).orElseThrow();
+        Assertions.assertFalse(funcionarioInativo.getAtivo());
     }
 }

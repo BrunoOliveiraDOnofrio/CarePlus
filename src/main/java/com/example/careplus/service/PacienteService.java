@@ -39,18 +39,18 @@ public class PacienteService {
     }
 
     public List<PacienteResponseDto> listarTodos(){
-        List<Paciente> pacientes = repositoryPaciente.findAll();
+        List<Paciente> pacientes = repositoryPaciente.findAllByAtivoTrue();
         List<PacienteResponseDto> dtos = PacienteMapper.toResponseDto(pacientes);
         return dtos;
     }
 
     public Page<PacienteResponseDto> listarTodosPaginado(Pageable pageable) {
-        return repositoryPaciente.findAll(pageable)
+        return repositoryPaciente.findAllByAtivoTrue(pageable)
                 .map(PacienteMapper::toResponseDto);
     }
 
     public PacienteResponseDto listarPorId(Long id){
-        Optional<Paciente> existePaciente = repositoryPaciente.findById(id);
+        Optional<Paciente> existePaciente = repositoryPaciente.findByIdAndAtivoTrue(id);
 
         if(existePaciente.isPresent()){
 
@@ -75,6 +75,7 @@ public class PacienteService {
         }
 
         Paciente entity = PacienteMapper.toEntity(paciente);
+        entity.setAtivo(true);
 
         if (paciente.getFoto() != null && !paciente.getFoto().isEmpty()) {
             try {
@@ -90,17 +91,16 @@ public class PacienteService {
 
     // OK
     public void deletar(Long id){
-        boolean existe = repositoryPaciente.existsById(id);
+        Paciente paciente = repositoryPaciente.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
-        if(!existe){
-            throw new ResourceNotFoundException("Paciente não encontrado");
-        }
-        repositoryPaciente.deleteById(id);
+        paciente.setAtivo(false);
+        repositoryPaciente.save(paciente);
     }
 
     // OK
     public PacienteResponseDto atualizar(PacienteRequestDto paciente, Long id){
-        Optional<Paciente> existe = repositoryPaciente.findById(id);
+        Optional<Paciente> existe = repositoryPaciente.findByIdAndAtivoTrue(id);
 
         if(existe.isPresent()){
             Paciente pacienteExistente = existe.get();
@@ -132,7 +132,7 @@ public class PacienteService {
     }
 
     public List<PacienteResponseDto> listarPorEmail(String email){
-        List<Paciente> existeEmail = repositoryPaciente.findByEmailContainsIgnoreCase(email);
+        List<Paciente> existeEmail = repositoryPaciente.findByEmailContainsIgnoreCaseAndAtivoTrue(email);
 
 
 
@@ -144,7 +144,7 @@ public class PacienteService {
 
     public List<PacienteResponseDto> buscarPorNome(String nome){
 
-        List<Paciente> pacientes = repositoryPaciente.findByNomeContainingIgnoreCase(nome);
+        List<Paciente> pacientes = repositoryPaciente.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
 
         if (!pacientes.isEmpty()){
             return PacienteMapper.toResponseDto(pacientes);
@@ -196,4 +196,3 @@ public class PacienteService {
         return pacienteSalvo;
     }
 }
-
