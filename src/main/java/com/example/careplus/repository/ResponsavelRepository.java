@@ -15,6 +15,5 @@ public interface ResponsavelRepository extends JpaRepository<Responsavel, Long> 
     boolean existsByEmailAndIdNot(String email, Long id);
 
     Optional<Responsavel> findByEmailStartingWith(String email);
-    Optional<Responsavel> findByEmail(String email);
     Optional<Responsavel> findByCpf(String cpf);
 }

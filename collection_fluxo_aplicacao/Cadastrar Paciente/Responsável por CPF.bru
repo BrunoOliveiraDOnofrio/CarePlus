@@ -1,0 +1,24 @@
+meta {
+  name: Responsável por CPF
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:8080/responsaveis/por-cpf?cpf=847.966.981-07
+  body: none
+  auth: bearer
+}
+
+params:query {
+  cpf: 847.966.981-07
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
