@@ -134,4 +134,9 @@ public class FuncionarioController {
         Page<FuncionarioResponseDto> funcionarios = funcionarioService.listarTodosPaginado(pageable);
         return ResponseEntity.status(200).body(funcionarios);
     }
+
+    @GetMapping("/supervisores")@SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<FuncionarioResponseDto>> listarSupervisores(){
+        List<FuncionarioResponseDto> supervisores = funcionarioService.listarSupervisores();
+        return ResponseEntity.status(200).body(supervisores);}
 }

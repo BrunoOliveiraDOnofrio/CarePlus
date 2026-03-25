@@ -1,0 +1,20 @@
+meta {
+  name: Listar Funcionarios
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/funcionarios
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenJWT}}
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

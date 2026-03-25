@@ -1,0 +1,31 @@
+meta {
+  name: Cdastrar Funcionario
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:8080/funcionarios
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjbGluaWNhLmNvbSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc3MTgwNTIzMywiZXhwIjoxNzc1NDA1MjMzfQ.5lXYAQZAnng7XMrNcf3oOt24mmADI3xj1JznZmzPpzW_89q_yxzKEOg_SFcPoiV-MGL0UXkOCYWTi5WVwCjHlQ
+}
+
+body:json {
+  {
+    "nome": "Vitor Almeida",
+    "email": "vitor.almeida@clinica.com",
+    "senha": "senha123",
+    "cargo": "Especialista",
+    "especialidade": "Fonoaudiólogo(a)",
+    "tipoAtendimento": "ABA"
+  }
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

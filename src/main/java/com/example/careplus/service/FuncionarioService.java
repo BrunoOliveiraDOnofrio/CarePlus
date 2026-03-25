@@ -356,4 +356,10 @@ public class FuncionarioService {
         return funcionariosDisponiveis;
     }
 
+    public List<FuncionarioResponseDto> listarSupervisores() {
+        List<Funcionario> supervisores = repository.findByCargoIgnoreCase("Supervisor");
+        return supervisores.stream()
+                .map(FuncionarioMapper::toResponseDto)
+                .toList();}
+
 }
