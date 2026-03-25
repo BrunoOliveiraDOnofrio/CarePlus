@@ -357,7 +357,7 @@ public class FuncionarioService {
     }
 
     public List<FuncionarioResponseDto> listarSupervisores() {
-        List<Funcionario> supervisores = repository.findByCargoIgnoreCase("Supervisor");
+        List<Funcionario> supervisores = repository.findByCargoIgnoreCase("Supervisor(a)");
         return supervisores.stream()
                 .map(FuncionarioMapper::toResponseDto)
                 .toList();}
