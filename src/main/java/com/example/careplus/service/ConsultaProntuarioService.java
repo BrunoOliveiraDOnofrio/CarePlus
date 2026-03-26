@@ -4,7 +4,11 @@ import com.example.careplus.dto.dtoConsultaProntuario.*;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConflitoDatasDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
-import com.example.careplus.messaging.ConsultaKafkaProducerService;
+import com.example.careplus.dto.kafka.EventoConsultaCriadaDto;
+import com.example.careplus.dto.kafka.ConsultaCriadaKafkaDto;
+import com.example.careplus.dto.kafka.PacienteKafkaDto;
+import com.example.careplus.dto.kafka.ProfissionalKafkaDto;
+import com.example.careplus.messaging.ConsultaCriadaRabbitProducer;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.ClassificacaoDoencas;
@@ -27,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,9 +46,9 @@ public class ConsultaProntuarioService {
     private final CuidadorRepository cuidadorRepository;
     private final S3Service s3Service;
     private final ObjectMapper objectMapper;
-    private final ConsultaKafkaProducerService consultaKafkaProducerService;
+    private final ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer;
 
-    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaKafkaProducerService consultaKafkaProducerService) {
+    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer) {
         this.consultaProntuarioRepository = consultaProntuarioRepository;
         this.pacienteRepository = pacienteRepository;
         this.funcionarioRepository = funcionarioRepository;
@@ -53,7 +58,35 @@ public class ConsultaProntuarioService {
         this.s3Service = s3Service;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.findAndRegisterModules();
-        this.consultaKafkaProducerService = consultaKafkaProducerService;
+        this.consultaCriadaRabbitProducer = consultaCriadaRabbitProducer;
+    }
+
+    private ConsultaCriadaKafkaDto toKafkaDto(ConsultaProntuarioResponseDto consulta) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String dataHora = consulta.getDataHora() != null ? consulta.getDataHora().format(formatter) : null;
+        PacienteKafkaDto paciente = new PacienteKafkaDto(
+                consulta.getPaciente().getId(),
+                consulta.getPaciente().getNome(),
+                consulta.getPaciente().getEmail(),
+                consulta.getPaciente().getCpf(),
+                consulta.getPaciente().getTelefone(),
+                consulta.getPaciente().getDtNascimento() != null ? consulta.getPaciente().getDtNascimento().toString() : null,
+                consulta.getPaciente().getConvenio(),
+                consulta.getPaciente().getDataInicio() != null ? consulta.getPaciente().getDataInicio().toString() : null
+        );
+        ProfissionalKafkaDto profissional = new ProfissionalKafkaDto(
+                consulta.getFuncionario().getId(),
+                consulta.getFuncionario().getNome(),
+                consulta.getFuncionario().getEspecialidade(),
+                consulta.getFuncionario().getTipoAtendimento()
+        );
+        return new ConsultaCriadaKafkaDto(
+                consulta.getId(),
+                paciente,
+                profissional,
+                dataHora,
+                consulta.getTipo()
+        );
     }
 
     public ConsultaProntuarioResponseDto marcarConsulta(ConsultaProntuarioRequestDto request){
@@ -161,8 +194,8 @@ public class ConsultaProntuarioService {
         // retorna a consulta criada com todos os detalhes
         ConsultaProntuarioResponseDto responseDto = ConsultaProntuarioMapper.toResponseDto(salvo);
 
-        // publica os detalhes da nova consulta no tópico Kafka
-        consultaKafkaProducerService.publicarConsultaCriada(responseDto);
+        // publica os detalhes da nova consulta no RabbitMQ no formato esperado pelo consumer (envelope)
+        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(java.util.List.of(toKafkaDto(responseDto))));
 
         return responseDto;
     }
@@ -476,8 +509,8 @@ public class ConsultaProntuarioService {
         response.setTotalConsultasCriadas(response.getConsultasCriadas().size());
         response.setTotalFalhas(0);
 
-        // publica todas as consultas recorrentes criadas no tópico Kafka
-        consultaKafkaProducerService.publicarConsultasRecorrentesCriadas(response.getConsultasCriadas());
+        // publica todas as consultas recorrentes criadas no RabbitMQ no formato esperado pelo consumer (envelope)
+        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(response.getConsultasCriadas().stream().map(this::toKafkaDto).toList()));
 
         return response;
     }

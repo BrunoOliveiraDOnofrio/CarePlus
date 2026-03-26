@@ -1,0 +1,19 @@
+meta {
+  name: Deletar Paciente
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/pacientes?id=2
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 2
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}

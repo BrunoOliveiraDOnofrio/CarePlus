@@ -1,8 +1,7 @@
 package com.example.careplus.dto.kafka;
 
 /**
- * Subconjunto de PacienteResponseDto esperado pelo consumer.
- * Datas são enviadas como String (formato "yyyy-MM-dd") pois o consumer as recebe como texto.
+ * Subconjunto de Paciente esperado pelo consumer.
  */
 public class PacienteKafkaDto {
     private Long id;
@@ -52,4 +51,3 @@ public class PacienteKafkaDto {
     public String getDataInicio() { return dataInicio; }
     public void setDataInicio(String dataInicio) { this.dataInicio = dataInicio; }
 }
-

@@ -40,4 +40,3 @@ public class ConsultaCriadaRabbitProducerTest {
         verifyNoInteractions(rabbitTemplate);
     }
 }
-

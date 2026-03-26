@@ -1,9 +1,7 @@
 package com.example.careplus.dto.kafka;
 
 /**
- * Representa uma consulta dentro do evento Kafka.
- * dataHora é String no formato "yyyy-MM-dd HH:mm:ss" — exigido pelo consumer.
- * O campo "funcionario" é aceito pelo consumer via @JsonAlias("profissional").
+ * Representa uma consulta dentro do evento enviado via mensageria.
  */
 public class ConsultaCriadaKafkaDto {
 
@@ -39,4 +37,3 @@ public class ConsultaCriadaKafkaDto {
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
 }
-
