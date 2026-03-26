@@ -4,10 +4,10 @@ import com.example.careplus.dto.dtoConsultaProntuario.*;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConflitoDatasDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
-import com.example.careplus.dto.kafka.EventoConsultaCriadaDto;
-import com.example.careplus.dto.kafka.ConsultaCriadaKafkaDto;
-import com.example.careplus.dto.kafka.PacienteKafkaDto;
-import com.example.careplus.dto.kafka.ProfissionalKafkaDto;
+import com.example.careplus.dto.messaging.EventoConsultaCriadaDto;
+import com.example.careplus.dto.messaging.ConsultaCriadaMensagemDto;
+import com.example.careplus.dto.messaging.PacienteMensagemDto;
+import com.example.careplus.dto.messaging.ProfissionalMensagemDto;
 import com.example.careplus.messaging.ConsultaCriadaRabbitProducer;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.ConsultaProntuario;
@@ -61,10 +61,10 @@ public class ConsultaProntuarioService {
         this.consultaCriadaRabbitProducer = consultaCriadaRabbitProducer;
     }
 
-    private ConsultaCriadaKafkaDto toKafkaDto(ConsultaProntuarioResponseDto consulta) {
+    private ConsultaCriadaMensagemDto toMensagemDto(ConsultaProntuarioResponseDto consulta) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String dataHora = consulta.getDataHora() != null ? consulta.getDataHora().format(formatter) : null;
-        PacienteKafkaDto paciente = new PacienteKafkaDto(
+        PacienteMensagemDto paciente = new PacienteMensagemDto(
                 consulta.getPaciente().getId(),
                 consulta.getPaciente().getNome(),
                 consulta.getPaciente().getEmail(),
@@ -74,13 +74,13 @@ public class ConsultaProntuarioService {
                 consulta.getPaciente().getConvenio(),
                 consulta.getPaciente().getDataInicio() != null ? consulta.getPaciente().getDataInicio().toString() : null
         );
-        ProfissionalKafkaDto profissional = new ProfissionalKafkaDto(
+        ProfissionalMensagemDto profissional = new ProfissionalMensagemDto(
                 consulta.getFuncionario().getId(),
                 consulta.getFuncionario().getNome(),
                 consulta.getFuncionario().getEspecialidade(),
                 consulta.getFuncionario().getTipoAtendimento()
         );
-        return new ConsultaCriadaKafkaDto(
+        return new ConsultaCriadaMensagemDto(
                 consulta.getId(),
                 paciente,
                 profissional,
@@ -195,7 +195,7 @@ public class ConsultaProntuarioService {
         ConsultaProntuarioResponseDto responseDto = ConsultaProntuarioMapper.toResponseDto(salvo);
 
         // publica os detalhes da nova consulta no RabbitMQ no formato esperado pelo consumer (envelope)
-        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(java.util.List.of(toKafkaDto(responseDto))));
+        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(java.util.List.of(toMensagemDto(responseDto))));
 
         return responseDto;
     }
@@ -510,7 +510,7 @@ public class ConsultaProntuarioService {
         response.setTotalFalhas(0);
 
         // publica todas as consultas recorrentes criadas no RabbitMQ no formato esperado pelo consumer (envelope)
-        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(response.getConsultasCriadas().stream().map(this::toKafkaDto).toList()));
+        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(response.getConsultasCriadas().stream().map(this::toMensagemDto).toList()));
 
         return response;
     }

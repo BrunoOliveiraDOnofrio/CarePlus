@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: com.example.careplus.service.FuncionarioServiceTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.233 s <<< FAILURE! -- in com.example.careplus.service.FuncionarioServiceTest
+com.example.careplus.service.FuncionarioServiceTest.listarTodos -- Time elapsed: 0.202 s <<< ERROR!
+com.example.careplus.exception.ResourceNotFoundException: Usuário não encontrado!
+	at com.example.careplus.service.FuncionarioService.buscarPorEmail(FuncionarioService.java:198)
+	at com.example.careplus.service.FuncionarioServiceTest.listarTodos(FuncionarioServiceTest.java:110)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.careplus.service.FuncionarioServiceTest.buscarTodos -- Time elapsed: 0.004 s <<< ERROR!
+java.lang.RuntimeException: Nenhum usuario cadastrado
+	at com.example.careplus.service.FuncionarioService.listarTodos(FuncionarioService.java:208)
+	at com.example.careplus.service.FuncionarioServiceTest.buscarTodos(FuncionarioServiceTest.java:52)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
