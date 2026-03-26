@@ -1,8 +1,7 @@
 package com.example.careplus.dto.kafka;
 
 /**
- * Subconjunto de ProfissionalDto esperado pelo consumer.
- * Contém apenas os 4 campos conhecidos — campos extras causariam UnrecognizedPropertyException.
+ * Subconjunto de Profissional esperado pelo consumer.
  */
 public class ProfissionalKafkaDto {
     private Long id;
@@ -31,4 +30,3 @@ public class ProfissionalKafkaDto {
     public String getTipoAtendimento() { return tipoAtendimento; }
     public void setTipoAtendimento(String tipoAtendimento) { this.tipoAtendimento = tipoAtendimento; }
 }
-
