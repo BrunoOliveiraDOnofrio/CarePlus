@@ -1,0 +1,25 @@
+meta {
+  name: Responsaveis
+  type: http
+  seq: 11
+}
+
+get {
+  url: http://localhost:8080/responsaveis
+  body: none
+  auth: bearer
+}
+
+headers {
+  Authorization: Bearer <YOUR_JWT_TOKEN>
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

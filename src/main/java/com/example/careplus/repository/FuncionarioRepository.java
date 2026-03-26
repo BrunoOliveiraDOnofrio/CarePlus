@@ -19,4 +19,5 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
     Optional<Funcionario> findByIdAndAtivoTrue(Long id);
     List<Funcionario> findByEmailContainingIgnoreCaseAndAtivoTrue(String email);
     List<Funcionario> findByEspecialidadeIgnoreCaseAndAtivoTrue(String especialidade);
+    List<Funcionario> findByCargoIgnoreCase(String supervisor);
 }

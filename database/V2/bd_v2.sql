@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS careplus_novo;
 USE careplus_novo;
 
+
 -- =========================
 -- TABELA ENDERECO
 -- =========================
@@ -225,6 +226,7 @@ CREATE TABLE material (
         FOREIGN KEY (fk_consulta)
         REFERENCES consulta_prontuario(id)
 );
+
 
 CREATE USER 'careplus_user'@'localhost' IDENTIFIED BY 'SenhaForte123!';
 GRANT ALL PRIVILEGES ON careplus_novo.* TO 'careplus_user'@'localhost';

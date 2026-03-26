@@ -1,0 +1,20 @@
+meta {
+  name: Listar Pacientes
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:8080/pacientes
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ2aXRvci5hbG1laWRhQGNsaW5pY2EuY29tIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE3NzE4ODA1NjYsImV4cCI6MTc3NTQ4MDU2Nn0.J3ieUCKg0ezV9gFSfkXjg8t7PmVKin30LfVlS5ldX-tcqKjNs102odMEGFi6Sz8X8iq0D8bJTwn5sddVL5UDwg
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
