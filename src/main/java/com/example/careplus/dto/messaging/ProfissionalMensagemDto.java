@@ -1,17 +1,17 @@
-package com.example.careplus.dto.kafka;
+package com.example.careplus.dto.messaging;
 
 /**
  * Subconjunto de Profissional esperado pelo consumer.
  */
-public class ProfissionalKafkaDto {
+public class ProfissionalMensagemDto {
     private Long id;
     private String nome;
     private String especialidade;
     private String tipoAtendimento;
 
-    public ProfissionalKafkaDto() {}
+    public ProfissionalMensagemDto() {}
 
-    public ProfissionalKafkaDto(Long id, String nome, String especialidade, String tipoAtendimento) {
+    public ProfissionalMensagemDto(Long id, String nome, String especialidade, String tipoAtendimento) {
         this.id = id;
         this.nome = nome;
         this.especialidade = especialidade;
@@ -30,3 +30,4 @@ public class ProfissionalKafkaDto {
     public String getTipoAtendimento() { return tipoAtendimento; }
     public void setTipoAtendimento(String tipoAtendimento) { this.tipoAtendimento = tipoAtendimento; }
 }
+

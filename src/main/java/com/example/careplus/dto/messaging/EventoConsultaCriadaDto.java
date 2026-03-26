@@ -1,4 +1,4 @@
-package com.example.careplus.dto.kafka;
+package com.example.careplus.dto.messaging;
 
 import java.util.List;
 
@@ -7,25 +7,25 @@ import java.util.List;
  */
 public class EventoConsultaCriadaDto {
 
-    private List<ConsultaCriadaKafkaDto> consultasCriadas;
+    private List<ConsultaCriadaMensagemDto> consultasCriadas;
     private int totalConsultasCriadas;
     private int totalFalhas;
     private List<String> datasComConflito;
 
     public EventoConsultaCriadaDto() {}
 
-    public EventoConsultaCriadaDto(List<ConsultaCriadaKafkaDto> consultasCriadas) {
+    public EventoConsultaCriadaDto(List<ConsultaCriadaMensagemDto> consultasCriadas) {
         this.consultasCriadas = consultasCriadas;
         this.totalConsultasCriadas = consultasCriadas != null ? consultasCriadas.size() : 0;
         this.totalFalhas = 0;
         this.datasComConflito = List.of();
     }
 
-    public List<ConsultaCriadaKafkaDto> getConsultasCriadas() {
+    public List<ConsultaCriadaMensagemDto> getConsultasCriadas() {
         return consultasCriadas;
     }
 
-    public void setConsultasCriadas(List<ConsultaCriadaKafkaDto> consultasCriadas) {
+    public void setConsultasCriadas(List<ConsultaCriadaMensagemDto> consultasCriadas) {
         this.consultasCriadas = consultasCriadas;
         this.totalConsultasCriadas = consultasCriadas != null ? consultasCriadas.size() : 0;
     }
@@ -54,3 +54,4 @@ public class EventoConsultaCriadaDto {
         this.datasComConflito = datasComConflito;
     }
 }
+

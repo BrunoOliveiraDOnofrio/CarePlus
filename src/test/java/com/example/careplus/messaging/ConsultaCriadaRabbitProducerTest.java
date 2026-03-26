@@ -1,7 +1,7 @@
 package com.example.careplus.messaging;
 
-import com.example.careplus.dto.kafka.ConsultaCriadaKafkaDto;
-import com.example.careplus.dto.kafka.EventoConsultaCriadaDto;
+import com.example.careplus.dto.messaging.ConsultaCriadaMensagemDto;
+import com.example.careplus.dto.messaging.EventoConsultaCriadaDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.DirectExchange;
@@ -28,7 +28,7 @@ public class ConsultaCriadaRabbitProducerTest {
 
     @Test
     void devePublicarEventoQuandoHaConsultas() {
-        EventoConsultaCriadaDto evento = new EventoConsultaCriadaDto(List.of(mock(ConsultaCriadaKafkaDto.class)));
+        EventoConsultaCriadaDto evento = new EventoConsultaCriadaDto(List.of(mock(ConsultaCriadaMensagemDto.class)));
         producer.publicarEvento(evento);
         verify(rabbitTemplate, times(1)).convertAndSend(eq("consultas.criadas.exchange"), any(), eq(evento));
     }

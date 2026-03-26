@@ -1,9 +1,9 @@
-package com.example.careplus.dto.kafka;
+package com.example.careplus.dto.messaging;
 
 /**
  * Subconjunto de Paciente esperado pelo consumer.
  */
-public class PacienteKafkaDto {
+public class PacienteMensagemDto {
     private Long id;
     private String nome;
     private String email;
@@ -13,10 +13,10 @@ public class PacienteKafkaDto {
     private String convenio;
     private String dataInicio;
 
-    public PacienteKafkaDto() {}
+    public PacienteMensagemDto() {}
 
-    public PacienteKafkaDto(Long id, String nome, String email, String cpf, String telefone,
-                             String dtNascimento, String convenio, String dataInicio) {
+    public PacienteMensagemDto(Long id, String nome, String email, String cpf, String telefone,
+                               String dtNascimento, String convenio, String dataInicio) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -51,3 +51,4 @@ public class PacienteKafkaDto {
     public String getDataInicio() { return dataInicio; }
     public void setDataInicio(String dataInicio) { this.dataInicio = dataInicio; }
 }
+
