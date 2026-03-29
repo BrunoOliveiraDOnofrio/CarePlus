@@ -1,124 +1,126 @@
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\CareplusApplication.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\AutenticacaoEntryPoint.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\AutenticacaoFilter.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\AutenticacaoProvider.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\GerenciadorTokenJwt.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\SecurityConfiguracao.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\swagger\OpenApiConfig.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\UsuarioDetails.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\config\UsuarioDetailsService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\ClassificacaoDoencasController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\ConsultaProntuarioController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\CuidadorController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\DetalhePacienteController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\EnderecoController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\FichaClinicaController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\FuncionarioController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\MaterialController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\MedicacaoController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\PacienteController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\ResponsavelController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\controller\TratamentoController.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoCid\ClassificacaoDoencasRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\ConsultaAtualResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\ConsultaMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\ConsultaRequest.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\ConsultaRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\ConsultaResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\DetalhesConsultaAnteriorResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\ProximaConsultaResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsulta\RealizarConsultaDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\ConsultaProntuarioAtualResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\ConsultaProntuarioMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\ConsultaProntuarioRequest.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\ConsultaProntuarioRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\ConsultaProntuarioResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\DetalhesConsultaProntuarioAnteriorResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\ProximaConsultaProntuarioResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaProntuario\RealizarConsultaProntuarioDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaRecorrente\ConflitoDatasDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaRecorrente\ConsultaRecorrenteRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoConsultaRecorrente\ConsultaRecorrenteResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoCuidador\CuidadorContatoResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoCuidador\CuidadorMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoCuidador\CuidadorRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoCuidador\CuidadorResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoDetalhes\AtualizarFichaClinicaDTO.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoDetalhes\AtualizarObservacoesComportamentaisDTO.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoDetalhes\AtualizarObservacoesConsultaDTO.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoDetalhes\AtualizarTratamentoDTO.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoEndereco\EnderecoMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoEndereco\EnderecoRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoEndereco\EnderecoResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFichaClinica\FichaClinicaMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFichaClinica\FichaClinicaRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioDetalhesDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioDisponivelRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioLoginDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioResquestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioSubordinadoDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\FuncionarioTokenDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoFuncionario\SupervisorDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoMaterial\MaterialMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoMaterial\MaterialRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoMaterial\MaterialResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoMedicacao\MedicacaoRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoPaciente\DetalhePacienteDTO.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoPaciente\PacienteMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoPaciente\PacienteRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoPaciente\PacienteResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoPaciente\TudoPacienteDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoResponsavel\ResponsavelMapper.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoResponsavel\ResponsavelRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoResponsavel\ResponsavelResponseDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\dtoTratamento\TratamentoRequestDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\kafka\ConsultaCriadaKafkaDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\kafka\EventoConsultaCriadaDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\kafka\PacienteKafkaDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\dto\kafka\ProfissionalKafkaDto.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\exception\GlobalExceptionHandler.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\exception\MissingFieldException.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\exception\ResourceNotFoundException.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\exception\UserAlreadyExistsException.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\messaging\ConsultaKafkaProducerService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\ClassificacaoDoencas.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\ConsultaProntuario.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Cuidador.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Endereco.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\FichaClinica.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Funcionario.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Material.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Medicacao.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Paciente.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Responsavel.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Role.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\model\Tratamento.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\ClassificacaoDoencasRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\ConsultaProntuarioRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\CuidadorRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\EnderecoRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\FichaClinicaRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\FuncionarioRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\MaterialRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\MedicacaoRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\PacienteRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\ResponsavelRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\repository\TratamentoRepository.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\AutenticacaoService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\ClassificacaoDoencasService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\ConsultaProntuarioService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\CuidadorService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\DetalhePacienteService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\EmailService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\EnderecoService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\FichaClinicaService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\FuncionarioService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\MaterialService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\MedicacaoService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\PacienteService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\ResponsavelService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\S3Service.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\service\TratamentoService.java
-D:\SPTECH\4 - Quarto Semestre\Projeto\CarePlus\src\main\java\com\example\careplus\utils\Notification.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/CareplusApplication.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/AutenticacaoEntryPoint.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/AutenticacaoFilter.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/AutenticacaoProvider.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/GerenciadorTokenJwt.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/RabbitProducerConfiguration.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/SecurityConfiguracao.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/UsuarioDetails.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/UsuarioDetailsService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/swagger/OpenApiConfig.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/ClassificacaoDoencasController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/ConsultaProntuarioController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/CuidadorController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/DetalhePacienteController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/EnderecoController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/FichaClinicaController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/FuncionarioController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/MaterialController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/MedicacaoController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/PacienteController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/ResponsavelController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/TratamentoController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoCid/ClassificacaoDoencasRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/ConsultaAtualResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/ConsultaMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/ConsultaRequest.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/ConsultaRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/ConsultaResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/DetalhesConsultaAnteriorResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/ProximaConsultaResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsulta/RealizarConsultaDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/ConsultaProntuarioAtualResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/ConsultaProntuarioMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/ConsultaProntuarioRequest.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/ConsultaProntuarioRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/ConsultaProntuarioResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/DetalhesConsultaProntuarioAnteriorResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/ProximaConsultaProntuarioResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/RealizarConsultaProntuarioDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/ConflitoDatasDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/ConsultaRecorrenteRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/ConsultaRecorrenteResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoCuidador/CuidadorContatoResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoCuidador/CuidadorMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoCuidador/CuidadorRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoCuidador/CuidadorResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoDetalhes/AtualizarFichaClinicaDTO.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoDetalhes/AtualizarObservacoesComportamentaisDTO.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoDetalhes/AtualizarObservacoesConsultaDTO.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoDetalhes/AtualizarTratamentoDTO.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoEndereco/EnderecoMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoEndereco/EnderecoRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoEndereco/EnderecoResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFichaClinica/FichaClinicaMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFichaClinica/FichaClinicaRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioDetalhesDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioDisponivelRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioLoginDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioResquestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioSubordinadoDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/FuncionarioTokenDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoFuncionario/SupervisorDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoMaterial/MaterialMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoMaterial/MaterialRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoMaterial/MaterialResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoMedicacao/MedicacaoRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoPaciente/DetalhePacienteDTO.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoPaciente/PacienteMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoPaciente/PacienteRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoPaciente/PacienteResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoPaciente/TudoPacienteDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoResponsavel/ResponsavelMapper.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoResponsavel/ResponsavelRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoResponsavel/ResponsavelResponseDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoTratamento/TratamentoRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/kafka/ConsultaCriadaKafkaDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/kafka/EventoConsultaCriadaDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/kafka/PacienteKafkaDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/kafka/ProfissionalKafkaDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/exception/GlobalExceptionHandler.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/exception/MissingFieldException.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/exception/ResourceNotFoundException.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/exception/UserAlreadyExistsException.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/messaging/ConsultaCriadaRabbitProducer.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/messaging/ConsultaKafkaProducerService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/ClassificacaoDoencas.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/ConsultaProntuario.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Cuidador.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Endereco.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/FichaClinica.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Funcionario.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Material.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Medicacao.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Paciente.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Responsavel.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Role.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/model/Tratamento.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/ClassificacaoDoencasRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/ConsultaProntuarioRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/CuidadorRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/EnderecoRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/FichaClinicaRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/FuncionarioRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/MaterialRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/MedicacaoRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/PacienteRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/ResponsavelRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/repository/TratamentoRepository.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/AutenticacaoService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/ClassificacaoDoencasService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/ConsultaProntuarioService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/CuidadorService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/DetalhePacienteService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/EmailService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/EnderecoService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/FichaClinicaService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/FuncionarioService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/MaterialService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/MedicacaoService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/PacienteService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/ResponsavelService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/S3Service.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/TratamentoService.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/utils/Notification.java

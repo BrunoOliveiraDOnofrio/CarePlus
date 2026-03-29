@@ -3,6 +3,7 @@ package com.example.careplus.config;
 // responsável por proteger as rotas da aplicação, controlando quem pode acessar o quê. Ela define quais endpoints estão abertos ao público — como o login, a documentação Swagger e o console do banco H2 — e quais precisam de autenticação com um token JWT válido.
 import com.example.careplus.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +37,9 @@ public class SecurityConfiguracao {
     @Autowired
     private AutenticacaoEntryPoint autenticacaoJwtEntryPoint;
 
+    @Value("${app.cors.allowed-origins}")
+    private List<String> allowedOrigins;
+
     private static final AntPathRequestMatcher[] URLS_PERMITIDAS = {
             new AntPathRequestMatcher("/swagger-ui/**"),
             new AntPathRequestMatcher("/swagger-ui.html"),
@@ -60,14 +64,15 @@ public class SecurityConfiguracao {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(URLS_PERMITIDAS).permitAll()
                                 // URLs protegidas por ROLE
-                                .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/pacientes/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/classificacao-doencas/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/cuidadores/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/consultas-prontuario/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/consultas-prontuario/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/enderecos/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/fichas-clinicas/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/materiais/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/materiais/**").hasAnyRole("ADMIN", "SCHEDULER")
                                 .requestMatchers("/**").hasRole("ADMIN")
 
 
@@ -117,10 +122,7 @@ public class SecurityConfiguracao {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
-        configuracao.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
-                "http://localhost:5173"
-        ));
+        configuracao.setAllowedOriginPatterns(allowedOrigins);
         configuracao.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuracao.setAllowCredentials(true);
         configuracao.setAllowedMethods(Arrays.asList(
