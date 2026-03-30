@@ -1,6 +1,7 @@
 package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoFichaClinica.FichaClinicaRequestDto;
+import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.model.FichaClinica;
 import com.example.careplus.repository.*;
@@ -69,7 +70,7 @@ public class FichaClinicaService {
         if (fichaClinicaOpt.isPresent()) {
             return fichaClinicaOpt.get();
         } else {
-            throw new RuntimeException("Usuário não encontrado!");
+            throw new ResourceNotFoundException("Usuário não encontrado!");
         }
 
     }
