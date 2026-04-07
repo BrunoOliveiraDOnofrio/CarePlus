@@ -1,0 +1,21 @@
+meta {
+  name: 5. Listar Todos os Vínculos
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/consulta-funcionario
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+docs {
+  Retorna todos os registros da tabela "consulta_funcionario".
+  Útil para visualizar todos os vínculos entre consultas e funcionários.
+}
+

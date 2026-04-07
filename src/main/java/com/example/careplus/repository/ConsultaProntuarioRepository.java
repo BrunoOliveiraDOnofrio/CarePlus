@@ -17,13 +17,13 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id= :idUsuario ORDER BY c.dataHora ")
     List<ConsultaProntuario> buscarPorPaciente(Long idUsuario);
 
-    @Query("SELECT c FROM ConsultaProntuario c WHERE FUNCTION('DATE', c.dataHora) = CURRENT_DATE AND c.funcionario.Id = :idFuncionario")
+    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE FUNCTION('DATE', c.dataHora) = CURRENT_DATE AND cf.funcionario.id = :idFuncionario")
     List<ConsultaProntuario> consultasDoDia(Long idFuncionario);
 
-    @Query("SELECT c FROM ConsultaProntuario c WHERE FUNCTION('DATE', c.dataHora) = :data AND c.funcionario.Id = :idFuncionario ORDER BY c.dataHora")
+    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE FUNCTION('DATE', c.dataHora) = :data AND cf.funcionario.id = :idFuncionario ORDER BY c.dataHora")
     List<ConsultaProntuario> buscarConsultasPorFuncionarioEData(Long idFuncionario, LocalDate data);
 
-    @Query("SELECT c FROM ConsultaProntuario c WHERE c.funcionario.Id = :funcionarioId " +
+    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE cf.funcionario.id = :funcionarioId " +
             "AND c.dataHora >= :inicio AND c.dataHora <= :fim " +
             "ORDER BY c.dataHora ASC")
     List<ConsultaProntuario> buscarConsultasPorFuncionarioEPeriodo(
@@ -32,6 +32,7 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
             @Param("fim") LocalDateTime fim
     );
 
+    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE cf.funcionario.id = :funcionarioId AND c.confirmada IS NULL")
     List<ConsultaProntuario> findByFuncionarioIdAndConfirmadaNull(Long funcionarioId);
 
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId " +
@@ -51,4 +52,3 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId AND c.dataHora > CURRENT_TIMESTAMP AND c.confirmada = true ORDER BY c.dataHora ASC")
     List<ConsultaProntuario> buscarProximaConsultaConfirmadaPorPaciente(@Param("pacienteId") Long pacienteId);
 }
-

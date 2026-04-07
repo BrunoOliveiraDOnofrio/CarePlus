@@ -32,6 +32,9 @@ public class Funcionario {
     @OneToMany(mappedBy = "supervisor")
     private List<Funcionario> subordinados = new ArrayList<>();
 
+    @OneToMany(mappedBy = "funcionario")
+    private List<ConsultaFuncionario> consultaFuncionarios = new ArrayList<>();
+
     @Schema(description = "Supervisora")
     private String cargo;
 

@@ -6,11 +6,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ConsultaProntuarioResponseDto {
     private Long id;
     private PacienteResponseDto paciente;
-    private FuncionarioResponseDto funcionario;
+    private List<FuncionarioResponseDto> funcionarios;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataHora;
@@ -26,10 +27,10 @@ public class ConsultaProntuarioResponseDto {
     public ConsultaProntuarioResponseDto() {
     }
 
-    public ConsultaProntuarioResponseDto(Long id, PacienteResponseDto paciente, FuncionarioResponseDto funcionario, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca, Boolean confirmada) {
+    public ConsultaProntuarioResponseDto(Long id, PacienteResponseDto paciente, List<FuncionarioResponseDto> funcionarios, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca, Boolean confirmada) {
         this.id = id;
         this.paciente = paciente;
-        this.funcionario = funcionario;
+        this.funcionarios = funcionarios;
         this.dataHora = dataHora;
         this.tipo = tipo;
         this.observacoesComportamentais = observacoesComportamentais;
@@ -53,12 +54,12 @@ public class ConsultaProntuarioResponseDto {
         this.paciente = paciente;
     }
 
-    public FuncionarioResponseDto getFuncionario() {
-        return funcionario;
+    public List<FuncionarioResponseDto> getFuncionarios() {
+        return funcionarios;
     }
 
-    public void setFuncionario(FuncionarioResponseDto funcionario) {
-        this.funcionario = funcionario;
+    public void setFuncionarios(List<FuncionarioResponseDto> funcionarios) {
+        this.funcionarios = funcionarios;
     }
 
     public LocalDateTime getDataHora() {

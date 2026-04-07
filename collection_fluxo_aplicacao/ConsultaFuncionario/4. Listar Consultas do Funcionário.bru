@@ -1,0 +1,25 @@
+meta {
+  name: 4. Listar Consultas do Funcionário
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/consulta-funcionario/por-funcionario?funcionarioId=2
+  body: none
+  auth: bearer
+}
+
+params:query {
+  funcionarioId: 2
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+docs {
+  Lista todos os vínculos de um funcionário específico, ou seja,
+  todas as consultas em que o funcionário de id=2 está atribuído.
+}
+

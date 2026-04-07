@@ -19,6 +19,8 @@ import com.example.careplus.model.Medicacao;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Tratamento;
+import com.example.careplus.model.ConsultaFuncionario;
+import com.example.careplus.repository.ConsultaFuncionarioRepository;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.CuidadorRepository;
 import com.example.careplus.repository.FuncionarioRepository;
@@ -47,8 +49,9 @@ public class ConsultaProntuarioService {
     private final S3Service s3Service;
     private final ObjectMapper objectMapper;
     private final ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer;
+    private final ConsultaFuncionarioRepository consultaFuncionarioRepository;
 
-    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer) {
+    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer, ConsultaFuncionarioRepository consultaFuncionarioRepository) {
         this.consultaProntuarioRepository = consultaProntuarioRepository;
         this.pacienteRepository = pacienteRepository;
         this.funcionarioRepository = funcionarioRepository;
@@ -59,6 +62,7 @@ public class ConsultaProntuarioService {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.findAndRegisterModules();
         this.consultaCriadaRabbitProducer = consultaCriadaRabbitProducer;
+        this.consultaFuncionarioRepository = consultaFuncionarioRepository;
     }
 
     private ConsultaCriadaMensagemDto toMensagemDto(ConsultaProntuarioResponseDto consulta) {
@@ -74,12 +78,16 @@ public class ConsultaProntuarioService {
                 consulta.getPaciente().getConvenio(),
                 consulta.getPaciente().getDataInicio() != null ? consulta.getPaciente().getDataInicio().toString() : null
         );
-        ProfissionalMensagemDto profissional = new ProfissionalMensagemDto(
-                consulta.getFuncionario().getId(),
-                consulta.getFuncionario().getNome(),
-                consulta.getFuncionario().getEspecialidade(),
-                consulta.getFuncionario().getTipoAtendimento()
-        );
+        ProfissionalMensagemDto profissional = null;
+        if (consulta.getFuncionarios() != null && !consulta.getFuncionarios().isEmpty()) {
+            var f = consulta.getFuncionarios().get(0);
+            profissional = new ProfissionalMensagemDto(
+                    f.getId(),
+                    f.getNome(),
+                    f.getEspecialidade(),
+                    f.getTipoAtendimento()
+            );
+        }
         return new ConsultaCriadaMensagemDto(
                 consulta.getId(),
                 paciente,
@@ -87,6 +95,15 @@ public class ConsultaProntuarioService {
                 dataHora,
                 consulta.getTipo()
         );
+    }
+
+    /** Cria um vínculo ConsultaFuncionario apenas se ele ainda não existir. */
+    private ConsultaFuncionario vincularFuncionario(Funcionario funcionario, ConsultaProntuario consulta) {
+        if (consultaFuncionarioRepository.existsByConsultaIdAndFuncionarioId(consulta.getId(), funcionario.getId())) {
+            throw new RuntimeException("Funcionário " + funcionario.getNome() + " já está vinculado a esta consulta.");
+        }
+        ConsultaFuncionario cf = new ConsultaFuncionario(funcionario, consulta);
+        return consultaFuncionarioRepository.save(cf);
     }
 
     public ConsultaProntuarioResponseDto marcarConsulta(ConsultaProntuarioRequestDto request){
@@ -180,13 +197,16 @@ public class ConsultaProntuarioService {
         // cria a nova consulta
         ConsultaProntuario novaConsulta = new ConsultaProntuario();
         novaConsulta.setPaciente(paciente);
-        novaConsulta.setFuncionario(funcionarioAtribuido); // pode ser o original ou um substituto
         novaConsulta.setDataHora(request.getDataHora());
         novaConsulta.setConfirmada(null);
         novaConsulta.setTipo(request.getTipo());
 
         // salva no banco
         ConsultaProntuario salvo = consultaProntuarioRepository.save(novaConsulta);
+
+        // cria o vínculo entre a consulta e o funcionário atribuído
+        ConsultaFuncionario consultaFuncionario = vincularFuncionario(funcionarioAtribuido, salvo);
+        salvo.getConsultaFuncionarios().add(consultaFuncionario);
 
         // envia email de notificação pro funcionário que vai atender
 //        emailService.EnviarNotificacaoConsultaProntuario(funcionarioAtribuido, novaConsulta, paciente);
@@ -210,10 +230,13 @@ public class ConsultaProntuarioService {
 
         ConsultaProntuario novaConsulta = new ConsultaProntuario();
         novaConsulta.setPaciente(paciente);
-        novaConsulta.setFuncionario(funcionario);
         novaConsulta.setDataHora(request.getDataHora());
         novaConsulta.setConfirmada(null);
         novaConsulta.setTipo(request.getTipo() != null ? request.getTipo() : "Pendente");
+
+        // adiciona o funcionário como ConsultaFuncionario para que o mapper consiga montar o DTO
+        ConsultaFuncionario cf = new ConsultaFuncionario(funcionario, novaConsulta);
+        novaConsulta.getConsultaFuncionarios().add(cf);
 
         return ConsultaProntuarioMapper.toResponseDto(novaConsulta);
     }
@@ -264,10 +287,20 @@ public class ConsultaProntuarioService {
         ConsultaProntuario consulta = consultaProntuarioRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
         consulta.setPaciente(paciente);
-        consulta.setFuncionario(funcionario);
         consulta.setDataHora(request.getDataHora());
         consulta.setTipo("Retorno");
         consulta.setConfirmada(consulta.getConfirmada() != null ? consulta.getConfirmada() : Boolean.FALSE);
+
+        // atualiza o vínculo com o funcionário
+        ConsultaFuncionario existente = consulta.getConsultaFuncionarios().isEmpty() ? null : consulta.getConsultaFuncionarios().get(0);
+        if (existente != null) {
+            existente.setFuncionario(funcionario);
+            consultaFuncionarioRepository.save(existente);
+        } else {
+            ConsultaFuncionario novo = new ConsultaFuncionario(funcionario, consulta);
+            consultaFuncionarioRepository.save(novo);
+            consulta.getConsultaFuncionarios().add(novo);
+        }
 
         ConsultaProntuario salva = consultaProntuarioRepository.save(consulta);
         return ConsultaProntuarioMapper.toResponseDto(salva);
@@ -490,7 +523,6 @@ public class ConsultaProntuarioService {
             // cria a consulta nova
             ConsultaProntuario consulta = new ConsultaProntuario();
             consulta.setPaciente(paciente);
-            consulta.setFuncionario(funcionarioAtribuido); // pode ser o original ou um substituto
             consulta.setDataHora(dataHora);
             consulta.setTipo(dto.getTipo());
             consulta.setPresenca(false);
@@ -498,6 +530,10 @@ public class ConsultaProntuarioService {
 
             // salva no banco
             ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
+
+            // cria o vínculo entre a consulta e o funcionário atribuído
+            ConsultaFuncionario cf = vincularFuncionario(funcionarioAtribuido, consultaSalva);
+            consultaSalva.getConsultaFuncionarios().add(cf);
 
             // converte pra dto e adiciona na lista de consultas criadas
             // assim a resposta vai ter todas as informações, incluindo o nome do médico

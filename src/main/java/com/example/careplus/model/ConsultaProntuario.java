@@ -15,9 +15,9 @@ public class ConsultaProntuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_id")
-    private Funcionario funcionario;
+    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @JsonManagedReference("consulta-funcionario")
+    private List<ConsultaFuncionario> consultaFuncionarios = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "paciente_id")
@@ -46,9 +46,8 @@ public class ConsultaProntuario {
     public ConsultaProntuario() {
     }
 
-    public ConsultaProntuario(Long id, Funcionario funcionario, Paciente paciente, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca) {
+    public ConsultaProntuario(Long id, Paciente paciente, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca) {
         this.id = id;
-        this.funcionario = funcionario;
         this.paciente = paciente;
         this.dataHora = dataHora;
         this.tipo = tipo;
@@ -64,12 +63,18 @@ public class ConsultaProntuario {
         this.paciente = paciente;
     }
 
+    /** Helper: returns the first associated Funcionario (convenience method) */
     public Funcionario getFuncionario() {
-        return funcionario;
+        if (consultaFuncionarios == null || consultaFuncionarios.isEmpty()) return null;
+        return consultaFuncionarios.get(0).getFuncionario();
     }
 
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
+    public List<ConsultaFuncionario> getConsultaFuncionarios() {
+        return consultaFuncionarios;
+    }
+
+    public void setConsultaFuncionarios(List<ConsultaFuncionario> consultaFuncionarios) {
+        this.consultaFuncionarios = consultaFuncionarios;
     }
 
     public Long getId() {

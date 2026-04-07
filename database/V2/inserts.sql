@@ -45,22 +45,30 @@ INSERT INTO fichaClinica (id, paciente_id, desfraldado, hiperfoco, anamnese, dia
 
 -- consulta_prontuario
 INSERT INTO consulta_prontuario 
-(id, funcionario_id, paciente_id, data_hora, tipo, observacoes_comportamentais, presenca, confirmada) VALUES
+(id, paciente_id, data_hora, tipo, observacoes_comportamentais, presenca, confirmada) VALUES
 
 -- consulta já realizada
-(1, 2, 1, '2026-01-10 09:00:00', 'Avaliação Inicial', 'Paciente colaborativo', 1, 1),
+(1, 1, '2026-01-10 09:00:00', 'Avaliação Inicial', 'Paciente colaborativo', 1, 1),
 
 -- consulta realizada, mas paciente faltou
-(2, 2, 2, '2026-01-12 10:30:00', 'Sessão Terapêutica', 'Paciente não compareceu', 0, 1),
+(2, 2, '2026-01-12 10:30:00', 'Sessão Terapêutica', 'Paciente não compareceu', 0, 1),
 
 -- consulta futura confirmada
-(3, 3, 3, '2026-02-05 14:00:00', 'Fonoaudiologia', NULL, NULL, 1),
+(3, 3, '2026-02-05 14:00:00', 'Fonoaudiologia', NULL, NULL, 1),
 
 -- consulta futura ainda a confirmar
-(4, 3, 7, '2026-02-10 15:30:00', 'Avaliação de Rotina', NULL, NULL, 0),
+(4, 7, '2026-02-10 15:30:00', 'Avaliação de Rotina', NULL, NULL, 0),
 
 -- consulta do dia (ótima para testes de "HOJE")
-(5, 2, 1, CURDATE() + INTERVAL 16 HOUR, 'Sessão Regular', NULL, NULL, 1);
+(5, 1, CURDATE() + INTERVAL 16 HOUR, 'Sessão Regular', NULL, NULL, 1);
+
+-- consulta_funcionario (vínculo entre consulta e funcionário)
+INSERT INTO consulta_funcionario (id, consulta_id, funcionario_id) VALUES
+(1, 1, 2),  -- consulta 1 → funcionário 2 (Juliana)
+(2, 2, 2),  -- consulta 2 → funcionário 2 (Juliana)
+(3, 3, 3),  -- consulta 3 → funcionário 3 (Marcos)
+(4, 4, 3),  -- consulta 4 → funcionário 3 (Marcos)
+(5, 5, 2);  -- consulta 5 → funcionário 2 (Juliana)
 
 -- classificacao_doencas
 INSERT INTO classificacao_doencas (id, cid, dt_modificacao, prontuario_id) VALUES
