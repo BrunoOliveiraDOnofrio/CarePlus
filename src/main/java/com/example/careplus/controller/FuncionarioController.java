@@ -122,7 +122,8 @@ public class FuncionarioController {
             @RequestBody FuncionarioDisponivelRequestDto requestDto){
         List<FuncionarioResponseDto> funcionarios = funcionarioService.buscarFuncionariosDisponiveis(
                 requestDto.getEspecialidade(),
-                requestDto.getDataHora());
+                requestDto.getData(),
+                requestDto.getHorarioInicio());
         return ResponseEntity.status(200).body(funcionarios);
     }
 

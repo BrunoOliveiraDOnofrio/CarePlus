@@ -2,16 +2,28 @@ package com.example.careplus.dto.dtoConsulta;
 
 import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.dto.dtoPaciente.PacienteResponseDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class ConsultaResponseDto {
     private Long id;
     private PacienteResponseDto paciente;
     private List<FuncionarioResponseDto> funcionarios;
-    private LocalDateTime dataHora;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate data;
+
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioInicio;
+
+    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private LocalTime horarioFim;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tipo;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -24,12 +36,15 @@ public class ConsultaResponseDto {
     public ConsultaResponseDto() {}
 
     public ConsultaResponseDto(Long id, PacienteResponseDto paciente, List<FuncionarioResponseDto> funcionarios,
-                               LocalDateTime dataHora, String tipo, String observacoesComportamentais,
+                               LocalDate data, LocalTime horarioInicio, LocalTime horarioFim,
+                               String tipo, String observacoesComportamentais,
                                Boolean presenca, Boolean confirmada) {
         this.id = id;
         this.paciente = paciente;
         this.funcionarios = funcionarios;
-        this.dataHora = dataHora;
+        this.data = data;
+        this.horarioInicio = horarioInicio;
+        this.horarioFim = horarioFim;
         this.tipo = tipo;
         this.observacoesComportamentais = observacoesComportamentais;
         this.presenca = presenca;
@@ -45,8 +60,14 @@ public class ConsultaResponseDto {
     public List<FuncionarioResponseDto> getFuncionarios() { return funcionarios; }
     public void setFuncionarios(List<FuncionarioResponseDto> funcionarios) { this.funcionarios = funcionarios; }
 
-    public LocalDateTime getDataHora() { return dataHora; }
-    public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
+
+    public LocalTime getHorarioInicio() { return horarioInicio; }
+    public void setHorarioInicio(LocalTime horarioInicio) { this.horarioInicio = horarioInicio; }
+
+    public LocalTime getHorarioFim() { return horarioFim; }
+    public void setHorarioFim(LocalTime horarioFim) { this.horarioFim = horarioFim; }
 
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }

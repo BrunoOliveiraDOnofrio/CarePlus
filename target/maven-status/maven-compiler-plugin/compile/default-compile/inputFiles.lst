@@ -9,6 +9,7 @@
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/UsuarioDetailsService.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/config/swagger/OpenApiConfig.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/ClassificacaoDoencasController.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/ConsultaFuncionarioController.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/ConsultaProntuarioController.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/CuidadorController.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/controller/DetalhePacienteController.java
@@ -37,7 +38,10 @@
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/DetalhesConsultaProntuarioAnteriorResponseDto.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/ProximaConsultaProntuarioResponseDto.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaProntuario/RealizarConsultaProntuarioDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/AgendarConsultasRequestDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/AgendarConsultasResponseDto.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/ConflitoDatasDto.java
+/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/ConsultaItemRequestDto.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/ConsultaRecorrenteRequestDto.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoConsultaRecorrente/ConsultaRecorrenteResponseDto.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/dto/dtoCuidador/CuidadorContatoResponseDto.java
@@ -114,7 +118,6 @@
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/ConsultaProntuarioService.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/CuidadorService.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/DetalhePacienteService.java
-/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/EmailService.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/EnderecoService.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/FichaClinicaService.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/FuncionarioService.java
@@ -124,4 +127,3 @@
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/ResponsavelService.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/S3Service.java
 /Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/service/TratamentoService.java
-/Users/vitoralmeida/Documents/SPTech/4Semestre/PesquisaEInovacao/Back-end/CarePlus/src/main/java/com/example/careplus/utils/Notification.java

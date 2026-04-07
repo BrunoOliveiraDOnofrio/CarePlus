@@ -1,11 +1,12 @@
 CREATE DATABASE IF NOT EXISTS careplus_novo;
 USE careplus_novo;
 
-
 -- =========================
 -- TABELA ENDERECO
 -- =========================
 DROP TABLE IF EXISTS endereco;
+
+
 
 CREATE TABLE endereco (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -113,7 +114,9 @@ DROP TABLE IF EXISTS consulta_prontuario;
 CREATE TABLE consulta_prontuario (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     paciente_id BIGINT,
-    data_hora DATETIME,
+    data DATE,
+    horario_inicio TIME,
+    horario_fim TIME,
     tipo VARCHAR(255),
     observacoes_comportamentais VARCHAR(255),
     presenca TINYINT,

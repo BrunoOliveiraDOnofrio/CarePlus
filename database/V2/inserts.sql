@@ -44,23 +44,13 @@ INSERT INTO fichaClinica (id, paciente_id, desfraldado, hiperfoco, anamnese, dia
 (4, 7, 1, 'Música', 'Ansiedade frequente', 'Transtorno de Ansiedade', 'Responde bem à terapia', 1);
 
 -- consulta_prontuario
-INSERT INTO consulta_prontuario 
-(id, paciente_id, data_hora, tipo, observacoes_comportamentais, presenca, confirmada) VALUES
-
--- consulta já realizada
-(1, 1, '2026-01-10 09:00:00', 'Avaliação Inicial', 'Paciente colaborativo', 1, 1),
-
--- consulta realizada, mas paciente faltou
-(2, 2, '2026-01-12 10:30:00', 'Sessão Terapêutica', 'Paciente não compareceu', 0, 1),
-
--- consulta futura confirmada
-(3, 3, '2026-02-05 14:00:00', 'Fonoaudiologia', NULL, NULL, 1),
-
--- consulta futura ainda a confirmar
-(4, 7, '2026-02-10 15:30:00', 'Avaliação de Rotina', NULL, NULL, 0),
-
--- consulta do dia (ótima para testes de "HOJE")
-(5, 1, CURDATE() + INTERVAL 16 HOUR, 'Sessão Regular', NULL, NULL, 1);
+INSERT INTO consulta_prontuario
+(id, paciente_id, data, horario_inicio, horario_fim, tipo, observacoes_comportamentais, presenca, confirmada) VALUES
+(1, 1, '2026-01-10', '09:00:00', '10:00:00', 'Avaliação Inicial', 'Paciente colaborativo', 1, 1),
+(2, 2, '2026-01-12', '10:30:00', '11:30:00', 'Sessão Terapêutica', 'Paciente não compareceu', 0, 1),
+(3, 3, '2026-02-05', '14:00:00', '15:00:00', 'Fonoaudiologia', NULL, NULL, 1),
+(4, 7, '2026-02-10', '15:30:00', '16:30:00', 'Avaliação de Rotina', NULL, NULL, 0),
+(5, 1, CURDATE(), '16:00:00', '17:00:00', 'Sessão Regular', NULL, NULL, 1);
 
 -- consulta_funcionario (vínculo entre consulta e funcionário)
 INSERT INTO consulta_funcionario (id, consulta_id, funcionario_id) VALUES
@@ -102,3 +92,18 @@ INSERT INTO material (id, item, data_implementacao, fk_consulta) VALUES
 (1, 'Cartões de Comunicação', '2026-01-10', 1),
 (2, 'Jogos Sensoriais', '2026-01-12', 2),
 (3, 'Espelho Terapêutico', '2026-02-05', 3);
+
+-- SELECT de todos os profissionais atralados as consultas
+SELECT 
+    c.id AS consulta_id,
+    c.data,
+    c.horario_inicio,
+    c.horario_fim,
+    GROUP_CONCAT(f.nome SEPARATOR ', ') AS funcionarios
+FROM consulta_prontuario c
+JOIN consulta_funcionario cf 
+    ON c.id = cf.consulta_id
+JOIN funcionario f 
+    ON cf.funcionario_id = f.id
+GROUP BY 
+    c.id, c.data, c.horario_inicio, c.horario_fim;

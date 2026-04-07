@@ -1,0 +1,61 @@
+meta {
+  name: edefef
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/consultas-prontuario/recorrentes
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer <TOKEN>
+}
+
+body:json {
+  {
+    "pacienteId": 3,
+    "consultas": [
+      {
+        "funcionarioIds": [
+          1,
+          2
+        ],
+        "horarioInicio": "08:00:00",
+        "horarioFim": "09:00:00",
+        "dataInicio": "07/04/2026",
+        "dataFim": "07/04/2027",
+        "tipo": "Rotina"
+      },
+      {
+        "funcionarioIds": [
+          3,
+          4
+        ],
+        "horarioInicio": "10:00:00",
+        "horarioFim": "11:00:00",
+        "dataInicio": "08/04/2026",
+        "dataFim": "08/04/2027",
+        "tipo": "Rotina"
+      },
+      {
+        "funcionarioIds": [
+          5,
+          6
+        ],
+        "horarioInicio": "14:00:00",
+        "horarioFim": "15:00:00",
+        "dataInicio": "09/04/2026",
+        "dataFim": "09/04/2027",
+        "tipo": "Rotina"
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: false
+}

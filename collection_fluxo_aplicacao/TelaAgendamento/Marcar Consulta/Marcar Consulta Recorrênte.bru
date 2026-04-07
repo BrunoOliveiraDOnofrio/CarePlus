@@ -11,19 +11,29 @@ post {
 }
 
 auth:bearer {
-  token: {{token}}
+  token: {{tokenId}}
 }
 
 body:json {
   {
     "pacienteId": 3,
-    "funcionarioId": 4,
-    "datas": [
-      "2069-05-21",
-      "2069-05-22",
-      "2069-05-23"
-    ],
-    "horario": "10:00:00",
-    "tipo": "Retorno"
+    "consultas": [
+      {
+        "funcionarioId": 1,
+        "horarioInicio": "10:00:00",
+        "horarioFim": "11:00:00",
+        "dataInicio": "07/04/2026",
+        "dataFim": "07/04/2027",
+        "tipo": "Rotina"
+      }
+    ]
   }
+}
+
+docs {
+  Agenda consultas recorrentes (ou únicas) em lote.
+  - funcionarioId: um único funcionário
+  - funcionarioIds: lista de funcionários (todos vinculados a cada data)
+  - dataInicio / dataFim: gera datas semanalmente (mesmo dia da semana). Se iguais, cria uma única consulta.
+  Resposta 207 Multi-Status com consultasCriadas e datasComConflito.
 }

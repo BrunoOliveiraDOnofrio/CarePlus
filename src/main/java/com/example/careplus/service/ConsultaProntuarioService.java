@@ -31,9 +31,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasRequestDto;
+import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasResponseDto;
+import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaItemRequestDto;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +47,6 @@ public class ConsultaProntuarioService {
     private final ConsultaProntuarioRepository consultaProntuarioRepository;
     private final PacienteRepository pacienteRepository;
     private final FuncionarioRepository funcionarioRepository;
-    private final EmailService emailService;
     private final FichaClinicaRepository fichaClinicaRepository;
     private final CuidadorRepository cuidadorRepository;
     private final S3Service s3Service;
@@ -51,11 +54,10 @@ public class ConsultaProntuarioService {
     private final ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer;
     private final ConsultaFuncionarioRepository consultaFuncionarioRepository;
 
-    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, EmailService emailService, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer, ConsultaFuncionarioRepository consultaFuncionarioRepository) {
+    public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer, ConsultaFuncionarioRepository consultaFuncionarioRepository) {
         this.consultaProntuarioRepository = consultaProntuarioRepository;
         this.pacienteRepository = pacienteRepository;
         this.funcionarioRepository = funcionarioRepository;
-        this.emailService = emailService;
         this.fichaClinicaRepository = fichaClinicaRepository;
         this.cuidadorRepository = cuidadorRepository;
         this.s3Service = s3Service;
@@ -66,8 +68,9 @@ public class ConsultaProntuarioService {
     }
 
     private ConsultaCriadaMensagemDto toMensagemDto(ConsultaProntuarioResponseDto consulta) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String dataHora = consulta.getDataHora() != null ? consulta.getDataHora().format(formatter) : null;
+        String dataHora = (consulta.getData() != null && consulta.getHorarioInicio() != null)
+                ? consulta.getData() + " " + consulta.getHorarioInicio()
+                : null;
         PacienteMensagemDto paciente = new PacienteMensagemDto(
                 consulta.getPaciente().getId(),
                 consulta.getPaciente().getNome(),
@@ -116,8 +119,8 @@ public class ConsultaProntuarioService {
         Funcionario funcionario = funcionarioOpt.orElseThrow(() -> new ResourceNotFoundException("Funcionario não encontrado!"));
 
 
-        LocalDateTime dataHoraConsulta = request.getDataHora();
-        LocalDate dataConsulta = dataHoraConsulta.toLocalDate();
+        LocalDateTime dataHoraConsulta = LocalDateTime.of(request.getData(), request.getHorarioInicio());
+        LocalDate dataConsulta = request.getData();
 
 
         List<ConsultaProntuario> consultasExistentes = consultaProntuarioRepository
@@ -126,10 +129,11 @@ public class ConsultaProntuarioService {
 
         boolean temConflito = false;
         for (ConsultaProntuario consulta : consultasExistentes) {
-            LocalDateTime inicioConsulta = consulta.getDataHora();
-            LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
-            LocalDateTime fimNovaConsulta = dataHoraConsulta.plusHours(1);
-
+            LocalDateTime inicioConsulta = consulta.getDataHoraInicio();
+            LocalDateTime fimConsulta = consulta.getHorarioFim() != null
+                    ? LocalDateTime.of(consulta.getData(), consulta.getHorarioFim())
+                    : inicioConsulta.plusHours(1);
+            LocalDateTime fimNovaConsulta = LocalDateTime.of(request.getData(), request.getHorarioFim() != null ? request.getHorarioFim() : request.getHorarioInicio().plusHours(1));
 
             if (dataHoraConsulta.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta)) {
                 temConflito = true;
@@ -163,14 +167,15 @@ public class ConsultaProntuarioService {
                 // verifica se esse funcionário tem conflito no horário
                 boolean funcionarioTemConflito = false;
                 for (ConsultaProntuario cons : consultasFuncionario) {
-                    LocalDateTime inicioConsulta = cons.getDataHora();
-                    LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
-                    LocalDateTime fimNovaConsulta = dataHoraConsulta.plusHours(1);
+                    LocalDateTime inicioConsulta = cons.getDataHoraInicio();
+                    LocalDateTime fimConsulta = cons.getHorarioFim() != null
+                            ? LocalDateTime.of(cons.getData(), cons.getHorarioFim())
+                            : inicioConsulta.plusHours(1);
+                    LocalDateTime fimNovaConsulta = LocalDateTime.of(request.getData(), request.getHorarioFim() != null ? request.getHorarioFim() : request.getHorarioInicio().plusHours(1));
 
-                    // checa se os horários batem
                     if (dataHoraConsulta.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta)) {
                         funcionarioTemConflito = true;
-                        break; // esse também tá ocupado
+                        break;
                     }
                 }
 
@@ -189,7 +194,7 @@ public class ConsultaProntuarioService {
                 throw new ResourceNotFoundException(
                         String.format("Horário indisponível - Nenhum funcionário da especialidade %s disponível às %s",
                                 funcionario.getEspecialidade(),
-                                dataHoraConsulta.toLocalTime().toString())
+                                request.getHorarioInicio().toString())
                 );
             }
         }
@@ -197,15 +202,14 @@ public class ConsultaProntuarioService {
         // cria a nova consulta
         ConsultaProntuario novaConsulta = new ConsultaProntuario();
         novaConsulta.setPaciente(paciente);
-        novaConsulta.setDataHora(request.getDataHora());
+        novaConsulta.setData(request.getData());
+        novaConsulta.setHorarioInicio(request.getHorarioInicio());
+        novaConsulta.setHorarioFim(request.getHorarioFim());
         novaConsulta.setConfirmada(null);
         novaConsulta.setTipo(request.getTipo());
 
         // salva no banco
-        ConsultaProntuario salvo = consultaProntuarioRepository.save(novaConsulta);
-
-        // cria o vínculo entre a consulta e o funcionário atribuído
-        ConsultaFuncionario consultaFuncionario = vincularFuncionario(funcionarioAtribuido, salvo);
+        ConsultaProntuario salvo = consultaProntuarioRepository.save(novaConsulta);        ConsultaFuncionario consultaFuncionario = vincularFuncionario(funcionarioAtribuido, salvo);
         salvo.getConsultaFuncionarios().add(consultaFuncionario);
 
         // envia email de notificação pro funcionário que vai atender
@@ -230,7 +234,9 @@ public class ConsultaProntuarioService {
 
         ConsultaProntuario novaConsulta = new ConsultaProntuario();
         novaConsulta.setPaciente(paciente);
-        novaConsulta.setDataHora(request.getDataHora());
+        novaConsulta.setData(request.getData());
+        novaConsulta.setHorarioInicio(request.getHorarioInicio());
+        novaConsulta.setHorarioFim(request.getHorarioFim());
         novaConsulta.setConfirmada(null);
         novaConsulta.setTipo(request.getTipo() != null ? request.getTipo() : "Pendente");
 
@@ -287,7 +293,9 @@ public class ConsultaProntuarioService {
         ConsultaProntuario consulta = consultaProntuarioRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
         consulta.setPaciente(paciente);
-        consulta.setDataHora(request.getDataHora());
+        consulta.setData(request.getData());
+        consulta.setHorarioInicio(request.getHorarioInicio());
+        consulta.setHorarioFim(request.getHorarioFim());
         consulta.setTipo("Retorno");
         consulta.setConfirmada(consulta.getConfirmada() != null ? consulta.getConfirmada() : Boolean.FALSE);
 
@@ -347,7 +355,7 @@ public class ConsultaProntuarioService {
 
             s3Service.uploadJson(
                     "bucket-prontuarios-1",
-                    "prontuarios/pacienteId" + consultaSalva.getPaciente().getId() + "/" + consultaSalva.getDataHora() + ".json",
+                    "prontuarios/pacienteId" + consultaSalva.getPaciente().getId() + "/" + consultaSalva.getData() + "_" + consultaSalva.getHorarioInicio() + ".json",
                     json
             );
 
@@ -380,71 +388,66 @@ public class ConsultaProntuarioService {
             List<ConsultaProntuario> consultasExistentes = consultaProntuarioRepository
                     .buscarConsultasPorFuncionarioEData(dto.getFuncionarioId(), data);
 
-            // vamos ver se tem alguma consulta que bate com o horário que a gente quer
             boolean temConflito = false;
             for (ConsultaProntuario consulta : consultasExistentes) {
-                // pega o início e fim da consulta que já existe
-                LocalDateTime inicioConsulta = consulta.getDataHora();
-                LocalDateTime fimConsulta = inicioConsulta.plusHours(1); // consultas duram 1 hora
-                LocalDateTime fimNovaConsulta = dataHora.plusHours(1);
+                LocalDateTime inicioConsulta = consulta.getDataHoraInicio();
+                LocalDateTime fimConsulta = consulta.getHorarioFim() != null
+                        ? LocalDateTime.of(consulta.getData(), consulta.getHorarioFim())
+                        : inicioConsulta.plusHours(1);
+                LocalDateTime fimNovaConsulta = dto.getHorarioFim() != null
+                        ? LocalDateTime.of(data, dto.getHorarioFim())
+                        : dataHora.plusHours(1);
 
-                // verifica se os horários se sobrepõem
                 temConflito = (dataHora.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta));
 
                 if (temConflito) {
-                    break; // já achou conflito, não precisa verificar o resto
+                    break;
                 }
             }
 
-            // se o funcionário escolhido tá ocupado, vamos procurar outro da mesma especialidade
             if (temConflito) {
-                // busca todos os funcionários que têm a mesma especialidade
                 List<Funcionario> funcionariosComMesmaEspecialidade = funcionarioRepository
                         .findByEspecialidadeIgnoreCase(funcionario.getEspecialidade());
 
-                // variável pra guardar o funcionário que estiver livre
                 Funcionario funcionarioDisponivel = null;
 
-                // percorre cada funcionário pra ver se algum tá livre
                 for (Funcionario func : funcionariosComMesmaEspecialidade) {
-                    // pula o funcionário original porque já sabemos que ele tá ocupado
                     if (func.getId().equals(funcionario.getId())) {
                         continue;
                     }
 
-                    // busca as consultas que esse outro funcionário tem na data
                     List<ConsultaProntuario> consultasFuncionario = consultaProntuarioRepository
                             .buscarConsultasPorFuncionarioEData(func.getId(), data);
 
-                    // verifica se esse funcionário tem conflito no horário
                     boolean funcionarioTemConflito = false;
                     for (ConsultaProntuario consulta : consultasFuncionario) {
-                        LocalDateTime inicioConsulta = consulta.getDataHora();
-                        LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
-                        LocalDateTime fimNovaConsulta = dataHora.plusHours(1);
+                        LocalDateTime inicioConsulta = consulta.getDataHoraInicio();
+                        LocalDateTime fimConsulta = consulta.getHorarioFim() != null
+                                ? LocalDateTime.of(consulta.getData(), consulta.getHorarioFim())
+                                : inicioConsulta.plusHours(1);
+                        LocalDateTime fimNovaConsulta = dto.getHorarioFim() != null
+                                ? LocalDateTime.of(data, dto.getHorarioFim())
+                                : dataHora.plusHours(1);
 
-                        // checa se os horários batem
                         if (dataHora.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta)) {
                             funcionarioTemConflito = true;
-                            break; // esse também tá ocupado
+                            break;
                         }
                     }
 
-                    // se esse funcionário tá livre, a gente escolhe ele
                     if (!funcionarioTemConflito) {
                         funcionarioDisponivel = func;
-                        break; // achou alguém disponível, pode parar de procurar
+                        break;
                     }
                 }
 
-                // se nenhum funcionário da especialidade tá disponível, anota como conflito
                 if (funcionarioDisponivel == null) {
                     ConflitoDatasDto conflito = new ConflitoDatasDto(
                             data,
                             dto.getHorario().toString(),
                             String.format("Horário indisponível - Nenhum funcionário da especialidade %s disponível às %s",
                                     funcionario.getEspecialidade(),
-                                    dataHora.toLocalTime().toString())
+                                    dto.getHorario().toString())
                     );
                     response.getDatasComConflito().add(conflito);
                 }
@@ -473,9 +476,13 @@ public class ConsultaProntuarioService {
 
             // verifica se o funcionário original tem conflito
             for (ConsultaProntuario consulta : consultasExistentes) {
-                LocalDateTime inicioConsulta = consulta.getDataHora();
-                LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
-                LocalDateTime fimNovaConsulta = dataHora.plusHours(1);
+                LocalDateTime inicioConsulta = consulta.getDataHoraInicio();
+                LocalDateTime fimConsulta = consulta.getHorarioFim() != null
+                        ? LocalDateTime.of(consulta.getData(), consulta.getHorarioFim())
+                        : inicioConsulta.plusHours(1);
+                LocalDateTime fimNovaConsulta = dto.getHorarioFim() != null
+                        ? LocalDateTime.of(data, dto.getHorarioFim())
+                        : dataHora.plusHours(1);
 
                 if (dataHora.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta)) {
                     temConflito = true;
@@ -483,28 +490,27 @@ public class ConsultaProntuarioService {
                 }
             }
 
-            // se tem conflito, procura outro funcionário disponível
             if (temConflito) {
-                // busca os funcionários da mesma especialidade de novo
                 List<Funcionario> funcionariosComMesmaEspecialidade = funcionarioRepository
                         .findByEspecialidadeIgnoreCase(funcionario.getEspecialidade());
 
-                // testa cada um até achar um livre
                 for (Funcionario func : funcionariosComMesmaEspecialidade) {
-                    // pula o original
                     if (func.getId().equals(funcionario.getId())) {
                         continue;
                     }
 
-                    // pega as consultas desse funcionário
                     List<ConsultaProntuario> consultasFuncionario = consultaProntuarioRepository
                             .buscarConsultasPorFuncionarioEData(func.getId(), data);
 
                     boolean funcionarioTemConflito = false;
                     for (ConsultaProntuario cons : consultasFuncionario) {
-                        LocalDateTime inicioConsulta = cons.getDataHora();
-                        LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
-                        LocalDateTime fimNovaConsulta = dataHora.plusHours(1);
+                        LocalDateTime inicioConsulta = cons.getDataHoraInicio();
+                        LocalDateTime fimConsulta = cons.getHorarioFim() != null
+                                ? LocalDateTime.of(cons.getData(), cons.getHorarioFim())
+                                : inicioConsulta.plusHours(1);
+                        LocalDateTime fimNovaConsulta = dto.getHorarioFim() != null
+                                ? LocalDateTime.of(data, dto.getHorarioFim())
+                                : dataHora.plusHours(1);
 
                         if (dataHora.isBefore(fimConsulta) && fimNovaConsulta.isAfter(inicioConsulta)) {
                             funcionarioTemConflito = true;
@@ -512,10 +518,9 @@ public class ConsultaProntuarioService {
                         }
                     }
 
-                    // se esse tá livre, usa ele
                     if (!funcionarioTemConflito) {
                         funcionarioAtribuido = func;
-                        break; // achou, pode parar
+                        break;
                     }
                 }
             }
@@ -523,10 +528,12 @@ public class ConsultaProntuarioService {
             // cria a consulta nova
             ConsultaProntuario consulta = new ConsultaProntuario();
             consulta.setPaciente(paciente);
-            consulta.setDataHora(dataHora);
+            consulta.setData(data);
+            consulta.setHorarioInicio(dto.getHorario());
+            consulta.setHorarioFim(dto.getHorarioFim());
             consulta.setTipo(dto.getTipo());
             consulta.setPresenca(false);
-            consulta.setConfirmada(false); // começa como não confirmada
+            consulta.setConfirmada(false);
 
             // salva no banco
             ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
@@ -555,13 +562,10 @@ public class ConsultaProntuarioService {
         LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
         LocalDate fimDaSemana = inicioDaSemana.plusDays(6);
 
-        LocalDateTime inicioDateTime = inicioDaSemana.atStartOfDay();
-        LocalDateTime fimDateTime = fimDaSemana.atTime(23, 59, 59);
-
         List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
                 funcionarioId,
-                inicioDateTime,
-                fimDateTime
+                inicioDaSemana,
+                fimDaSemana
         );
 
         if (consultas.isEmpty()) {
@@ -597,9 +601,9 @@ public class ConsultaProntuarioService {
 
         return new ProximaConsultaProntuarioResponseDto(
                 proximaConsulta.getId(),
-                proximaConsulta.getDataHora().toLocalDate(),
-                proximaConsulta.getDataHora().toLocalTime(),
-                proximaConsulta.getDataHora().toLocalTime().plusHours(1),
+                proximaConsulta.getData(),
+                proximaConsulta.getHorarioInicio(),
+                proximaConsulta.getHorarioFim(),
                 proximaConsulta.getTipo(),
                 proximaConsulta.getFuncionario().getNome(),
                 tratamento
@@ -618,9 +622,9 @@ public class ConsultaProntuarioService {
         ConsultaProntuarioAtualResponseDto response = new ConsultaProntuarioAtualResponseDto();
 
         response.setConsultaId(consulta.getId());
-        response.setData(consulta.getDataHora().toLocalDate());
-        response.setHorarioInicio(consulta.getDataHora().toLocalTime());
-        response.setHorarioFim(consulta.getDataHora().toLocalTime().plusHours(1));
+        response.setData(consulta.getData());
+        response.setHorarioInicio(consulta.getHorarioInicio());
+        response.setHorarioFim(consulta.getHorarioFim());
         response.setTipo(consulta.getTipo());
         response.setEspecialidade(funcionario.getEspecialidade());
         response.setNomeProfissional(funcionario.getNome());
@@ -682,7 +686,7 @@ public class ConsultaProntuarioService {
             ConsultaProntuario ultimaConsultaEntity = ultimasConsultas.get(0);
             ConsultaProntuarioAtualResponseDto.UltimaConsulta ultimaConsulta = new ConsultaProntuarioAtualResponseDto.UltimaConsulta();
             ultimaConsulta.setConsultaId(ultimaConsultaEntity.getId());
-            ultimaConsulta.setData(ultimaConsultaEntity.getDataHora().toLocalDate());
+            ultimaConsulta.setData(ultimaConsultaEntity.getData());
 
             if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
                 String tratamentoUltima = fichaClinica.getTratamentos().stream()
@@ -711,9 +715,9 @@ public class ConsultaProntuarioService {
         DetalhesConsultaProntuarioAnteriorResponseDto response = new DetalhesConsultaProntuarioAnteriorResponseDto();
 
         response.setConsultaId(consulta.getId());
-        response.setData(consulta.getDataHora().toLocalDate());
-        response.setHorarioInicio(consulta.getDataHora().toLocalTime());
-        response.setHorarioFim(consulta.getDataHora().toLocalTime().plusHours(1));
+        response.setData(consulta.getData());
+        response.setHorarioInicio(consulta.getHorarioInicio());
+        response.setHorarioFim(consulta.getHorarioFim());
         response.setEspecialidade(funcionario.getEspecialidade());
         response.setNomeProfissional(funcionario.getNome());
         response.setTipo(consulta.getTipo());
@@ -736,6 +740,109 @@ public class ConsultaProntuarioService {
         }
 
         return response;
+    }
+
+    /**
+     * Agenda um batch de consultas (recorrentes ou únicas) de uma única vez.
+     *
+     * Para cada item da lista:
+     *  - funcionarioId  → um único funcionário
+     *  - funcionarioIds → múltiplos funcionários (todos vinculados a cada data)
+     *  - dataInicio / dataFim → gera as datas semanalmente (mesmo dia da semana).
+     *    Para consulta única, informe dataInicio == dataFim.
+     */
+    @Transactional
+    public AgendarConsultasResponseDto agendarConsultas(AgendarConsultasRequestDto dto) {
+        AgendarConsultasResponseDto response = new AgendarConsultasResponseDto();
+
+        // valida o paciente uma única vez
+        Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado!"));
+
+        List<ConsultaProntuarioResponseDto> todasCriadas = new ArrayList<>();
+        List<ConflitoDatasDto> todosConflitos = new ArrayList<>();
+
+        for (ConsultaItemRequestDto item : dto.getConsultas()) {
+            List<Long> idsFunc = item.getFuncionarioIdsList();
+            if (idsFunc.isEmpty()) {
+                throw new IllegalArgumentException("Cada consulta deve ter ao menos um funcionarioId ou funcionarioIds.");
+            }
+
+            // gera as datas semanalmente entre dataInicio e dataFim (inclusive)
+            List<LocalDate> datas = gerarDatasSemanais(item.getDataInicio(), item.getDataFim());
+
+            // carrega os funcionários do item
+            List<Funcionario> funcionariosDoItem = new ArrayList<>();
+            for (Long fId : idsFunc) {
+                Funcionario f = funcionarioRepository.findById(fId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Funcionário com id " + fId + " não encontrado!"));
+                funcionariosDoItem.add(f);
+            }
+
+            // para cada data, cria a consulta e vincula todos os funcionários do item
+            for (LocalDate data : datas) {
+                try {
+                    ConsultaProntuario consulta = new ConsultaProntuario();
+                    consulta.setPaciente(paciente);
+                    consulta.setData(data);
+                    consulta.setHorarioInicio(item.getHorarioInicio());
+                    consulta.setHorarioFim(item.getHorarioFim());
+                    consulta.setTipo(item.getTipo());
+                    consulta.setPresenca(false);
+                    consulta.setConfirmada(false);
+
+                    ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
+
+                    for (Funcionario func : funcionariosDoItem) {
+                        ConsultaFuncionario cf = vincularFuncionario(func, consultaSalva);
+                        consultaSalva.getConsultaFuncionarios().add(cf);
+                    }
+
+                    ConsultaProntuarioResponseDto consultaDto = ConsultaProntuarioMapper.toResponseDto(consultaSalva);
+                    todasCriadas.add(consultaDto);
+                } catch (Exception e) {
+                    ConflitoDatasDto conflito = new ConflitoDatasDto(
+                            data,
+                            item.getHorarioInicio() != null ? item.getHorarioInicio().toString() : "N/A",
+                            e.getMessage()
+                    );
+                    todosConflitos.add(conflito);
+                }
+            }
+        }
+
+        response.setConsultasCriadas(todasCriadas);
+        response.setDatasComConflito(todosConflitos);
+        response.setTotalConsultasCriadas(todasCriadas.size());
+        response.setTotalFalhas(todosConflitos.size());
+
+        // notifica via RabbitMQ todas as consultas criadas
+        if (!todasCriadas.isEmpty()) {
+            consultaCriadaRabbitProducer.publicarEvento(
+                    new EventoConsultaCriadaDto(todasCriadas.stream().map(this::toMensagemDto).toList())
+            );
+        }
+
+        return response;
+    }
+
+    /**
+     * Gera uma lista de datas com frequência semanal (mesmo dia da semana de dataInicio)
+     * entre dataInicio e dataFim (inclusive).
+     * Se dataInicio == dataFim, retorna apenas uma data (consulta única).
+     */
+    private List<LocalDate> gerarDatasSemanais(LocalDate dataInicio, LocalDate dataFim) {
+        if (dataInicio == null || dataFim == null) {
+            throw new IllegalArgumentException("dataInicio e dataFim são obrigatórios.");
+        }
+        List<LocalDate> datas = new ArrayList<>();
+        LocalDate cursor = dataInicio;
+        while (!cursor.isAfter(dataFim)) {
+            datas.add(cursor);
+            if (cursor.equals(dataFim)) break; // consulta única
+            cursor = cursor.plusWeeks(1);
+        }
+        return datas;
     }
 
 }

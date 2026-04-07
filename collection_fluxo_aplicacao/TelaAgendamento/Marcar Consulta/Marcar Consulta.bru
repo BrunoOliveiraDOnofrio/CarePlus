@@ -11,14 +11,20 @@ post {
 }
 
 auth:bearer {
-  token: {{token}}
+  token: {{tokenId}}
 }
 
 body:json {
   {
     "pacienteId": 1,
     "funcionarioId": 2,
-    "dataHora": "2097-05-18 16:00:00",
+    "data": "2097-05-18",
+    "horarioInicio": "14:00:00",
+    "horarioFim": "15:00:00",
     "tipo": "Retorno"
   }
+}
+
+docs {
+  Marca uma nova consulta enviando data, horário de início e horário de fim separadamente.
 }

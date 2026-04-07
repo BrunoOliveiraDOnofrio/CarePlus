@@ -1,0 +1,36 @@
+meta {
+  name: ConsultaNova
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/consultas-prontuario
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer <TOKEN>
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "pacienteId": 1,
+    "funcionarioId": 2,
+    "data": "2026-04-13",
+    "horarioInicio": "14:15:00",
+    "horarioFim": "15:15:00",
+    "tipo": "Retorno"
+  }
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}
