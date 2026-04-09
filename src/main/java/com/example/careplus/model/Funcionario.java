@@ -14,7 +14,7 @@ public class Funcionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Schema(description = "Brenda Stefany")
     private String nome;
@@ -69,11 +69,11 @@ public class Funcionario {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getNome() {

@@ -200,7 +200,7 @@ public class FuncionarioService {
     }
 
     public List<FuncionarioResponseDto> listarTodos(){
-        List<Funcionario> funcionarios = repository.findAllByAtivoTrue();
+        List<Funcionario> funcionarios = repository.findAllAtivosExcluindoAdminEAgendamento();
 
         if (!funcionarios.isEmpty()){
             return FuncionarioMapper.toResponseDto(funcionarios);
