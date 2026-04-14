@@ -1,0 +1,21 @@
+meta {
+  name: Consultas do Mês
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-mensal?id=1&tipo=paciente&dataReferencia=2026-01-14
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 1
+  tipo: paciente
+  dataReferencia: 2026-01-14
+}
+
+auth:bearer {
+  token: {{token}}
+}

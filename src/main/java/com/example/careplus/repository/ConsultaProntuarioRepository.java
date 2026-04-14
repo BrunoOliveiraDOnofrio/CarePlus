@@ -16,17 +16,32 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :idUsuario ORDER BY c.data ASC, c.horarioInicio ASC")
     List<ConsultaProntuario> buscarPorPaciente(Long idUsuario);
 
-    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE c.data = CURRENT_DATE AND cf.funcionario.id = :idFuncionario ORDER BY c.horarioInicio ASC")
-    List<ConsultaProntuario> consultasDoDia(Long idFuncionario);
-
     @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE c.data = :data AND cf.funcionario.id = :idFuncionario ORDER BY c.horarioInicio ASC")
     List<ConsultaProntuario> buscarConsultasPorFuncionarioEData(Long idFuncionario, LocalDate data);
+
+    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE c.data = :data AND cf.funcionario.id = :idFuncionario ORDER BY c.horarioInicio ASC")
+    List<ConsultaProntuario> buscarConsultasDiariaPorFuncionario(Long idFuncionario, LocalDate data);
+
+    @Query("SELECT c FROM ConsultaProntuario c WHERE c.data = :data AND c.paciente.id = :idPaciente ORDER BY c.horarioInicio ASC")
+    List<ConsultaProntuario> buscarConsultasDiariaPorPaciente(
+            @Param("idPaciente") Long idPaciente,
+            @Param("data") LocalDate data
+    );
 
     @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE cf.funcionario.id = :funcionarioId " +
             "AND c.data >= :inicio AND c.data <= :fim " +
             "ORDER BY c.data ASC, c.horarioInicio ASC")
     List<ConsultaProntuario> buscarConsultasPorFuncionarioEPeriodo(
             @Param("funcionarioId") Long funcionarioId,
+            @Param("inicio") LocalDate inicio,
+            @Param("fim") LocalDate fim
+    );
+
+    @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId " +
+            "AND c.data >= :inicio AND c.data <= :fim " +
+            "ORDER BY c.data ASC, c.horarioInicio ASC")
+    List<ConsultaProntuario> buscarConsultasPorPacienteEPeriodo(
+            @Param("pacienteId") Long pacienteId,
             @Param("inicio") LocalDate inicio,
             @Param("fim") LocalDate fim
     );

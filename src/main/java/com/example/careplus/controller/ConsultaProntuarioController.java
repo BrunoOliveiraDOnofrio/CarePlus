@@ -3,8 +3,6 @@ package com.example.careplus.controller;
 import com.example.careplus.dto.dtoConsultaProntuario.*;
 import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasResponseDto;
-import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
-import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
 import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.service.ConsultaProntuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -108,11 +106,37 @@ public class ConsultaProntuarioController {
         return ResponseEntity.status(200).body(consultaResponseDto);
     }
 
-    @GetMapping("/consultasDoDia")
+    @GetMapping("/agenda-diaria")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ConsultaProntuarioResponseDto>> buscarConsultasDoDia(@RequestParam Long idFuncionario){
-        List<ConsultaProntuarioResponseDto> consultaResponseDtos = service.consultasDoDia(idFuncionario);
+    public ResponseEntity<List<ConsultaProntuarioResponseDto>> buscarConsultasDoDia(
+            @RequestParam Long id,
+            @RequestParam String tipo,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
+    ){
+        List<ConsultaProntuarioResponseDto> consultaResponseDtos = service.listarAgendaDiaria(id, tipo, dataReferencia);
         return ResponseEntity.status(200).body(consultaResponseDtos);
+    }
+
+    @GetMapping("/agenda-semanal")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarAgendaSemanal(
+            @RequestParam Long id,
+            @RequestParam String tipo,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
+    ) {
+        List<ConsultaProntuarioResponseDto> agenda = service.listarAgendaSemanal(id, tipo, dataReferencia);
+        return ResponseEntity.ok(agenda);
+    }
+
+    @GetMapping("/agenda-mensal")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarAgendaMensal(
+            @RequestParam Long id,
+            @RequestParam String tipo,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
+    ) {
+        List<ConsultaProntuarioResponseDto> agenda = service.listarAgendaMensal(id, tipo, dataReferencia);
+        return ResponseEntity.ok(agenda);
     }
 
     @PostMapping("/recorrentes")
@@ -122,17 +146,6 @@ public class ConsultaProntuarioController {
         AgendarConsultasResponseDto response = service.agendarConsultas(request);
         return ResponseEntity.status(207).body(response);
     }
-
-    @GetMapping("/agenda-semanal")
-    @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarAgendaSemanal(
-            @RequestParam Long funcionarioId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
-    ) {
-        List<ConsultaProntuarioResponseDto> agenda = service.listarAgendaSemanal(funcionarioId, dataReferencia);
-        return ResponseEntity.ok(agenda);
-    }
-
     @GetMapping("/pendentes")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarConsultasPendentes(@RequestParam Long idFuncionario) {

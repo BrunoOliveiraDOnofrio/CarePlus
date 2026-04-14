@@ -277,14 +277,6 @@ public class ConsultaProntuarioService {
         return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public List<ConsultaProntuarioResponseDto> consultasDoDia(Long idFuncionario){
-        List<ConsultaProntuario> consultas = consultaProntuarioRepository.consultasDoDia(idFuncionario);
-        if (consultas.isEmpty()){
-            throw new ResourceNotFoundException("Nenhuma consulta para esse funcionario hoje!");
-        }
-        return ConsultaProntuarioMapper.toResponseDto(consultas);
-    }
-
     public ConsultaProntuarioResponseDto editarConsulta(Long consultaId, ConsultaProntuarioRequest request) {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
@@ -558,18 +550,82 @@ public class ConsultaProntuarioService {
         return response;
     }
 
-    public List<ConsultaProntuarioResponseDto> listarAgendaSemanal(Long funcionarioId, LocalDate dataReferencia) {
+    public List<ConsultaProntuarioResponseDto> listarAgendaDiaria(Long id, String tipo, LocalDate dataReferencia){
+
+        List<ConsultaProntuario> consultas = new ArrayList<>();
+
+        if ("funcionario".equalsIgnoreCase(tipo)) {
+            consultas = consultaProntuarioRepository.buscarConsultasDiariaPorFuncionario(id, dataReferencia);
+            if (consultas.isEmpty()){
+                throw new ResourceNotFoundException("Nenhuma consulta para esse funcionario hoje!");
+            }
+        } else if ("paciente".equalsIgnoreCase(tipo)) {
+            consultas = consultaProntuarioRepository.buscarConsultasDiariaPorPaciente(id, dataReferencia);
+            if (consultas.isEmpty()){
+                throw new ResourceNotFoundException("Nenhuma consulta para esse paciente hoje!");
+            }
+        }
+
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
+    }
+
+    public List<ConsultaProntuarioResponseDto> listarAgendaSemanal(Long id, String tipo, LocalDate dataReferencia) {
         LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
-        LocalDate fimDaSemana = inicioDaSemana.plusDays(6);
+        LocalDate fimDaSemana = inicioDaSemana.plusDays(4);
 
-        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
-                funcionarioId,
-                inicioDaSemana,
-                fimDaSemana
-        );
+        List<ConsultaProntuario> consultas = new ArrayList<>();
 
-        if (consultas.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+        if ("funcionario".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
+                    id,
+                    inicioDaSemana,
+                    fimDaSemana
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
+        } else if ("paciente".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorPacienteEPeriodo(
+                    id,
+                    inicioDaSemana,
+                    fimDaSemana
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
+        }
+
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
+    }
+
+    public List<ConsultaProntuarioResponseDto> listarAgendaMensal(Long id, String tipo, LocalDate dataReferencia) {
+        LocalDate inicioDoMes = dataReferencia.withDayOfMonth(1);
+        LocalDate fimDoMes = dataReferencia.withDayOfMonth(dataReferencia.lengthOfMonth());
+
+        List<ConsultaProntuario> consultas = new ArrayList<>();
+
+        if ("funcionario".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
+                    id,
+                    inicioDoMes,
+                    fimDoMes
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
+        } else if ("paciente".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorPacienteEPeriodo(
+                    id,
+                    inicioDoMes,
+                    fimDoMes
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
         }
 
         return ConsultaProntuarioMapper.toResponseDto(consultas);
