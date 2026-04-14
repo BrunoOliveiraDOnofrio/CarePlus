@@ -2,24 +2,37 @@ package com.example.careplus.dto.dtoConsulta;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ConsultaRequestDto {
     private Long pacienteId;
     private Long funcionarioId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dataHora;
+    @Schema(description = "2026-01-20", example = "2026-01-20")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate data;
+
+    @Schema(description = "14:00:00", example = "14:00:00")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioInicio;
+
+    @Schema(description = "15:00:00", example = "15:00:00")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioFim;
+
     private String tipo;
 
-    public ConsultaRequestDto() {
-    }
+    public ConsultaRequestDto() {}
 
-    public ConsultaRequestDto(Long pacienteId, Long funcionarioId, LocalDateTime dataHora, String tipo) {
+    public ConsultaRequestDto(Long pacienteId, Long funcionarioId, LocalDate data, LocalTime horarioInicio, LocalTime horarioFim, String tipo) {
         this.pacienteId = pacienteId;
         this.funcionarioId = funcionarioId;
-        this.dataHora = dataHora;
+        this.data = data;
+        this.horarioInicio = horarioInicio;
+        this.horarioFim = horarioFim;
         this.tipo = tipo;
     }
 
@@ -39,12 +52,28 @@ public class ConsultaRequestDto {
         this.funcionarioId = funcionarioId;
     }
 
-    public LocalDateTime getDataHora() {
-        return dataHora;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public LocalTime getHorarioInicio() {
+        return horarioInicio;
+    }
+
+    public void setHorarioInicio(LocalTime horarioInicio) {
+        this.horarioInicio = horarioInicio;
+    }
+
+    public LocalTime getHorarioFim() {
+        return horarioFim;
+    }
+
+    public void setHorarioFim(LocalTime horarioFim) {
+        this.horarioFim = horarioFim;
     }
 
     public String getTipo() {

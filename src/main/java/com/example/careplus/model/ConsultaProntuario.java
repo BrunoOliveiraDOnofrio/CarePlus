@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,17 +17,25 @@ public class ConsultaProntuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_id")
-    private Funcionario funcionario;
+    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @JsonManagedReference("consulta-funcionario")
+    private List<ConsultaFuncionario> consultaFuncionarios = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
-    @Schema(description = "2026-01-15 10:00:00", example = "2026-01-15 10:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dataHora;
+    @Schema(description = "2026-01-15", example = "2026-01-15")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate data;
+
+    @Schema(description = "10:00:00", example = "10:00:00")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioInicio;
+
+    @Schema(description = "11:00:00", example = "11:00:00")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioFim;
 
     @Schema(description = "Retorno")
     private String tipo;
@@ -46,86 +56,48 @@ public class ConsultaProntuario {
     public ConsultaProntuario() {
     }
 
-    public ConsultaProntuario(Long id, Funcionario funcionario, Paciente paciente, LocalDateTime dataHora, String tipo, String observacoesComportamentais, Boolean presenca) {
-        this.id = id;
-        this.funcionario = funcionario;
-        this.paciente = paciente;
-        this.dataHora = dataHora;
-        this.tipo = tipo;
-        this.observacoesComportamentais = observacoesComportamentais;
-        this.presenca = presenca;
+    /** Helper: monta um LocalDateTime a partir de data + horarioInicio (usado internamente no service) */
+    public LocalDateTime getDataHoraInicio() {
+        if (data == null || horarioInicio == null) return null;
+        return LocalDateTime.of(data, horarioInicio);
     }
 
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
-
+    /** Helper: retorna o primeiro Funcionario associado */
     public Funcionario getFuncionario() {
-        return funcionario;
+        if (consultaFuncionarios == null || consultaFuncionarios.isEmpty()) return null;
+        return consultaFuncionarios.get(0).getFuncionario();
     }
 
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
-    }
+    public Paciente getPaciente() { return paciente; }
+    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 
-    public Long getId() {
-        return id;
-    }
+    public List<ConsultaFuncionario> getConsultaFuncionarios() { return consultaFuncionarios; }
+    public void setConsultaFuncionarios(List<ConsultaFuncionario> consultaFuncionarios) { this.consultaFuncionarios = consultaFuncionarios; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
 
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
-    }
+    public LocalTime getHorarioInicio() { return horarioInicio; }
+    public void setHorarioInicio(LocalTime horarioInicio) { this.horarioInicio = horarioInicio; }
 
-    public String getTipo() {
-        return tipo;
-    }
+    public LocalTime getHorarioFim() { return horarioFim; }
+    public void setHorarioFim(LocalTime horarioFim) { this.horarioFim = horarioFim; }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
-    public String getObservacoesComportamentais() {
-        return observacoesComportamentais;
-    }
+    public String getObservacoesComportamentais() { return observacoesComportamentais; }
+    public void setObservacoesComportamentais(String observacoesComportamentais) { this.observacoesComportamentais = observacoesComportamentais; }
 
-    public void setObservacoesComportamentais(String observacoesComportamentais) {
-        this.observacoesComportamentais = observacoesComportamentais;
-    }
+    public Boolean getPresenca() { return presenca; }
+    public void setPresenca(Boolean presenca) { this.presenca = presenca; }
 
-    public Boolean getPresenca() {
-        return presenca;
-    }
+    public Boolean getConfirmada() { return confirmada; }
+    public void setConfirmada(Boolean confirmada) { this.confirmada = confirmada; }
 
-    public void setPresenca(Boolean presenca) {
-        this.presenca = presenca;
-    }
-
-    public Boolean getConfirmada() {
-        return confirmada;
-    }
-
-    public void setConfirmada(Boolean confirmada) {
-        this.confirmada = confirmada;
-    }
-
-    public List<Material> getMateriais() {
-        return materiais;
-    }
-
-    public void setMateriais(List<Material> materiais) {
-        this.materiais = materiais;
-    }
+    public List<Material> getMateriais() { return materiais; }
+    public void setMateriais(List<Material> materiais) { this.materiais = materiais; }
 }
-

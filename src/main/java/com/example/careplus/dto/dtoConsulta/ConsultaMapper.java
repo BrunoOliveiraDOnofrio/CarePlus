@@ -18,9 +18,9 @@ public class ConsultaMapper {
 
         ConsultaProntuario entity = new ConsultaProntuario();
         entity.setPaciente(PacienteMapper.toEntityResponse(paciente));
-        entity.setFuncionario(FuncionarioMapper.toEntityResponse(funcionario));
-        entity.setDataHora(dto.getDataHora());
-        // Tipo inicial padrão se não informado
+        entity.setData(dto.getData());
+        entity.setHorarioInicio(dto.getHorarioInicio());
+        entity.setHorarioFim(dto.getHorarioFim());
         entity.setTipo(entity.getTipo() == null ? "Pendente" : entity.getTipo());
         return entity;
     }
@@ -29,11 +29,18 @@ public class ConsultaMapper {
         if (entity == null){
             return null;
         }
+
+        List<FuncionarioResponseDto> funcionarios = entity.getConsultaFuncionarios().stream()
+                .map(cf -> FuncionarioMapper.toResponseDto(cf.getFuncionario()))
+                .toList();
+
         return new ConsultaResponseDto(
                 entity.getId(),
                 PacienteMapper.toResponseDto(entity.getPaciente()),
-                FuncionarioMapper.toResponseDto(entity.getFuncionario()),
-                entity.getDataHora(),
+                funcionarios,
+                entity.getData(),
+                entity.getHorarioInicio(),
+                entity.getHorarioFim(),
                 entity.getTipo(),
                 entity.getObservacoesComportamentais(),
                 entity.getPresenca(),

@@ -1,7 +1,7 @@
 package com.example.careplus.dto.dtoConsultaProntuario;
 
-import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.dto.dtoFuncionario.FuncionarioMapper;
+import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.dto.dtoPaciente.PacienteMapper;
 import com.example.careplus.dto.dtoPaciente.PacienteResponseDto;
 import com.example.careplus.model.ConsultaProntuario;
@@ -17,8 +17,9 @@ public class ConsultaProntuarioMapper {
 
         ConsultaProntuario entity = new ConsultaProntuario();
         entity.setPaciente(PacienteMapper.toEntityResponse(paciente));
-        entity.setFuncionario(FuncionarioMapper.toEntityResponse(funcionario));
-        entity.setDataHora(dto.getDataHora());
+        entity.setData(dto.getData());
+        entity.setHorarioInicio(dto.getHorarioInicio());
+        entity.setHorarioFim(dto.getHorarioFim());
         entity.setTipo(entity.getTipo() == null ? "Pendente" : entity.getTipo());
         return entity;
     }
@@ -27,11 +28,18 @@ public class ConsultaProntuarioMapper {
         if (entity == null){
             return null;
         }
+
+        List<FuncionarioResponseDto> funcionarios = entity.getConsultaFuncionarios().stream()
+                .map(cf -> FuncionarioMapper.toResponseDto(cf.getFuncionario()))
+                .toList();
+
         return new ConsultaProntuarioResponseDto(
                 entity.getId(),
                 PacienteMapper.toResponseDto(entity.getPaciente()),
-                FuncionarioMapper.toResponseDto(entity.getFuncionario()),
-                entity.getDataHora(),
+                funcionarios,
+                entity.getData(),
+                entity.getHorarioInicio(),
+                entity.getHorarioFim(),
                 entity.getTipo(),
                 entity.getObservacoesComportamentais(),
                 entity.getPresenca(),

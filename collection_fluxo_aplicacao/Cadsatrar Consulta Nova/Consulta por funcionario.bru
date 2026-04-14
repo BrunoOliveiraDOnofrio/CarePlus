@@ -1,0 +1,24 @@
+meta {
+  name: Consulta por funcionario
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/consultas-prontuario/por-paciente?idPaciente=1
+  body: none
+  auth: inherit
+}
+
+params:query {
+  idPaciente: 1
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjbGluaWNhLmNvbSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInVzZXJJZCI6Miwibm9tZSI6Ikx1Y2lhbm8gQ3JlbWFzY2hpIiwiY2FyZ28iOiJGdW5jaW9uw6FyaW8iLCJlc3BlY2lhbGlkYWRlIjoiQWRtaW4iLCJub21lU3VwZXJ2aXNvciI6IkRyYS4gSGVsZW5hIENhc3RybyIsImRvY3VtZW50byI6IjQwMDI4OTIyIiwiaWF0IjoxNzc0ODA5NzUyLCJleHAiOjE3Nzg0MDk3NTJ9.eRbSZOHbmz5QkVydVD5OG8qQ9i3ITS4XKTmV5Fh9kXGnrGX4ADuOo2NgsYEzHTjPRROEwd5XHRKTj5NumHhTwg
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

@@ -1,11 +1,12 @@
 CREATE DATABASE IF NOT EXISTS careplus_novo;
 USE careplus_novo;
 
-
 -- =========================
 -- TABELA ENDERECO
 -- =========================
 DROP TABLE IF EXISTS endereco;
+
+
 
 CREATE TABLE endereco (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -91,6 +92,7 @@ CREATE TABLE role (
 -- TABELA FUNCIONARIO_ROLES (N:N)
 -- =========================
 DROP TABLE IF EXISTS funcionario_roles;
+DROP TABLE IF EXISTS consulta_funcionario;
 
 CREATE TABLE funcionario_roles (
     funcionario_id BIGINT,
@@ -111,19 +113,33 @@ DROP TABLE IF EXISTS consulta_prontuario;
 
 CREATE TABLE consulta_prontuario (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    funcionario_id BIGINT,
     paciente_id BIGINT,
-    data_hora DATETIME,
+    data DATE,
+    horario_inicio TIME,
+    horario_fim TIME,
     tipo VARCHAR(255),
     observacoes_comportamentais VARCHAR(255),
     presenca TINYINT,
     confirmada TINYINT,
-    CONSTRAINT fk_consulta_funcionario
-        FOREIGN KEY (funcionario_id)
-        REFERENCES funcionario(id),
     CONSTRAINT fk_consulta_paciente
         FOREIGN KEY (paciente_id)
         REFERENCES paciente(id)
+);
+
+-- =========================
+-- TABELA CONSULTA_FUNCIONARIO
+-- =========================
+CREATE TABLE consulta_funcionario (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    funcionario_id BIGINT NOT NULL,
+    consulta_id BIGINT NOT NULL,
+    CONSTRAINT uq_cf_consulta_funcionario UNIQUE (consulta_id, funcionario_id),
+    CONSTRAINT fk_cf_funcionario
+        FOREIGN KEY (funcionario_id)
+        REFERENCES funcionario(id),
+    CONSTRAINT fk_cf_consulta
+        FOREIGN KEY (consulta_id)
+        REFERENCES consulta_prontuario(id)
 );
 
 -- =========================

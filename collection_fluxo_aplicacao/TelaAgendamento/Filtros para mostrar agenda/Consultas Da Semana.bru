@@ -5,14 +5,15 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/consultas-prontuario/agenda-semanal?funcionarioId=2&dataReferencia=2026-01-30
+  url: {{baseUrl}}/consultas-prontuario/agenda-semanal?id=1&tipo=paciente&dataReferencia=2026-04-14
   body: none
   auth: bearer
 }
 
 params:query {
-  funcionarioId: 2
-  dataReferencia: 2026-01-30
+  id: 1
+  tipo: paciente
+  dataReferencia: 2026-04-14
 }
 
 auth:bearer {

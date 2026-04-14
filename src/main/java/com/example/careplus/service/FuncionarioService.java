@@ -200,7 +200,7 @@ public class FuncionarioService {
     }
 
     public List<FuncionarioResponseDto> listarTodos(){
-        List<Funcionario> funcionarios = repository.findAllByAtivoTrue();
+        List<Funcionario> funcionarios = repository.findAllAtivosExcluindoAdminEAgendamento();
 
         if (!funcionarios.isEmpty()){
             return FuncionarioMapper.toResponseDto(funcionarios);
@@ -273,14 +273,14 @@ public class FuncionarioService {
         while (horarioAtual.isBefore(horarioFim)){
             LocalDateTime horarioConsulta = LocalDateTime.of(data, horarioAtual);
 
-            // Verifica se o horário está ocupado
             boolean ocupado = false;
 
             for (ConsultaProntuario consulta : consultas){
-                LocalDateTime inicioConsulta = consulta.getDataHora();
-                LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
+                LocalDateTime inicioConsulta = consulta.getDataHoraInicio();
+                LocalDateTime fimConsulta = consulta.getHorarioFim() != null
+                        ? LocalDateTime.of(data, consulta.getHorarioFim())
+                        : inicioConsulta.plusHours(1);
 
-                // Verifica se o horário atual está dentro do período da consulta
                 if ((horarioConsulta.isEqual(inicioConsulta) || horarioConsulta.isAfter(inicioConsulta))
                         && horarioConsulta.isBefore(fimConsulta)){
                     ocupado = true;
@@ -300,42 +300,38 @@ public class FuncionarioService {
         return horariosDisponiveis;
     }
 
-    public List<FuncionarioResponseDto> buscarFuncionariosDisponiveis(String especialidade, String dataHoraStr){
-        // Parse do dataHora (formato: "2026-01-30 16:00:00" ou "2026-01-30T16:00:00")
-        LocalDateTime dataHora;
+    public List<FuncionarioResponseDto> buscarFuncionariosDisponiveis(String especialidade, String dataStr, String horarioInicioStr){
+        LocalDate data;
+        LocalTime horarioInicio;
         try {
-            // Tenta com espaço primeiro
-            if (dataHoraStr.contains(" ")) {
-                dataHoraStr = dataHoraStr.replace(" ", "T");
-            }
-            dataHora = LocalDateTime.parse(dataHoraStr);
+            data = LocalDate.parse(dataStr);
+            horarioInicio = LocalTime.parse(horarioInicioStr);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Formato de data/hora inválido. Use: yyyy-MM-ddTHH:mm:ss ou yyyy-MM-dd HH:mm:ss");
+            throw new IllegalArgumentException("Formato inválido. Use data: yyyy-MM-dd e horario: HH:mm:ss");
         }
 
-        // Busca todos os funcionários DA ESPECIALIDADE e ATIVOS
+        LocalDateTime dataHora = LocalDateTime.of(data, horarioInicio);
+
         List<Funcionario> funcionariosDaEspecialidade = repository.findByEspecialidadeIgnoreCaseAndAtivoTrue(especialidade);
 
         if (funcionariosDaEspecialidade.isEmpty()){
             throw new ResourceNotFoundException("Nenhum funcionário encontrado para a especialidade: " + especialidade);
         }
 
-        // Filtra os funcionários que estão disponíveis no horário solicitado
         List<FuncionarioResponseDto> funcionariosDisponiveis = new ArrayList<>();
 
         for (Funcionario funcionario : funcionariosDaEspecialidade){
-            // Busca as consultas do funcionário na data especificada
             List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEData(
-                    funcionario.getId(), dataHora.toLocalDate());
+                    funcionario.getId(), data);
 
-            // Verifica se o horário está livre
             boolean disponivel = true;
 
             for (ConsultaProntuario consulta : consultas){
-                LocalDateTime inicioConsulta = consulta.getDataHora();
-                LocalDateTime fimConsulta = inicioConsulta.plusHours(1);
+                LocalDateTime inicioConsulta = consulta.getDataHoraInicio();
+                LocalDateTime fimConsulta = consulta.getHorarioFim() != null
+                        ? LocalDateTime.of(consulta.getData(), consulta.getHorarioFim())
+                        : inicioConsulta.plusHours(1);
 
-                // Verifica se o horário solicitado conflita com alguma consulta existente
                 if ((dataHora.isEqual(inicioConsulta) || dataHora.isAfter(inicioConsulta))
                         && dataHora.isBefore(fimConsulta)){
                     disponivel = false;
@@ -343,7 +339,6 @@ public class FuncionarioService {
                 }
             }
 
-            // Se está disponível, adiciona à lista
             if (disponivel){
                 funcionariosDisponiveis.add(FuncionarioMapper.toResponseDto(funcionario));
             }
