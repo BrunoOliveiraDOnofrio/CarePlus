@@ -218,9 +218,6 @@ public class ConsultaProntuarioService {
         // retorna a consulta criada com todos os detalhes
         ConsultaProntuarioResponseDto responseDto = ConsultaProntuarioMapper.toResponseDto(salvo);
 
-        // publica os detalhes da nova consulta no RabbitMQ no formato esperado pelo consumer (envelope)
-        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(java.util.List.of(toMensagemDto(responseDto))));
-
         return responseDto;
     }
 
@@ -629,6 +626,18 @@ public class ConsultaProntuarioService {
         }
 
         return ConsultaProntuarioMapper.toResponseDto(consultas);
+    }
+
+    public List<ConsultaProntuarioResponseDto> notificarResponsavel(Long id, LocalDate dataReferencia) {
+        List<ConsultaProntuarioResponseDto> agenda = listarAgendaMensal(id, "paciente", dataReferencia);
+
+        if (!agenda.isEmpty()) {
+            consultaCriadaRabbitProducer.publicarEvento(
+                    new EventoConsultaCriadaDto(agenda.stream().map(this::toMensagemDto).toList())
+            );
+        }
+
+        return agenda;
     }
 
     public List<ConsultaProntuarioResponseDto> listarConsultasPendentes(Long idFuncionario) {

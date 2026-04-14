@@ -139,6 +139,17 @@ public class ConsultaProntuarioController {
         return ResponseEntity.ok(agenda);
     }
 
+    @GetMapping("/notificar-responsavel")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ConsultaProntuarioResponseDto>> notificarResponsavel(
+            @RequestParam Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
+    ) {
+        List<ConsultaProntuarioResponseDto> agenda = service.notificarResponsavel(id, dataReferencia);
+        return ResponseEntity.ok(agenda);
+    }
+
+
     @PostMapping("/recorrentes")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<AgendarConsultasResponseDto> agendarConsultas(
