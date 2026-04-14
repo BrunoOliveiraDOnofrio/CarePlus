@@ -881,13 +881,6 @@ public class ConsultaProntuarioService {
         response.setTotalConsultasCriadas(todasCriadas.size());
         response.setTotalFalhas(todosConflitos.size());
 
-        // notifica via RabbitMQ todas as consultas criadas
-        if (!todasCriadas.isEmpty()) {
-            consultaCriadaRabbitProducer.publicarEvento(
-                    new EventoConsultaCriadaDto(todasCriadas.stream().map(this::toMensagemDto).toList())
-            );
-        }
-
         return response;
     }
 
