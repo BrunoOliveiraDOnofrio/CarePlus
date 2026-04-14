@@ -7,31 +7,26 @@ public class FuncionarioDisponivelRequestDto {
     @Schema(description = "Cardiologia", example = "Cardiologia")
     private String especialidade;
 
-    @Schema(description = "2026-01-30 16:00:00", example = "2026-01-30 16:00:00")
-    private String dataHora;
+    @Schema(description = "2026-01-30", example = "2026-01-30")
+    private String data;
 
-    public FuncionarioDisponivelRequestDto() {
-    }
+    @Schema(description = "16:00:00", example = "16:00:00")
+    private String horarioInicio;
 
-    public FuncionarioDisponivelRequestDto(String especialidade, String dataHora) {
+    public FuncionarioDisponivelRequestDto() {}
+
+    public FuncionarioDisponivelRequestDto(String especialidade, String data, String horarioInicio) {
         this.especialidade = especialidade;
-        this.dataHora = dataHora;
+        this.data = data;
+        this.horarioInicio = horarioInicio;
     }
 
-    public String getEspecialidade() {
-        return especialidade;
-    }
+    public String getEspecialidade() { return especialidade; }
+    public void setEspecialidade(String especialidade) { this.especialidade = especialidade; }
 
-    public void setEspecialidade(String especialidade) {
-        this.especialidade = especialidade;
-    }
+    public String getData() { return data; }
+    public void setData(String data) { this.data = data; }
 
-    public String getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(String dataHora) {
-        this.dataHora = dataHora;
-    }
+    public String getHorarioInicio() { return horarioInicio; }
+    public void setHorarioInicio(String horarioInicio) { this.horarioInicio = horarioInicio; }
 }
-

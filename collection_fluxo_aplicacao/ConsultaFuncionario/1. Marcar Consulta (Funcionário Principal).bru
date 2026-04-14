@@ -1,0 +1,31 @@
+meta {
+  name: 1. Marcar Consulta (Funcionário Principal)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/consultas-prontuario
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "pacienteId": 1,
+    "funcionarioId": 2,
+    "data": "2097-05-18",
+    "horarioInicio": "14:00:00",
+    "horarioFim": "15:00:00",
+    "tipo": "Retorno"
+  }
+}
+
+docs {
+  PASSO 1 — Cria a consulta com data e horários separados.
+  Guarde o "id" retornado para usar nos próximos passos.
+}

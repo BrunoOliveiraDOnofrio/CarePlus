@@ -1,0 +1,28 @@
+meta {
+  name: Adicionar Funcionario
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/consulta-funcionario
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjbGluaWNhLmNvbSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInVzZXJJZCI6Miwibm9tZSI6Ikx1Y2lhbm8gQ3JlbWFzY2hpIiwiY2FyZ28iOiJGdW5jaW9uw6FyaW8iLCJlc3BlY2lhbGlkYWRlIjoiQWRtaW4iLCJub21lU3VwZXJ2aXNvciI6IkRyYS4gSGVsZW5hIENhc3RybyIsImRvY3VtZW50byI6IjQwMDI4OTIyIiwiaWF0IjoxNzc0ODA5NzUyLCJleHAiOjE3Nzg0MDk3NTJ9.eRbSZOHbmz5QkVydVD5OG8qQ9i3ITS4XKTmV5Fh9kXGnrGX4ADuOo2NgsYEzHTjPRROEwd5XHRKTj5NumHhTwg
+}
+
+body:json {
+  {
+    "consultaId": 6,
+    "funcionarioId": 4
+  }
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

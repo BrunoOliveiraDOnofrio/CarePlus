@@ -68,7 +68,9 @@ public class DetalhePacienteService {
 
             // Última Consulta
             DetalhePacienteDTO.UltimaConsultaDTO ultimaConsultaDTO = new DetalhePacienteDTO.UltimaConsultaDTO();
-            ultimaConsultaDTO.setData(ultimaConsulta.getDataHora());
+            ultimaConsultaDTO.setData(ultimaConsulta.getData());
+            ultimaConsultaDTO.setHorarioInicio(ultimaConsulta.getHorarioInicio());
+            ultimaConsultaDTO.setHorarioFim(ultimaConsulta.getHorarioFim());
             ultimaConsultaDTO.setMateriais(ultimaConsultaDTO.getMateriais());
             dto.setUltimaConsulta(ultimaConsultaDTO);
         }
@@ -82,7 +84,7 @@ public class DetalhePacienteService {
 
         // Próxima Consulta
         if (!proximasConsultas.isEmpty()) {
-            dto.setProximaConsulta(proximasConsultas.get(0).getDataHora());
+            dto.setProximaConsulta(proximasConsultas.get(0).getData());
         }
 
         return dto;

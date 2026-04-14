@@ -62,6 +62,16 @@ public class ResponsavelController {
         }
     }
 
+    @GetMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Responsavel> buscarPorId(@PathVariable Long id){
+        try {
+            return ResponseEntity.status(200).body(responsavelService.buscarPorId(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
     @PutMapping
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Responsavel> atualizar(@RequestParam Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){

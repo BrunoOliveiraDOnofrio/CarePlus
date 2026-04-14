@@ -14,7 +14,7 @@ public class Funcionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Schema(description = "Brenda Stefany")
     private String nome;
@@ -31,6 +31,9 @@ public class Funcionario {
 
     @OneToMany(mappedBy = "supervisor")
     private List<Funcionario> subordinados = new ArrayList<>();
+
+    @OneToMany(mappedBy = "funcionario")
+    private List<ConsultaFuncionario> consultaFuncionarios = new ArrayList<>();
 
     @Schema(description = "Supervisora")
     private String cargo;
@@ -66,11 +69,11 @@ public class Funcionario {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getNome() {

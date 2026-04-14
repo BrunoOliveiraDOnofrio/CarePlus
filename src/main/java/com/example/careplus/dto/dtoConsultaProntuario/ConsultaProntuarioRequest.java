@@ -3,48 +3,48 @@ package com.example.careplus.dto.dtoConsultaProntuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ConsultaProntuarioRequest {
 
     private Long pacienteId;
     private Long funcionarioId;
 
-    @Schema(description = "2025-10-14 14:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dataHora;
+    @Schema(description = "2026-01-20", example = "2026-01-20")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate data;
 
-    public ConsultaProntuarioRequest() {
-    }
+    @Schema(description = "14:00:00", example = "14:00:00")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioInicio;
 
-    public ConsultaProntuarioRequest(Long pacienteId, Long funcionarioId, LocalDateTime dataHora) {
+    @Schema(description = "15:00:00", example = "15:00:00")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioFim;
+
+    public ConsultaProntuarioRequest() {}
+
+    public ConsultaProntuarioRequest(Long pacienteId, Long funcionarioId, LocalDate data, LocalTime horarioInicio, LocalTime horarioFim) {
         this.pacienteId = pacienteId;
         this.funcionarioId = funcionarioId;
-        this.dataHora = dataHora;
+        this.data = data;
+        this.horarioInicio = horarioInicio;
+        this.horarioFim = horarioFim;
     }
 
-    public Long getPacienteId() {
-        return pacienteId;
-    }
+    public Long getPacienteId() { return pacienteId; }
+    public void setPacienteId(Long pacienteId) { this.pacienteId = pacienteId; }
 
-    public void setPacienteId(Long pacienteId) {
-        this.pacienteId = pacienteId;
-    }
+    public Long getFuncionarioId() { return funcionarioId; }
+    public void setFuncionarioId(Long funcionarioId) { this.funcionarioId = funcionarioId; }
 
-    public Long getFuncionarioId() {
-        return funcionarioId;
-    }
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
 
-    public void setFuncionarioId(Long funcionarioId) {
-        this.funcionarioId = funcionarioId;
-    }
+    public LocalTime getHorarioInicio() { return horarioInicio; }
+    public void setHorarioInicio(LocalTime horarioInicio) { this.horarioInicio = horarioInicio; }
 
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
-    }
+    public LocalTime getHorarioFim() { return horarioFim; }
+    public void setHorarioFim(LocalTime horarioFim) { this.horarioFim = horarioFim; }
 }
-

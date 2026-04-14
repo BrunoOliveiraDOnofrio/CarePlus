@@ -1,6 +1,8 @@
 package com.example.careplus.controller;
 
 import com.example.careplus.dto.dtoConsultaProntuario.*;
+import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasRequestDto;
+import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasResponseDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.ConsultaRecorrenteResponseDto;
 import com.example.careplus.model.ConsultaProntuario;
@@ -115,9 +117,9 @@ public class ConsultaProntuarioController {
 
     @PostMapping("/recorrentes")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ConsultaRecorrenteResponseDto> criarConsultasRecorrentes(
-            @RequestBody ConsultaRecorrenteRequestDto request) {
-        ConsultaRecorrenteResponseDto response = service.criarConsultasRecorrentes(request);
+    public ResponseEntity<AgendarConsultasResponseDto> agendarConsultas(
+            @RequestBody AgendarConsultasRequestDto request) {
+        AgendarConsultasResponseDto response = service.agendarConsultas(request);
         return ResponseEntity.status(207).body(response);
     }
 

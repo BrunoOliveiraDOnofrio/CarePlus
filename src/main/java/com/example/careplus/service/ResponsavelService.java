@@ -76,6 +76,13 @@ public class ResponsavelService {
         return responsavelEncontrado;
     }
 
+    public Responsavel buscarPorId(Long id){
+        Responsavel responsavelEncontrado = responsavelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado!"));
+
+        return responsavelEncontrado;
+    }
+
     public Responsavel atualizar(Long id, ResponsavelRequestDto responsavelAtt){
         Optional<Responsavel> selecionar = responsavelRepository.findById(id);
         if(selecionar.isEmpty()){

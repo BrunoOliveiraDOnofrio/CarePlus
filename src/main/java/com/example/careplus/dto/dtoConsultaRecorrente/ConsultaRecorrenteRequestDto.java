@@ -26,9 +26,12 @@ public class ConsultaRecorrenteRequestDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private List<LocalDate> datas;
 
-    @NotNull(message = "O horário é obrigatório")
+    @NotNull(message = "O horário de início é obrigatório")
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime horario;
+
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime horarioFim;
 
     private String tipo;
 }

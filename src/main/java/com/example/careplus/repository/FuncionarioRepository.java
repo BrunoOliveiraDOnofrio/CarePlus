@@ -5,6 +5,7 @@ import com.example.careplus.model.Funcionario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,9 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
     List<Funcionario> findByEmailContainingIgnoreCaseAndAtivoTrue(String email);
     List<Funcionario> findByEspecialidadeIgnoreCaseAndAtivoTrue(String especialidade);
     List<Funcionario> findByCargoIgnoreCase(String supervisor);
+
+    // Busca funcionários ativos cuja especialidade não seja 'admin' nem 'agendamento' (case-insensitive)
+    // Inclui registros com especialidade NULL (tratados como diferentes desses valores)
+    @Query("SELECT f FROM Funcionario f WHERE f.ativo = true AND (f.especialidade IS NULL OR (LOWER(f.especialidade) <> 'admin' AND LOWER(f.especialidade) <> 'agendamento'))")
+    List<Funcionario> findAllAtivosExcluindoAdminEAgendamento();
 }
