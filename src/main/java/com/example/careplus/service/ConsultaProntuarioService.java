@@ -629,7 +629,7 @@ public class ConsultaProntuarioService {
     }
 
     public List<ConsultaProntuarioResponseDto> notificarResponsavel(Long id, LocalDate dataReferencia) {
-        List<ConsultaProntuarioResponseDto> agenda = listarAgendaMensal(id, "paciente", dataReferencia);
+        List<ConsultaProntuarioResponseDto> agenda = listarAgendaSemanal(id, "paciente", dataReferencia);
 
         if (!agenda.isEmpty()) {
             consultaCriadaRabbitProducer.publicarEvento(
