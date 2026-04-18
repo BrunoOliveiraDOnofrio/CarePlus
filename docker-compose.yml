@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: careplus-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: careplus_novo
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+
+  app-backend:
+    image: brvnod/careplus-app:latest
+    container_name: careplus-app
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/careplus_novo
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+      - mysql
+      - rabbitmq
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
