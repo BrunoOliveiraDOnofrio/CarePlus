@@ -1,0 +1,21 @@
+meta {
+  name: Consultas do Mês
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-mensal?id=3&tipo=funcionario&dataReferencia=2026-04-14
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 3
+  tipo: funcionario
+  dataReferencia: 2026-04-14
+}
+
+auth:bearer {
+  token: {{token}}
+}

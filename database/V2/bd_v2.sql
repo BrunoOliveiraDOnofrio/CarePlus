@@ -121,6 +121,7 @@ CREATE TABLE consulta_prontuario (
     observacoes_comportamentais VARCHAR(255),
     presenca TINYINT,
     confirmada TINYINT,
+    recorrencia_id VARCHAR(36), -- Adicionei esse campo
     CONSTRAINT fk_consulta_paciente
         FOREIGN KEY (paciente_id)
         REFERENCES paciente(id)

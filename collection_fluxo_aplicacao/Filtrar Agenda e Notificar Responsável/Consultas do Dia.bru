@@ -1,0 +1,21 @@
+meta {
+  name: Consultas do Dia
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-diaria?id=2&tipo=funcionario&dataReferencia=2026-04-14
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 2
+  tipo: funcionario
+  dataReferencia: 2026-04-14
+}
+
+auth:bearer {
+  token: {{token}}
+}

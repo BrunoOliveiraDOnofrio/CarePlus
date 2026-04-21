@@ -12,6 +12,8 @@ import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -355,6 +357,28 @@ public class FuncionarioService {
         List<Funcionario> supervisores = repository.findByCargoIgnoreCase("Supervisor(a)");
         return supervisores.stream()
                 .map(FuncionarioMapper::toResponseDto)
-                .toList();}
+                .toList();
+    }
+
+    public List<FuncionarioResponseDto> buscar(String nome, String email, String documento) {
+        if (documento != null && !documento.isBlank()) {
+            Page<Funcionario> funcionarios = repository.buscarPorCpf(documento, PageRequest.of(0, 10));
+            if (funcionarios.isEmpty()) throw new ResourceNotFoundException("Funcionário não encontrado!");
+            return FuncionarioMapper.toResponseDto(funcionarios.getContent());
+        }
+        if (email != null && !email.isBlank()) {
+            Page<Funcionario> funcionarios = repository.findByEmailContainingIgnoreCaseAndAtivoTrue(
+                    email, PageRequest.of(0, 10));
+            if (funcionarios.isEmpty()) throw new ResourceNotFoundException("Funcionário não encontrado!");
+            return FuncionarioMapper.toResponseDto(funcionarios.getContent());
+        }
+        if (nome != null && !nome.isBlank()) {
+            Page<Funcionario> funcionarios = repository.findByNomeContainingIgnoreCaseAndAtivoTrue(
+                    nome, PageRequest.of(0, 10));
+            if (funcionarios.isEmpty()) throw new ResourceNotFoundException("Funcionário não encontrado!");
+            return FuncionarioMapper.toResponseDto(funcionarios.getContent());
+        }
+        throw new ResourceNotFoundException("Informe ao menos um parâmetro de busca: nome, email ou documento.");
+    }
 
 }

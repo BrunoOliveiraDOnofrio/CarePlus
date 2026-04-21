@@ -106,6 +106,16 @@ public class PacienteController {
         return ResponseEntity.status(200).body(pacientes);
     }
 
+    @GetMapping("/buscar")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<PacienteResponseDto>> buscar(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String cpf) {
+        List<PacienteResponseDto> pacientes = service.buscar(nome, email, cpf);
+        return ResponseEntity.ok(pacientes);
+    }
+
     @GetMapping("/todos-pacientes")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Page<PacienteResponseDto>> listarTodosPacientesPaginado(

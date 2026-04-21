@@ -23,6 +23,8 @@ public class ConsultaProntuarioRequest {
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime horarioFim;
 
+    private String tipo;
+
     public ConsultaProntuarioRequest() {}
 
     public ConsultaProntuarioRequest(Long pacienteId, Long funcionarioId, LocalDate data, LocalTime horarioInicio, LocalTime horarioFim) {
@@ -47,4 +49,7 @@ public class ConsultaProntuarioRequest {
 
     public LocalTime getHorarioFim() { return horarioFim; }
     public void setHorarioFim(LocalTime horarioFim) { this.horarioFim = horarioFim; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 }

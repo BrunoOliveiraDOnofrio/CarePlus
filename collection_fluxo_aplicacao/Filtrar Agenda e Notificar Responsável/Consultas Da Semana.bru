@@ -1,0 +1,26 @@
+meta {
+  name: Consultas Da Semana
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-semanal?id=1&tipo=paciente&dataReferencia=2026-04-14
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 1
+  tipo: paciente
+  dataReferencia: 2026-04-14
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -5,13 +5,15 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/consultas-prontuario/consultasDoDia?idFuncionario=2
+  url: {{baseUrl}}/consultas-prontuario/agenda-diaria?id=3&tipo=funcionario&dataReferencia=2026-04-16
   body: none
   auth: bearer
 }
 
 params:query {
-  idFuncionario: 2
+  id: 3
+  tipo: funcionario
+  dataReferencia: 2026-04-16
 }
 
 auth:bearer {

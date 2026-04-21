@@ -1,0 +1,25 @@
+meta {
+  name: Notificar Responsável
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/notificar-responsavel?id=2&dataReferencia=2026-04-14
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 2
+  dataReferencia: 2026-04-14
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ConsultaProntuarioService {
@@ -218,9 +219,6 @@ public class ConsultaProntuarioService {
         // retorna a consulta criada com todos os detalhes
         ConsultaProntuarioResponseDto responseDto = ConsultaProntuarioMapper.toResponseDto(salvo);
 
-        // publica os detalhes da nova consulta no RabbitMQ no formato esperado pelo consumer (envelope)
-        consultaCriadaRabbitProducer.publicarEvento(new EventoConsultaCriadaDto(java.util.List.of(toMensagemDto(responseDto))));
-
         return responseDto;
     }
 
@@ -255,6 +253,15 @@ public class ConsultaProntuarioService {
         consultaProntuarioRepository.deleteById(consultaId);
     }
 
+    @Transactional
+    public void removerRecorrencia(String recorrenciaId) {
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.findByRecorrenciaId(recorrenciaId);
+        if (consultas.isEmpty()) {
+            throw new ResourceNotFoundException("Recorrência não encontrada");
+        }
+        consultaProntuarioRepository.deleteAll(consultas);
+    }
+
     public List<ConsultaProntuario> listarConsultas(){
         return consultaProntuarioRepository.findAll();
     }
@@ -277,14 +284,6 @@ public class ConsultaProntuarioService {
         return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public List<ConsultaProntuarioResponseDto> consultasDoDia(Long idFuncionario){
-        List<ConsultaProntuario> consultas = consultaProntuarioRepository.consultasDoDia(idFuncionario);
-        if (consultas.isEmpty()){
-            throw new ResourceNotFoundException("Nenhuma consulta para esse funcionario hoje!");
-        }
-        return ConsultaProntuarioMapper.toResponseDto(consultas);
-    }
-
     public ConsultaProntuarioResponseDto editarConsulta(Long consultaId, ConsultaProntuarioRequest request) {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
@@ -296,7 +295,7 @@ public class ConsultaProntuarioService {
         consulta.setData(request.getData());
         consulta.setHorarioInicio(request.getHorarioInicio());
         consulta.setHorarioFim(request.getHorarioFim());
-        consulta.setTipo("Retorno");
+        consulta.setTipo(request.getTipo() != null ? request.getTipo() : consulta.getTipo());
         consulta.setConfirmada(consulta.getConfirmada() != null ? consulta.getConfirmada() : Boolean.FALSE);
 
         // atualiza o vínculo com o funcionário
@@ -558,21 +557,97 @@ public class ConsultaProntuarioService {
         return response;
     }
 
-    public List<ConsultaProntuarioResponseDto> listarAgendaSemanal(Long funcionarioId, LocalDate dataReferencia) {
-        LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
-        LocalDate fimDaSemana = inicioDaSemana.plusDays(6);
+    public List<ConsultaProntuarioResponseDto> listarAgendaDiaria(Long id, String tipo, LocalDate dataReferencia){
 
-        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
-                funcionarioId,
-                inicioDaSemana,
-                fimDaSemana
-        );
+        List<ConsultaProntuario> consultas = new ArrayList<>();
 
-        if (consultas.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+        if ("funcionario".equalsIgnoreCase(tipo)) {
+            consultas = consultaProntuarioRepository.buscarConsultasDiariaPorFuncionario(id, dataReferencia);
+            if (consultas.isEmpty()){
+                throw new ResourceNotFoundException("Nenhuma consulta para esse funcionario hoje!");
+            }
+        } else if ("paciente".equalsIgnoreCase(tipo)) {
+            consultas = consultaProntuarioRepository.buscarConsultasDiariaPorPaciente(id, dataReferencia);
+            if (consultas.isEmpty()){
+                throw new ResourceNotFoundException("Nenhuma consulta para esse paciente hoje!");
+            }
         }
 
         return ConsultaProntuarioMapper.toResponseDto(consultas);
+    }
+
+    public List<ConsultaProntuarioResponseDto> listarAgendaSemanal(Long id, String tipo, LocalDate dataReferencia) {
+        LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
+        LocalDate fimDaSemana = inicioDaSemana.plusDays(4);
+
+        List<ConsultaProntuario> consultas = new ArrayList<>();
+
+        if ("funcionario".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
+                    id,
+                    inicioDaSemana,
+                    fimDaSemana
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
+        } else if ("paciente".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorPacienteEPeriodo(
+                    id,
+                    inicioDaSemana,
+                    fimDaSemana
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
+        }
+
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
+    }
+
+    public List<ConsultaProntuarioResponseDto> listarAgendaMensal(Long id, String tipo, LocalDate dataReferencia) {
+        LocalDate inicioDoMes = dataReferencia.withDayOfMonth(1);
+        LocalDate fimDoMes = dataReferencia.withDayOfMonth(dataReferencia.lengthOfMonth());
+
+        List<ConsultaProntuario> consultas = new ArrayList<>();
+
+        if ("funcionario".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorFuncionarioEPeriodo(
+                    id,
+                    inicioDoMes,
+                    fimDoMes
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
+        } else if ("paciente".equalsIgnoreCase(tipo)){
+            consultas = consultaProntuarioRepository.buscarConsultasPorPacienteEPeriodo(
+                    id,
+                    inicioDoMes,
+                    fimDoMes
+            );
+
+            if (consultas.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
+            }
+        }
+
+        return ConsultaProntuarioMapper.toResponseDto(consultas);
+    }
+
+    public List<ConsultaProntuarioResponseDto> notificarResponsavel(Long id, LocalDate dataReferencia) {
+        List<ConsultaProntuarioResponseDto> agenda = listarAgendaSemanal(id, "paciente", dataReferencia);
+
+        if (!agenda.isEmpty()) {
+            consultaCriadaRabbitProducer.publicarEvento(
+                    new EventoConsultaCriadaDto(agenda.stream().map(this::toMensagemDto).toList())
+            );
+        }
+
+        return agenda;
     }
 
     public List<ConsultaProntuarioResponseDto> listarConsultasPendentes(Long idFuncionario) {
@@ -771,6 +846,9 @@ public class ConsultaProntuarioService {
             // gera as datas semanalmente entre dataInicio e dataFim (inclusive)
             List<LocalDate> datas = gerarDatasSemanais(item.getDataInicio(), item.getDataFim());
 
+            // atribui um ID de recorrência único para este bloco quando há mais de uma data
+            String recorrenciaId = datas.size() > 1 ? UUID.randomUUID().toString() : null;
+
             // carrega os funcionários do item
             List<Funcionario> funcionariosDoItem = new ArrayList<>();
             for (Long fId : idsFunc) {
@@ -790,6 +868,7 @@ public class ConsultaProntuarioService {
                     consulta.setTipo(item.getTipo());
                     consulta.setPresenca(false);
                     consulta.setConfirmada(false);
+                    consulta.setRecorrenciaId(recorrenciaId);
 
                     ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
 
@@ -815,13 +894,6 @@ public class ConsultaProntuarioService {
         response.setDatasComConflito(todosConflitos);
         response.setTotalConsultasCriadas(todasCriadas.size());
         response.setTotalFalhas(todosConflitos.size());
-
-        // notifica via RabbitMQ todas as consultas criadas
-        if (!todasCriadas.isEmpty()) {
-            consultaCriadaRabbitProducer.publicarEvento(
-                    new EventoConsultaCriadaDto(todasCriadas.stream().map(this::toMensagemDto).toList())
-            );
-        }
 
         return response;
     }

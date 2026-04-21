@@ -16,6 +16,7 @@ import com.example.careplus.exception.MissingFieldException;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.PacienteRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
@@ -143,14 +144,36 @@ public class PacienteService {
     }
 
     public List<PacienteResponseDto> buscarPorNome(String nome){
-
-        List<Paciente> pacientes = repositoryPaciente.findByNomeContainingIgnoreCaseAndAtivoTrue(nome);
+        Page<Paciente> pacientes = repositoryPaciente.findByNomeContainingIgnoreCaseAndAtivoTrue(
+                nome, PageRequest.of(0, 10)
+        );
 
         if (!pacientes.isEmpty()){
-            return PacienteMapper.toResponseDto(pacientes);
+            return PacienteMapper.toResponseDto(pacientes.getContent());
         }else{
             throw new ResourceNotFoundException("Usuário não encontrado!");
         }
+    }
+
+    public List<PacienteResponseDto> buscar(String nome, String email, String cpf) {
+        if (cpf != null && !cpf.isBlank()) {
+            Page<Paciente> pacientes = repositoryPaciente.buscarPorCpfEAtivoTrue(cpf, PageRequest.of(0, 10));
+            if (pacientes.isEmpty()) throw new ResourceNotFoundException("Paciente não encontrado!");
+            return PacienteMapper.toResponseDto(pacientes.getContent());
+        }
+        if (email != null && !email.isBlank()) {
+            Page<Paciente> pacientes = repositoryPaciente.findByEmailContainsIgnoreCaseAndAtivoTrue(
+                    email, PageRequest.of(0, 10));
+            if (pacientes.isEmpty()) throw new ResourceNotFoundException("Paciente não encontrado!");
+            return PacienteMapper.toResponseDto(pacientes.getContent());
+        }
+        if (nome != null && !nome.isBlank()) {
+            Page<Paciente> pacientes = repositoryPaciente.findByNomeContainingIgnoreCaseAndAtivoTrue(
+                    nome, PageRequest.of(0, 10));
+            if (pacientes.isEmpty()) throw new ResourceNotFoundException("Paciente não encontrado!");
+            return PacienteMapper.toResponseDto(pacientes.getContent());
+        }
+        throw new ResourceNotFoundException("Informe ao menos um parâmetro de busca: nome, email ou cpf.");
     }
 
 
