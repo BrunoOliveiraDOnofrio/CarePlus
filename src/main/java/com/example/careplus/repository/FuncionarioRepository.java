@@ -27,8 +27,8 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
     // Busca funcionários ativos cuja especialidade não seja 'admin' nem 'agendamento' (case-insensitive)
     // Inclui registros com especialidade NULL (tratados como diferentes desses valores)
-    @Query("SELECT f FROM Funcionario f WHERE f.ativo = true AND (f.especialidade IS NULL OR (LOWER(f.especialidade) <> 'admin' AND LOWER(f.especialidade) <> 'agendamento'))")
-    List<Funcionario> findAllAtivosExcluindoAdminEAgendamento();
+    @Query(value = "SELECT f.especialidade AS Setor, COUNT(DISTINCT f.id) AS Total_Funcionarios, COUNT(DISTINCT cp.paciente_id) AS Total_Pacientes FROM funcionario f LEFT JOIN consulta_funcionario cf ON cf.funcionario_id = f.id LEFT JOIN consulta_prontuario cp ON cp.id = cf.consulta_id WHERE f.ativo = 1 GROUP BY f.especialidade ORDER BY Total_Pacientes DESC", nativeQuery = true)
+    List<Object[]> findAllAtivosExcluindoAdminEAgendamento();
 
     @Query("SELECT f FROM Funcionario f WHERE f.documento LIKE %:cpf% AND f.ativo = true")
     Page<Funcionario> buscarPorCpf(String cpf,  Pageable pageable);

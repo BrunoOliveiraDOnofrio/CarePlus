@@ -12,7 +12,6 @@ import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -202,7 +201,7 @@ public class FuncionarioService {
     }
 
     public List<FuncionarioResponseDto> listarTodos(){
-        List<Funcionario> funcionarios = repository.findAllAtivosExcluindoAdminEAgendamento();
+        List<Funcionario> funcionarios = repository.findAllByAtivoTrue();
 
         if (!funcionarios.isEmpty()){
             return FuncionarioMapper.toResponseDto(funcionarios);
