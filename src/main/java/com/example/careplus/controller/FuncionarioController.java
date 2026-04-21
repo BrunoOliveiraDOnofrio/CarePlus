@@ -87,6 +87,16 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarios);
     }
 
+    @GetMapping("/buscar")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<FuncionarioResponseDto>> buscar(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String documento) {
+        List<FuncionarioResponseDto> funcionarios = funcionarioService.buscar(nome, email, documento);
+        return ResponseEntity.ok(funcionarios);
+    }
+
     @GetMapping
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<FuncionarioResponseDto>> listarTodos(){

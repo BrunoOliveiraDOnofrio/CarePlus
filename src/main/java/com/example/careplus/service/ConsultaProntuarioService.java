@@ -285,7 +285,7 @@ public class ConsultaProntuarioService {
         consulta.setData(request.getData());
         consulta.setHorarioInicio(request.getHorarioInicio());
         consulta.setHorarioFim(request.getHorarioFim());
-        consulta.setTipo("Retorno");
+        consulta.setTipo(request.getTipo() != null ? request.getTipo() : consulta.getTipo());
         consulta.setConfirmada(consulta.getConfirmada() != null ? consulta.getConfirmada() : Boolean.FALSE);
 
         // atualiza o vínculo com o funcionário

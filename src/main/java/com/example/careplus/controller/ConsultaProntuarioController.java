@@ -48,6 +48,15 @@ public class ConsultaProntuarioController {
         }
     }
 
+    @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ConsultaProntuarioResponseDto> editarConsulta(
+            @PathVariable Long id,
+            @RequestBody ConsultaProntuarioRequest request) {
+        ConsultaProntuarioResponseDto consulta = service.editarConsulta(id, request);
+        return ResponseEntity.ok(consulta);
+    }
+
     @GetMapping
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ConsultaProntuario>> listarConsultas(){
