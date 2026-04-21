@@ -33,7 +33,7 @@ public class ConsultaProntuarioMapper {
                 .map(cf -> FuncionarioMapper.toResponseDto(cf.getFuncionario()))
                 .toList();
 
-        return new ConsultaProntuarioResponseDto(
+        ConsultaProntuarioResponseDto dto = new ConsultaProntuarioResponseDto(
                 entity.getId(),
                 PacienteMapper.toResponseDto(entity.getPaciente()),
                 funcionarios,
@@ -45,6 +45,8 @@ public class ConsultaProntuarioMapper {
                 entity.getPresenca(),
                 entity.getConfirmada()
         );
+        dto.setRecorrenciaId(entity.getRecorrenciaId());
+        return dto;
     }
 
     public static List<ConsultaProntuarioResponseDto> toResponseDto(List<ConsultaProntuario> entity){

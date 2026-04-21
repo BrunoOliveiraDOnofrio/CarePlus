@@ -48,6 +48,13 @@ public class ConsultaProntuarioController {
         }
     }
 
+    @DeleteMapping("/recorrencia/{recorrenciaId}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<?> deletarRecorrencia(@PathVariable String recorrenciaId) {
+        service.removerRecorrencia(recorrenciaId);
+        return ResponseEntity.status(204).build();
+    }
+
     @PutMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<ConsultaProntuarioResponseDto> editarConsulta(

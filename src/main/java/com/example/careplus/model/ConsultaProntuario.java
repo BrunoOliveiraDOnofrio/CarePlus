@@ -49,6 +49,8 @@ public class ConsultaProntuario {
     @Schema(description = "Sim")
     private Boolean confirmada;
 
+    private String recorrenciaId;
+
     @OneToMany(mappedBy = "consultaProntuario", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Material> materiais = new ArrayList<>();
@@ -97,6 +99,9 @@ public class ConsultaProntuario {
 
     public Boolean getConfirmada() { return confirmada; }
     public void setConfirmada(Boolean confirmada) { this.confirmada = confirmada; }
+
+    public String getRecorrenciaId() { return recorrenciaId; }
+    public void setRecorrenciaId(String recorrenciaId) { this.recorrenciaId = recorrenciaId; }
 
     public List<Material> getMateriais() { return materiais; }
     public void setMateriais(List<Material> materiais) { this.materiais = materiais; }

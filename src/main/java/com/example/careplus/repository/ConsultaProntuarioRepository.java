@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaProntuario, Long> {
+
+    List<ConsultaProntuario> findByRecorrenciaId(String recorrenciaId);
 
     @Query("SELECT c FROM ConsultaProntuario c ORDER BY c.data ASC, c.horarioInicio ASC")
     List<ConsultaProntuario> buscarPorData();

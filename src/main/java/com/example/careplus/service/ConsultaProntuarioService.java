@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ConsultaProntuarioService {
@@ -250,6 +251,15 @@ public class ConsultaProntuarioService {
             throw new RuntimeException("Consulta não encontrada");
         }
         consultaProntuarioRepository.deleteById(consultaId);
+    }
+
+    @Transactional
+    public void removerRecorrencia(String recorrenciaId) {
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.findByRecorrenciaId(recorrenciaId);
+        if (consultas.isEmpty()) {
+            throw new ResourceNotFoundException("Recorrência não encontrada");
+        }
+        consultaProntuarioRepository.deleteAll(consultas);
     }
 
     public List<ConsultaProntuario> listarConsultas(){
@@ -836,6 +846,9 @@ public class ConsultaProntuarioService {
             // gera as datas semanalmente entre dataInicio e dataFim (inclusive)
             List<LocalDate> datas = gerarDatasSemanais(item.getDataInicio(), item.getDataFim());
 
+            // atribui um ID de recorrência único para este bloco quando há mais de uma data
+            String recorrenciaId = datas.size() > 1 ? UUID.randomUUID().toString() : null;
+
             // carrega os funcionários do item
             List<Funcionario> funcionariosDoItem = new ArrayList<>();
             for (Long fId : idsFunc) {
@@ -855,6 +868,7 @@ public class ConsultaProntuarioService {
                     consulta.setTipo(item.getTipo());
                     consulta.setPresenca(false);
                     consulta.setConfirmada(false);
+                    consulta.setRecorrenciaId(recorrenciaId);
 
                     ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
 

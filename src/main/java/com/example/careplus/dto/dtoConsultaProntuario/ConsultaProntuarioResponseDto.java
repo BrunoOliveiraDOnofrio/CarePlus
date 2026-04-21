@@ -33,6 +33,9 @@ public class ConsultaProntuarioResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean confirmada;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String recorrenciaId;
+
     public ConsultaProntuarioResponseDto() {}
 
     public ConsultaProntuarioResponseDto(Long id, PacienteResponseDto paciente, List<FuncionarioResponseDto> funcionarios,
@@ -80,4 +83,7 @@ public class ConsultaProntuarioResponseDto {
 
     public Boolean getConfirmada() { return confirmada; }
     public void setConfirmada(Boolean confirmada) { this.confirmada = confirmada; }
+
+    public String getRecorrenciaId() { return recorrenciaId; }
+    public void setRecorrenciaId(String recorrenciaId) { this.recorrenciaId = recorrenciaId; }
 }
