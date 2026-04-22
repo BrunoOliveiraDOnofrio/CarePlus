@@ -17,8 +17,8 @@ public class DetalhePacienteController {
     private final DetalhePacienteService detalhePacienteService;
 
     @GetMapping("/detalhes-completos")
-    public ResponseEntity<DetalhePacienteDTO> buscarDetalhesCompletos(@RequestParam Long id) {
-        DetalhePacienteDTO detalhes = detalhePacienteService.buscarDetalhesCompletoPaciente(id);
+    public ResponseEntity<DetalhePacienteDTO> buscarDetalhesCompletos(@RequestParam Long idPaciente) {
+        DetalhePacienteDTO detalhes = detalhePacienteService.buscarDetalhesCompletoPaciente(idPaciente);
         return ResponseEntity.ok(detalhes);
     }
 

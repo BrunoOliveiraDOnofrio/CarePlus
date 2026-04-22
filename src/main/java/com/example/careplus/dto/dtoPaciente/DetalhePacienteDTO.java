@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -52,10 +51,10 @@ public class DetalhePacienteDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UltimaConsultaDTO {
+        private Long consultaId;
         private LocalDate data;
-        private LocalTime horarioInicio;
-        private LocalTime horarioFim;
-        private List<String> materiais;
+        private String especialidade;
+        private String nomeFuncionario;
     }
 
     @Data

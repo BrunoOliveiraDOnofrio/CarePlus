@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,8 @@ public class DetalhePacienteService {
         Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
+        // Busca pela última consulta realmente realizada (inclui consultas de dias anteriores e consultas de hoje
+        // cujo horário de início já passou). Essa query considera apenas consultas confirmadas.
         List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarUltimaConsultaPorPaciente(pacienteId);
         ConsultaProntuario ultimaConsulta = consultas.isEmpty() ? null : consultas.get(0);
 
@@ -48,31 +51,50 @@ public class DetalhePacienteService {
         dto.setNome(paciente.getNome());
 
         // Ficha Clínica
+        FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorPacienteId(pacienteId);
         DetalhePacienteDTO.FichaClinicaDTO fichaClinicaDTO = new DetalhePacienteDTO.FichaClinicaDTO();
-        fichaClinicaDTO.setId(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getId());
+        fichaClinicaDTO.setId(fichaClinica.getId());
         fichaClinicaDTO.setIdade(Period.between(paciente.getDtNascimento(), LocalDate.now()).getYears());
-        fichaClinicaDTO.setAnamnese(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getAnamnese());
-        fichaClinicaDTO.setDiagnostico(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getDiagnostico());
+        fichaClinicaDTO.setAnamnese(fichaClinica.getAnamnese());
+        fichaClinicaDTO.setDiagnostico(fichaClinica.getDiagnostico());
         fichaClinicaDTO.setPlanoTerapeutico(paciente.getConvenio());
-        fichaClinicaDTO.setObservacoesComportamentais(
-                fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getResumoClinico()
-        );
-        fichaClinicaDTO.setAtendimentoEspecial(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getNivelAgressividade());
-        fichaClinicaDTO.setDesfraldada(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getDesfraldado());
-        fichaClinicaDTO.setHiperfoco(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getHiperfoco());
+        fichaClinicaDTO.setObservacoesComportamentais(fichaClinica.getResumoClinico());
+        fichaClinicaDTO.setAtendimentoEspecial(fichaClinica.getNivelAgressividade());
+        fichaClinicaDTO.setDesfraldada(fichaClinica.getDesfraldado());
+        fichaClinicaDTO.setHiperfoco(fichaClinica.getHiperfoco());
         dto.setFichaClinica(fichaClinicaDTO);
 
         // Última Consulta
         if (ultimaConsulta != null) {
             DetalhePacienteDTO.UltimaConsultaDTO ultimaConsultaDTO = new DetalhePacienteDTO.UltimaConsultaDTO();
+            ultimaConsultaDTO.setConsultaId(ultimaConsulta.getId());
             ultimaConsultaDTO.setData(ultimaConsulta.getData());
-            ultimaConsultaDTO.setHorarioInicio(ultimaConsulta.getHorarioInicio());
-            ultimaConsultaDTO.setHorarioFim(ultimaConsulta.getHorarioFim());
-            ultimaConsultaDTO.setMateriais(ultimaConsultaDTO.getMateriais());
+
+            if (ultimaConsulta.getConsultaFuncionarios() != null && !ultimaConsulta.getConsultaFuncionarios().isEmpty()) {
+                String especialidades = ultimaConsulta.getConsultaFuncionarios().stream()
+                        .map(cf -> cf.getFuncionario())
+                        .filter(f -> f != null && f.getEspecialidade() != null)
+                        .map(f -> f.getEspecialidade().trim())
+                        .filter(s -> !s.isEmpty())
+                        .distinct()
+                        .collect(Collectors.joining(" - "));
+
+                String nomesFuncionarios = ultimaConsulta.getConsultaFuncionarios().stream()
+                        .map(cf -> cf.getFuncionario())
+                        .filter(f -> f != null && f.getNome() != null)
+                        .map(f -> f.getNome().trim())
+                        .filter(s -> !s.isEmpty())
+                        .distinct()
+                        .collect(Collectors.joining(" - "));
+
+                ultimaConsultaDTO.setEspecialidade(especialidades.isBlank() ? null : especialidades);
+                ultimaConsultaDTO.setNomeFuncionario(nomesFuncionarios.isBlank() ? null : nomesFuncionarios);
+            }
+
             dto.setUltimaConsulta(ultimaConsultaDTO);
         }
 
-        List<Medicacao> medicacoes = fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getMedicacoes();
+        List<Medicacao> medicacoes = fichaClinica.getMedicacoes();
         List<DetalhePacienteDTO.MedicacaoDTO> medicacoesDTO = new ArrayList<>();
         if (medicacoes != null) {
             for (Medicacao medicacao : medicacoes) {
@@ -89,7 +111,7 @@ public class DetalhePacienteService {
         dto.setMedicacoes(medicacoesDTO);
 
         // CIDs
-        List<ClassificacaoDoencas> cids = fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getCid();
+        List<ClassificacaoDoencas> cids = fichaClinica.getCid();
         List<DetalhePacienteDTO.CidDTO> cidsDTO = new ArrayList<>();
         if (cids != null) {
             for (ClassificacaoDoencas cid : cids) {
