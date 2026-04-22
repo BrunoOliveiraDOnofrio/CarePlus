@@ -31,7 +31,7 @@ public interface PacienteRepository extends JpaRepository<Paciente,Long> {
     @Query("SELECT p FROM Paciente p WHERE p.cpf LIKE %:cpf% AND p.ativo = true")
     Page<Paciente> buscarPorCpfEAtivoTrue(String cpf, Pageable pageable);
 
-    @Query(value = "SELECT COUNT(p.id) AS qtd_sem_consulta FROM paciente p LEFT JOIN consulta_prontuario c ON p.id = c.paciente_id WHERE c.paciente_id IS NULL AND p.ativo = true", nativeQuery = true)
+    @Query(value = "SELECT COUNT(DISTINCT p.id) FROM paciente p LEFT JOIN consulta_prontuario c ON p.id = c.paciente_id AND c.data >= CURDATE() WHERE p.ativo = true AND c.paciente_id IS NULL", nativeQuery = true)
     Long findPacientesSemConsulta();
 
     @Query("SELECT p.convenio, COUNT(p) FROM Paciente p WHERE p.ativo = true GROUP BY p.convenio ORDER BY COUNT(p) DESC")
