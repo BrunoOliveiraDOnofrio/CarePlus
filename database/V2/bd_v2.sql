@@ -153,9 +153,9 @@ CREATE TABLE fichaclinica (
     paciente_id BIGINT,
     desfraldado TINYINT,
     hiperfoco VARCHAR(255),
-    anamnese VARCHAR(255),
+    anamnese VARCHAR(955),
     diagnostico VARCHAR(255),
-    resumo_clinico VARCHAR(255),
+    resumo_clinico VARCHAR(955),
     nivel_agressividade INT,
     CONSTRAINT fk_prontuario_paciente
         FOREIGN KEY (paciente_id)

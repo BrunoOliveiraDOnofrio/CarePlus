@@ -55,8 +55,7 @@ INSERT INTO paciente (id, nome, email, cpf, telefone, dt_nascimento, convenio, d
 (44,'Fábio Macedo','fabio.macedo@email.com','11122233380','11990000037','1985-09-09','SulAmérica','2026-02-01',NULL,1),
 (45,'Kelly Ramos','kelly.ramos@email.com','11122233381','11990000038','1993-06-06','Bradesco Saúde','2026-02-01',NULL,1),
 (46,'Igor Medeiros','igor.medeiros@email.com','11122233382','11990000039','2000-01-15','Unimed','2026-02-01',NULL,1),
-(47,'Natália Figueiredo','natalia.figueiredo@email.com','11122233383','11990000040','1998-04-04','Amil','2026-02-01',NULL,1);
-
+(47,'Natália Figueiredo','natalia.figueiredo@email.com','11122233383','11990000040','1998-04-04','Amil','2026-02-01',NULL,1),
 (48,'Maria Oliveira','maria.oliveira@email.com','22233344401','11990000041','1992-02-02','Unimed','2026-02-10',NULL,1),
 (49,'Maria Souza','maria.souza@email.com','22233344402','11990000042','1989-05-10','Bradesco Saúde','2026-02-10',NULL,1),
 (50,'Maria Pereira','maria.pereira@email.com','22233344403','11990000043','1995-08-18','Amil','2026-02-10',NULL,1),

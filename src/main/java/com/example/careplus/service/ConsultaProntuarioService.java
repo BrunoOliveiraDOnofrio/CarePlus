@@ -732,23 +732,6 @@ public class ConsultaProntuarioService {
             dadosPaciente.setHiperfocoAtual(fichaClinica.getHiperfoco());
             dadosPaciente.setDiagnostico(fichaClinica.getDiagnostico());
 
-            if (fichaClinica.getCid() != null && !fichaClinica.getCid().isEmpty()) {
-                String cids = fichaClinica.getCid().stream()
-                        .map(ClassificacaoDoencas::getCid)
-                        .reduce((a, b) -> a + ", " + b)
-                        .orElse(null);
-                dadosPaciente.setCid(cids);
-            }
-
-            if (fichaClinica.getMedicacoes() != null && !fichaClinica.getMedicacoes().isEmpty()) {
-                String medicacoes = fichaClinica.getMedicacoes().stream()
-                        .filter(Medicacao::getAtivo)
-                        .map(Medicacao::getNomeMedicacao)
-                        .reduce((a, b) -> a + ", " + b)
-                        .orElse(null);
-                dadosPaciente.setMedicacoes(medicacoes);
-            }
-
             if (fichaClinica.getNivelAgressividade() != null && fichaClinica.getNivelAgressividade() > 0) {
                 dadosPaciente.setAtendimentoEspecial("Lesivo");
             }

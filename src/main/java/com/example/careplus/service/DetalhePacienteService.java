@@ -5,12 +5,14 @@ import com.example.careplus.dto.dtoDetalhes.AtualizarObservacoesComportamentaisD
 import com.example.careplus.dto.dtoDetalhes.AtualizarTratamentoDTO;
 import com.example.careplus.dto.dtoPaciente.DetalhePacienteDTO;
 import com.example.careplus.model.ConsultaProntuario;
-import com.example.careplus.model.Paciente;
 import com.example.careplus.model.FichaClinica;
+import com.example.careplus.model.Medicacao;
+import com.example.careplus.model.Paciente;
 import com.example.careplus.model.Tratamento;
+import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
-import com.example.careplus.repository.PacienteRepository;
 import com.example.careplus.repository.FichaClinicaRepository;
+import com.example.careplus.repository.PacienteRepository;
 import com.example.careplus.repository.TratamentoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,22 +54,16 @@ public class DetalhePacienteService {
         fichaClinicaDTO.setAnamnese(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getAnamnese());
         fichaClinicaDTO.setDiagnostico(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getDiagnostico());
         fichaClinicaDTO.setPlanoTerapeutico(paciente.getConvenio());
+        fichaClinicaDTO.setObservacoesComportamentais(
+                fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getResumoClinico()
+        );
+        fichaClinicaDTO.setAtendimentoEspecial(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getNivelAgressividade());
+        fichaClinicaDTO.setDesfraldada(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getDesfraldado());
+        fichaClinicaDTO.setHiperfoco(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getHiperfoco());
         dto.setFichaClinica(fichaClinicaDTO);
 
-        // Observações Comportamentais
-        dto.setObservacoesComportamentais(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getResumoClinico());
-
+        // Última Consulta
         if (ultimaConsulta != null) {
-            // Observações da Última Consulta
-            DetalhePacienteDTO.ObservacoesDTO observacoes = new DetalhePacienteDTO.ObservacoesDTO();
-            observacoes.setCid(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getCid().getLast().getCid());
-            observacoes.setMedicacao(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getMedicacoes().getLast().getNomeMedicacao());
-            observacoes.setAtendimentoEspecial(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getNivelAgressividade());
-            observacoes.setDesfraldada(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getDesfraldado());
-            observacoes.setHiperfoco(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getHiperfoco());
-            dto.setObservacoes(observacoes);
-
-            // Última Consulta
             DetalhePacienteDTO.UltimaConsultaDTO ultimaConsultaDTO = new DetalhePacienteDTO.UltimaConsultaDTO();
             ultimaConsultaDTO.setData(ultimaConsulta.getData());
             ultimaConsultaDTO.setHorarioInicio(ultimaConsulta.getHorarioInicio());
@@ -75,12 +72,35 @@ public class DetalhePacienteService {
             dto.setUltimaConsulta(ultimaConsultaDTO);
         }
 
-        // Progresso do Tratamento
-        DetalhePacienteDTO.ProgressoTratamentoDTO progresso = new DetalhePacienteDTO.ProgressoTratamentoDTO();
-        progresso.setPercentual(calcularProgresso(paciente));
-        progresso.setTratamentoFeito(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getTratamentos());
-        progresso.setTratamentoAtual(fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getTratamentos().getLast().getTipoDeTratamento());
-        dto.setProgresso(progresso);
+        List<Medicacao> medicacoes = fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getMedicacoes();
+        List<DetalhePacienteDTO.MedicacaoDTO> medicacoesDTO = new ArrayList<>();
+        if (medicacoes != null) {
+            for (Medicacao medicacao : medicacoes) {
+                medicacoesDTO.add(new DetalhePacienteDTO.MedicacaoDTO(
+                        medicacao.getIdMedicacao(),
+                        medicacao.getNomeMedicacao(),
+                        medicacao.getDataInicio(),
+                        medicacao.getDataFim(),
+                        medicacao.getAtivo(),
+                        medicacao.getDataModificacao()
+                ));
+            }
+        }
+        dto.setMedicacoes(medicacoesDTO);
+
+        // CIDs
+        List<ClassificacaoDoencas> cids = fichaClinicaService.buscarFichaClinicaPorId(pacienteId).getCid();
+        List<DetalhePacienteDTO.CidDTO> cidsDTO = new ArrayList<>();
+        if (cids != null) {
+            for (ClassificacaoDoencas cid : cids) {
+                cidsDTO.add(new DetalhePacienteDTO.CidDTO(
+                        cid.getId(),
+                        cid.getCid(),
+                        cid.getDtModificacao()
+                ));
+            }
+        }
+        dto.setCids(cidsDTO);
 
         // Próxima Consulta
         if (!proximasConsultas.isEmpty()) {
@@ -90,10 +110,6 @@ public class DetalhePacienteService {
         return dto;
     }
 
-    private Integer calcularProgresso(Paciente paciente) {
-        // Implementar lógica de cálculo do progresso
-        return 65; // Exemplo
-    }
 
     @Transactional
     public void atualizarFichaClinica(Long pacienteId, AtualizarFichaClinicaDTO dto) {

@@ -1,11 +1,11 @@
 package com.example.careplus.dto.dtoPaciente;
 
-import com.example.careplus.model.Tratamento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,17 +21,14 @@ public class DetalhePacienteDTO {
     // Ficha Clínica
     private FichaClinicaDTO fichaClinica;
 
-    // Observações Comportamentais
-    private String observacoesComportamentais;
+    // CIDs
+    private List<CidDTO> cids;
 
-    // Observações da Última Consulta
-    private ObservacoesDTO observacoes;
+    // Medicações
+    private List<MedicacaoDTO> medicacoes;
 
     // Última Consulta
     private UltimaConsultaDTO ultimaConsulta;
-
-    // Progresso do Tratamento
-    private ProgressoTratamentoDTO progresso;
 
     // Próxima Consulta
     private LocalDate proximaConsulta;
@@ -45,14 +42,7 @@ public class DetalhePacienteDTO {
         private String anamnese;
         private String diagnostico;
         private String planoTerapeutico;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ObservacoesDTO {
-        private String cid;
-        private String medicacao;
+        private String observacoesComportamentais;
         private Integer atendimentoEspecial;
         private Boolean desfraldada;
         private String hiperfoco;
@@ -71,9 +61,21 @@ public class DetalhePacienteDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ProgressoTratamentoDTO {
-        private Integer percentual;
-        private List<Tratamento> tratamentoFeito;
-        private String tratamentoAtual;
+    public static class MedicacaoDTO {
+        private Long idMedicacao;
+        private String nomeMedicacao;
+        private LocalDate dataInicio;
+        private LocalDate dataFim;
+        private Boolean ativo;
+        private LocalDateTime dataModificacao;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CidDTO {
+        private Long id;
+        private String cid;
+        private LocalDate dtModificacao;
     }
 }
