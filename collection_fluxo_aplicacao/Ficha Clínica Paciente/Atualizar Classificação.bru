@@ -1,0 +1,22 @@
+meta {
+  name: Atualizar Classificação
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/classificacao-doencas
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "cid": "214314",
+    "idProntuario": 1
+  }
+}

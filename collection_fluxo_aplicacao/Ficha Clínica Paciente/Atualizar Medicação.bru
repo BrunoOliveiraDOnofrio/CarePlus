@@ -1,0 +1,29 @@
+meta {
+  name: Atualizar Medicação
+  type: http
+  seq: 11
+}
+
+put {
+  url: {{baseUrl}}/medicacoes?id=1
+  body: json
+  auth: bearer
+}
+
+params:query {
+  id: 1
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "nomeMedicacao": "Dipirona",
+    "dataInicio": "2026-04-21",
+    "dataFim": "2026-04-21",
+    "ativo": true,
+    "idProntuario": 1
+  }
+}
