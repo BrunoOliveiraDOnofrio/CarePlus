@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.careplus.exception.MissingFieldException;
 import com.example.careplus.model.Paciente;
+import com.example.careplus.model.FichaClinica;
 import com.example.careplus.repository.PacienteRepository;
+import com.example.careplus.repository.FichaClinicaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +32,15 @@ public class PacienteService {
     private final CuidadorService cuidadorService;
     private final EnderecoService enderecoService;
     private final S3Service s3Service;
+    private final FichaClinicaRepository fichaClinicaRepository;
 
-    public PacienteService(PacienteRepository repositoryPaciente, ResponsavelService responsavelService, CuidadorService cuidadorService, EnderecoService enderecoService, S3Service s3Service) {
+    public PacienteService(PacienteRepository repositoryPaciente, ResponsavelService responsavelService, CuidadorService cuidadorService, EnderecoService enderecoService, S3Service s3Service, FichaClinicaRepository fichaClinicaRepository) {
         this.repositoryPaciente = repositoryPaciente;
         this.responsavelService = responsavelService;
         this.cuidadorService = cuidadorService;
         this.enderecoService = enderecoService;
         this.s3Service = s3Service;
+        this.fichaClinicaRepository = fichaClinicaRepository;
     }
 
     public List<PacienteResponseDto> listarTodos(){
@@ -87,7 +91,21 @@ public class PacienteService {
             }
         }
 
-        return PacienteMapper.toResponseDto(repositoryPaciente.save(entity));
+        Paciente pacienteSalvo = repositoryPaciente.save(entity);
+        criarFichaClinicaSeNecessario(pacienteSalvo);
+        return PacienteMapper.toResponseDto(pacienteSalvo);
+    }
+
+    private void criarFichaClinicaSeNecessario(Paciente paciente) {
+        if (paciente == null || paciente.getId() == null) {
+            return;
+        }
+        if (fichaClinicaRepository.findByPacienteId(paciente.getId()).isPresent()) {
+            return;
+        }
+        FichaClinica fichaClinica = new FichaClinica();
+        fichaClinica.setPaciente(paciente);
+        fichaClinicaRepository.save(fichaClinica);
     }
 
     // OK

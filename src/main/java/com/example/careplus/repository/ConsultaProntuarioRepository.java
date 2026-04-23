@@ -53,21 +53,12 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
 
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId " +
             "AND (c.data < CURRENT_DATE OR (c.data = CURRENT_DATE AND c.horarioInicio < CURRENT_TIME)) " +
-            "AND c.observacoesComportamentais IS NOT NULL " +
-            "AND c.observacoesComportamentais != '' " +
-            "AND c.presenca = true " +
-            "AND c.confirmada = true " +
             "ORDER BY c.data DESC, c.horarioInicio DESC")
     List<ConsultaProntuario> buscarUltimaConsultaPorPaciente(@Param("pacienteId") Long pacienteId);
 
-    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf " +
-            "WHERE c.paciente.id = :pacienteId " +
+    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE c.paciente.id = :pacienteId " +
             "AND cf.funcionario.id = :funcionarioId " +
             "AND (c.data < CURRENT_DATE OR (c.data = CURRENT_DATE AND c.horarioInicio < CURRENT_TIME)) " +
-            "AND c.observacoesComportamentais IS NOT NULL " +
-            "AND c.observacoesComportamentais != '' " +
-            "AND c.presenca = true " +
-            "AND c.confirmada = true " +
             "ORDER BY c.data DESC, c.horarioInicio DESC")
     List<ConsultaProntuario> buscarUltimaConsultaPorPacienteEFuncionario(
             @Param("pacienteId") Long pacienteId,
@@ -90,4 +81,12 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
 
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId AND (c.data > CURRENT_DATE OR (c.data = CURRENT_DATE AND c.horarioInicio > CURRENT_TIME)) AND c.confirmada = true ORDER BY c.data ASC, c.horarioInicio ASC")
     List<ConsultaProntuario> buscarProximaConsultaConfirmadaPorPaciente(@Param("pacienteId") Long pacienteId);
+
+    @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE c.paciente.id = :pacienteId " +
+            "AND cf.funcionario.id = :funcionarioId " +
+            "AND (c.data > CURRENT_DATE OR (c.data = CURRENT_DATE AND c.horarioInicio > CURRENT_TIME)) " +
+            "ORDER BY c.data ASC, c.horarioInicio ASC")
+    List<ConsultaProntuario> buscarProximaConsultaPorPacienteEFuncionario(
+            @Param("pacienteId") Long pacienteId,
+            @Param("funcionarioId") Long funcionarioId);
 }

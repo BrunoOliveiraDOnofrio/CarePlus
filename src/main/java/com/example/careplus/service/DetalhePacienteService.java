@@ -4,6 +4,7 @@ import com.example.careplus.dto.dtoDetalhes.AtualizarFichaClinicaDTO;
 import com.example.careplus.dto.dtoDetalhes.AtualizarObservacoesComportamentaisDTO;
 import com.example.careplus.dto.dtoDetalhes.AtualizarTratamentoDTO;
 import com.example.careplus.dto.dtoPaciente.DetalhePacienteDTO;
+import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Medicacao;
@@ -35,23 +36,23 @@ public class DetalhePacienteService {
     private final FichaClinicaService fichaClinicaService;
     private final TratamentoRepository tratamentoRepository;
 
-    public DetalhePacienteDTO buscarDetalhesCompletoPaciente(Long pacienteId) {
+    public DetalhePacienteDTO buscarDetalhesCompletoPaciente(Long pacienteId, Long funcionarioId) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        // Busca pela última consulta realmente realizada (inclui consultas de dias anteriores e consultas de hoje
-        // cujo horário de início já passou). Essa query considera apenas consultas confirmadas.
-        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarUltimaConsultaPorPaciente(pacienteId);
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository
+                .buscarUltimaConsultaPorPacienteEFuncionario(pacienteId, funcionarioId);
         ConsultaProntuario ultimaConsulta = consultas.isEmpty() ? null : consultas.get(0);
 
-        List<ConsultaProntuario> proximasConsultas = consultaProntuarioRepository.buscarProximaConsultaPorPaciente(pacienteId);
+        List<ConsultaProntuario> proximasConsultas = consultaProntuarioRepository
+                .buscarProximaConsultaPorPacienteEFuncionario(pacienteId, funcionarioId);
 
         DetalhePacienteDTO dto = new DetalhePacienteDTO();
         dto.setPacienteId(paciente.getId());
         dto.setNome(paciente.getNome());
 
         // Ficha Clínica
-        FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorPacienteId(pacienteId);
+        FichaClinica fichaClinica = resolverFichaClinica(paciente);
         DetalhePacienteDTO.FichaClinicaDTO fichaClinicaDTO = new DetalhePacienteDTO.FichaClinicaDTO();
         fichaClinicaDTO.setId(fichaClinica.getId());
         fichaClinicaDTO.setIdade(Period.between(paciente.getDtNascimento(), LocalDate.now()).getYears());
@@ -132,6 +133,15 @@ public class DetalhePacienteService {
         return dto;
     }
 
+    private FichaClinica resolverFichaClinica(Paciente paciente) {
+        try {
+            return fichaClinicaService.buscarFichaClinicaPorPacienteId(paciente.getId());
+        } catch (ResourceNotFoundException ex) {
+            FichaClinica fichaClinica = new FichaClinica();
+            fichaClinica.setPaciente(paciente);
+            return fichaClinicaRepository.save(fichaClinica);
+        }
+    }
 
     @Transactional
     public void atualizarFichaClinica(Long pacienteId, AtualizarFichaClinicaDTO dto) {
