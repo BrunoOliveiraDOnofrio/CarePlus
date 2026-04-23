@@ -9,6 +9,8 @@ import com.example.careplus.model.Responsavel;
 import com.example.careplus.repository.EnderecoRepository;
 import com.example.careplus.repository.ResponsavelRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,6 +62,10 @@ public class ResponsavelService {
     public List<Responsavel> listar(){
         List<Responsavel> responsaveis = responsavelRepository.findAll();
         return responsaveis;
+    }
+
+    public Page<Responsavel> listarPaginado(Pageable pageable){
+        return responsavelRepository.findAll(pageable);
     }
 
     public Responsavel buscarPorEmail(String email){
