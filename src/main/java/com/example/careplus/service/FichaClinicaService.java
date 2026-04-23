@@ -75,6 +75,14 @@ public class FichaClinicaService {
 
     }
 
+    public FichaClinica buscarFichaClinicaPorPacienteId(Long pacienteId) {
+        Optional<FichaClinica> fichaClinicaOpt = fichaClinicaRepository.findByPacienteId(pacienteId);
+        if (fichaClinicaOpt.isPresent()) {
+            return fichaClinicaOpt.get();
+        }
+        throw new ResourceNotFoundException("Paciente não encontrado!");
+    }
+
     public FichaClinica buscarFichaClinicaPorNome(String nome){
         Optional<FichaClinica> fichaClinica = fichaClinicaRepository.findByPacienteNomeContainsIgnoreCase(nome);
 
@@ -126,4 +134,3 @@ public class FichaClinicaService {
     }
 
 }
-
