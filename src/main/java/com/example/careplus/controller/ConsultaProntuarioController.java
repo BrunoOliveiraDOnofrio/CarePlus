@@ -7,6 +7,9 @@ import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.service.ConsultaProntuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -206,4 +209,17 @@ public class ConsultaProntuarioController {
         return ResponseEntity.ok(detalhes);
     }
 
+    @GetMapping("/ultimas-consultas")
+    public ResponseEntity<Page<ConsultaProntuarioResponseDto>> listarUltimasConsultas(
+            @RequestParam Long idPaciente,
+            @RequestParam(defaultValue = "0") Integer pagina,
+            @RequestParam Long idFuncionario
+    ) {
+        Pageable pageable = PageRequest.of(pagina, 8);
+
+        Page<ConsultaProntuarioResponseDto> consultas = service
+                .listarUltimasConsultas(idPaciente, idFuncionario, pageable);
+
+        return ResponseEntity.ok(consultas);
+    }
 }

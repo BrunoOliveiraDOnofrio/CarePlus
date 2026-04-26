@@ -9,7 +9,9 @@ import com.example.careplus.dto.dtoPaciente.PacienteResponseDto;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.exception.UserAlreadyExistsException;
+import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Responsavel;
+import com.example.careplus.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 
 import com.example.careplus.exception.MissingFieldException;
@@ -33,14 +35,16 @@ public class PacienteService {
     private final EnderecoService enderecoService;
     private final S3Service s3Service;
     private final FichaClinicaRepository fichaClinicaRepository;
+    private final FuncionarioRepository repositoryFuncionario;
 
-    public PacienteService(PacienteRepository repositoryPaciente, ResponsavelService responsavelService, CuidadorService cuidadorService, EnderecoService enderecoService, S3Service s3Service, FichaClinicaRepository fichaClinicaRepository) {
+    public PacienteService(PacienteRepository repositoryPaciente, ResponsavelService responsavelService, CuidadorService cuidadorService, EnderecoService enderecoService, S3Service s3Service, FichaClinicaRepository fichaClinicaRepository, FuncionarioRepository repositoryFuncionario) {
         this.repositoryPaciente = repositoryPaciente;
         this.responsavelService = responsavelService;
         this.cuidadorService = cuidadorService;
         this.enderecoService = enderecoService;
         this.s3Service = s3Service;
         this.fichaClinicaRepository = fichaClinicaRepository;
+        this.repositoryFuncionario = repositoryFuncionario;
     }
 
     public List<PacienteResponseDto> listarTodos(){
@@ -51,6 +55,24 @@ public class PacienteService {
 
     public Page<PacienteResponseDto> listarTodosPaginado(Pageable pageable) {
         return repositoryPaciente.findAllByAtivoTrue(pageable)
+                .map(PacienteMapper::toResponseDto);
+    }
+
+    public Page<PacienteResponseDto> listarTodosPaginadoPorFuncionario(Pageable pageable, Long idFuncionario) {
+
+        Funcionario funcionario = repositoryFuncionario.findById(idFuncionario)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+
+        String especialidade = funcionario.getEspecialidade();
+
+        if ("Admin".equalsIgnoreCase(especialidade) ||
+                "Agendamento".equalsIgnoreCase(especialidade)) {
+
+            return repositoryPaciente.findAllByAtivoTrue(pageable)
+                    .map(PacienteMapper::toResponseDto);
+        }
+
+        return repositoryPaciente.findPacientesByFuncionario(pageable, idFuncionario)
                 .map(PacienteMapper::toResponseDto);
     }
 

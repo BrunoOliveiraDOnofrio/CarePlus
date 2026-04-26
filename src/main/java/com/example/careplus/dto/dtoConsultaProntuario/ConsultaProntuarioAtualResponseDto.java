@@ -12,7 +12,7 @@ public class ConsultaProntuarioAtualResponseDto {
     private String tipo;
     private String especialidade;
     private String nomeProfissional;
-    private String tratamentoAtual;
+    private String observacoesComportamentais;
 
     private DadosPaciente dadosPaciente;
 
@@ -77,12 +77,12 @@ public class ConsultaProntuarioAtualResponseDto {
         this.nomeProfissional = nomeProfissional;
     }
 
-    public String getTratamentoAtual() {
-        return tratamentoAtual;
+    public String getObservacoesComportamentais() {
+        return observacoesComportamentais;
     }
 
-    public void setTratamentoAtual(String tratamentoAtual) {
-        this.tratamentoAtual = tratamentoAtual;
+    public void setObservacoesComportamentais(String observacoesComportamentais) {
+        this.observacoesComportamentais = observacoesComportamentais;
     }
 
     public DadosPaciente getDadosPaciente() {
@@ -200,7 +200,7 @@ public class ConsultaProntuarioAtualResponseDto {
     public static class UltimaConsulta {
         private Long consultaId;
         private LocalDate data;
-        private String tratamento;
+        private String nomeFuncionarioUltimaConsulta;
 
         public UltimaConsulta() {
         }
@@ -221,12 +221,12 @@ public class ConsultaProntuarioAtualResponseDto {
             this.data = data;
         }
 
-        public String getTratamento() {
-            return tratamento;
+        public String getNomeFuncionarioUltimaConsulta() {
+            return nomeFuncionarioUltimaConsulta;
         }
 
-        public void setTratamento(String tratamento) {
-            this.tratamento = tratamento;
+        public void setNomeFuncionarioUltimaConsulta(String nomeFuncionarioUltimaConsulta) {
+            this.nomeFuncionarioUltimaConsulta = nomeFuncionarioUltimaConsulta;
         }
     }
 }

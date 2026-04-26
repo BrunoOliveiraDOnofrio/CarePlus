@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/pacientes/todos-pacientes
+  url: http://localhost:8080/pacientes/todos-pacientes-funcionario?pagina=0&idFuncionario=5
   body: none
   auth: bearer
+}
+
+params:query {
+  pagina: 0
+  idFuncionario: 5
 }
 
 auth:bearer {

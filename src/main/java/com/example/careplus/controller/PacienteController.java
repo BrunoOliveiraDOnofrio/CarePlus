@@ -125,6 +125,17 @@ public class PacienteController {
         return ResponseEntity.status(200).body(pacientes);
     }
 
+    @GetMapping("/todos-pacientes-funcionario")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Page<PacienteResponseDto>> listarTodosPacientesPaginado(
+            @RequestParam(defaultValue = "0") Integer pagina,
+            @RequestParam Long idFuncionario) {
+        Pageable pageable = PageRequest.of(pagina, 8);
+        Page<PacienteResponseDto> pacientes = service.listarTodosPaginadoPorFuncionario(pageable, idFuncionario);
+        return ResponseEntity.status(200).body(pacientes);
+    }
+
+
     @PostMapping(path = "/formCadastro", consumes = "multipart/form-data")
     public ResponseEntity<PacienteResponseDto> teste(
             @ModelAttribute TudoPacienteDto dto

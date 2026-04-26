@@ -1,0 +1,26 @@
+meta {
+  name: Listar Consultas Antigas
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/consultas-prontuario/ultimas-consultas?idPaciente=10&pagina=0&idFuncionario=5
+  body: none
+  auth: bearer
+}
+
+params:query {
+  idPaciente: 10
+  pagina: 0
+  idFuncionario: 5
+}
+
+auth:bearer {
+  token: {{tokenJWT}}
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

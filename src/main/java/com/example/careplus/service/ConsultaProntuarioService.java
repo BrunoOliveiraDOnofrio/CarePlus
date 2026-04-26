@@ -11,11 +11,9 @@ import com.example.careplus.dto.messaging.ProfissionalMensagemDto;
 import com.example.careplus.messaging.ConsultaCriadaRabbitProducer;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.ConsultaProntuario;
-import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.model.Cuidador;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Material;
-import com.example.careplus.model.Medicacao;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Tratamento;
@@ -29,6 +27,8 @@ import com.example.careplus.repository.FichaClinicaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasRequestDto;
@@ -703,15 +703,8 @@ public class ConsultaProntuarioService {
         response.setTipo(consulta.getTipo());
         response.setEspecialidade(funcionario.getEspecialidade());
         response.setNomeProfissional(funcionario.getNome());
+        response.setObservacoesComportamentais(consulta.getObservacoesComportamentais());
 
-        if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
-            String tratamentoAtual = fichaClinica.getTratamentos().stream()
-                    .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
-                    .map(Tratamento::getTipoDeTratamento)
-                    .findFirst()
-                    .orElse(null);
-            response.setTratamentoAtual(tratamentoAtual);
-        }
 
         ConsultaProntuarioAtualResponseDto.DadosPaciente dadosPaciente = new ConsultaProntuarioAtualResponseDto.DadosPaciente();
         dadosPaciente.setPacienteId(paciente.getId());
@@ -745,15 +738,8 @@ public class ConsultaProntuarioService {
             ConsultaProntuarioAtualResponseDto.UltimaConsulta ultimaConsulta = new ConsultaProntuarioAtualResponseDto.UltimaConsulta();
             ultimaConsulta.setConsultaId(ultimaConsultaEntity.getId());
             ultimaConsulta.setData(ultimaConsultaEntity.getData());
+            ultimaConsulta.setNomeFuncionarioUltimaConsulta(ultimaConsultaEntity.getFuncionario().getNome());
 
-            if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
-                String tratamentoUltima = fichaClinica.getTratamentos().stream()
-                        .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
-                        .map(Tratamento::getTipoDeTratamento)
-                        .findFirst()
-                        .orElse(null);
-                ultimaConsulta.setTratamento(tratamentoUltima);
-            }
 
             response.setUltimaConsulta(ultimaConsulta);
         }
@@ -898,6 +884,16 @@ public class ConsultaProntuarioService {
             cursor = cursor.plusWeeks(1);
         }
         return datas;
+    }
+
+    public Page<ConsultaProntuarioResponseDto> listarUltimasConsultas(
+            Long idPaciente,
+            Long idFuncionario,
+            Pageable pageable
+    ) {
+        return consultaProntuarioRepository
+                .findUltimasConsultas(idPaciente, idFuncionario, pageable)
+                .map(ConsultaProntuarioMapper::toResponseDto);
     }
 
 }
