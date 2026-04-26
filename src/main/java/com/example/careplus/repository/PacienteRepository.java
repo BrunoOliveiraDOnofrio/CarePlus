@@ -49,4 +49,6 @@ public interface PacienteRepository extends JpaRepository<Paciente,Long> {
       AND cf.funcionario.id = :idFuncionario
     """)
     Page<Paciente> findPacientesByFuncionario(Pageable pageable, Long idFuncionario);
+
+    Page<Paciente> findAllByAtivoFalse(Pageable pageable);
 }

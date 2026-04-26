@@ -43,6 +43,15 @@ public class ResponsavelController {
         return ResponseEntity.status(200).body(responsaveis);
     }
 
+    @GetMapping("/buscar")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<Responsavel>> buscar(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String cpf) {
+        return ResponseEntity.ok(responsavelService.buscar(nome, email, cpf));
+    }
+
     @GetMapping("/por-email")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Responsavel> buscarPorEmail(@RequestParam String email){

@@ -125,6 +125,22 @@ public class PacienteController {
         return ResponseEntity.status(200).body(pacientes);
     }
 
+    @GetMapping("/inativos")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Page<PacienteResponseDto>> listarPacientesInativosPaginado(
+            @RequestParam(defaultValue = "0") Integer pagina) {
+        Pageable pageable = PageRequest.of(pagina, 8);
+        Page<PacienteResponseDto> pacientes = service.listarInativosPaginado(pageable);
+        return ResponseEntity.status(200).body(pacientes);
+    }
+
+    @PatchMapping("/reativar")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> reativarPaciente(@RequestParam Long id) {
+        service.reativar(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/todos-pacientes-funcionario")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Page<PacienteResponseDto>> listarTodosPacientesPaginado(

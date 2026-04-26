@@ -146,6 +146,22 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarios);
     }
 
+    @GetMapping("/inativos")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Page<FuncionarioResponseDto>> listarFuncionariosInativosPaginado(
+            @RequestParam(defaultValue = "0") Integer pagina) {
+        Pageable pageable = PageRequest.of(pagina, 8);
+        Page<FuncionarioResponseDto> funcionarios = funcionarioService.listarInativosPaginado(pageable);
+        return ResponseEntity.status(200).body(funcionarios);
+    }
+
+    @PatchMapping("/reativar")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> reativarFuncionario(@RequestParam Long id) {
+        funcionarioService.reativar(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/supervisores")@SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<FuncionarioResponseDto>> listarSupervisores(){
         List<FuncionarioResponseDto> supervisores = funcionarioService.listarSupervisores();

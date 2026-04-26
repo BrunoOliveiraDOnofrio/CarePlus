@@ -32,4 +32,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
     @Query("SELECT f FROM Funcionario f WHERE f.documento LIKE %:cpf% AND f.ativo = true")
     Page<Funcionario> buscarPorCpf(String cpf,  Pageable pageable);
+
+    Page<Funcionario> findAllByAtivoFalse(Pageable pageable);
 }

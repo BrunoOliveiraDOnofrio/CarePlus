@@ -215,6 +215,18 @@ public class FuncionarioService {
                 .map(FuncionarioMapper::toResponseDto);
     }
 
+    public Page<FuncionarioResponseDto> listarInativosPaginado(Pageable pageable) {
+        return repository.findAllByAtivoFalse(pageable)
+                .map(FuncionarioMapper::toResponseDto);
+    }
+
+    public void reativar(Long id) {
+        Funcionario funcionario = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado"));
+        funcionario.setAtivo(true);
+        repository.save(funcionario);
+    }
+
     public List<String> listarEspecialidades(){
 
         List<Funcionario> funcionarios = repository.findAllByAtivoTrue();

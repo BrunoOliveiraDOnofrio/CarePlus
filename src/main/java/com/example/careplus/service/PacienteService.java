@@ -58,6 +58,18 @@ public class PacienteService {
                 .map(PacienteMapper::toResponseDto);
     }
 
+    public Page<PacienteResponseDto> listarInativosPaginado(Pageable pageable) {
+        return repositoryPaciente.findAllByAtivoFalse(pageable)
+                .map(PacienteMapper::toResponseDto);
+    }
+
+    public void reativar(Long id) {
+        Paciente paciente = repositoryPaciente.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+        paciente.setAtivo(true);
+        repositoryPaciente.save(paciente);
+    }
+
     public Page<PacienteResponseDto> listarTodosPaginadoPorFuncionario(Pageable pageable, Long idFuncionario) {
 
         Funcionario funcionario = repositoryFuncionario.findById(idFuncionario)

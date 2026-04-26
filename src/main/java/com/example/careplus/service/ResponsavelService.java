@@ -116,6 +116,19 @@ public class ResponsavelService {
         return selecionado;
     }
 
+    public List<Responsavel> buscar(String nome, String email, String cpf) {
+        if (cpf != null && !cpf.isBlank()) {
+            return responsavelRepository.findByCpfContaining(cpf);
+        }
+        if (email != null && !email.isBlank()) {
+            return responsavelRepository.findByEmailContainingIgnoreCase(email);
+        }
+        if (nome != null && !nome.isBlank()) {
+            return responsavelRepository.findByNomeContainingIgnoreCase(nome);
+        }
+        return List.of();
+    }
+
     public void deletar(Long id){
         boolean existe = responsavelRepository.existsById(id);
         if (!existe) {
