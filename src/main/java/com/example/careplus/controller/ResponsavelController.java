@@ -43,6 +43,25 @@ public class ResponsavelController {
         return ResponseEntity.status(200).body(responsaveis);
     }
 
+    @GetMapping("/inativos")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Page<Responsavel>> listarInativos(
+            @RequestParam(defaultValue = "0") Integer pagina){
+        Pageable pageable = PageRequest.of(pagina, 8);
+        return ResponseEntity.ok(responsavelService.listarInativosPaginado(pageable));
+    }
+
+    @PatchMapping("/reativar")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> reativar(@RequestParam Long id){
+        try {
+            responsavelService.reativar(id);
+            return ResponseEntity.status(204).build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
     @GetMapping("/buscar")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<Responsavel>> buscar(

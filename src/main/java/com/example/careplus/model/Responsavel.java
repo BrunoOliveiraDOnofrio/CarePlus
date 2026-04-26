@@ -21,6 +21,9 @@ public class Responsavel {
     @JoinColumn(name = "id_endereco", referencedColumnName = "id")
     private Endereco endereco;
 
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo = true;
+
     public Long getId() {
         return id;
     }
@@ -75,6 +78,14 @@ public class Responsavel {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 
 }

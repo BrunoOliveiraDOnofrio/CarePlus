@@ -50,6 +50,7 @@ CREATE TABLE responsavel (
     dt_nascimento DATE,
     cpf VARCHAR(255),
     id_endereco INT,
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
     CONSTRAINT fk_responsavel_endereco
         FOREIGN KEY (id_endereco)
         REFERENCES endereco(id)

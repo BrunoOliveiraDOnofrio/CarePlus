@@ -65,7 +65,11 @@ public class ResponsavelService {
     }
 
     public Page<Responsavel> listarPaginado(Pageable pageable){
-        return responsavelRepository.findAll(pageable);
+        return responsavelRepository.findAllByAtivoTrue(pageable);
+    }
+
+    public Page<Responsavel> listarInativosPaginado(Pageable pageable){
+        return responsavelRepository.findAllByAtivoFalse(pageable);
     }
 
     public Responsavel buscarPorEmail(String email){
@@ -130,11 +134,17 @@ public class ResponsavelService {
     }
 
     public void deletar(Long id){
-        boolean existe = responsavelRepository.existsById(id);
-        if (!existe) {
-            throw new NoSuchElementException();
-        }
-        responsavelRepository.deleteById(id);
+        Responsavel responsavel = responsavelRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
+        responsavel.setAtivo(false);
+        responsavelRepository.save(responsavel);
+    }
+
+    public void reativar(Long id){
+        Responsavel responsavel = responsavelRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
+        responsavel.setAtivo(true);
+        responsavelRepository.save(responsavel);
     }
     // CRUD SIMPLES
     // "ORDENAÇÃO" DE RESPONSÁVEL
