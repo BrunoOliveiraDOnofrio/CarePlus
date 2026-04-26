@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "paciente")
@@ -38,7 +40,18 @@ public class Paciente {
     @Column(name = "ativo", nullable = false)
     private Boolean ativo = true;
 
+    @OneToMany(mappedBy = "paciente")
+    private List<ConsultaProntuario> consultas = new ArrayList<>();
+
     public Paciente() {
+    }
+
+    public List<ConsultaProntuario> getConsultas() {
+        return consultas;
+    }
+
+    public void setConsultas(List<ConsultaProntuario> consultas) {
+        this.consultas = consultas;
     }
 
     public Long getId() {

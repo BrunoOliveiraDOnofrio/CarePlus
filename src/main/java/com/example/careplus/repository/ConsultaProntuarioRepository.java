@@ -1,6 +1,8 @@
 package com.example.careplus.repository;
 
 import com.example.careplus.model.ConsultaProntuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -89,4 +91,19 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
     List<ConsultaProntuario> buscarProximaConsultaPorPacienteEFuncionario(
             @Param("pacienteId") Long pacienteId,
             @Param("funcionarioId") Long funcionarioId);
+
+    @Query("""
+    SELECT c
+    FROM ConsultaProntuario c
+    JOIN c.consultaFuncionarios cf
+    WHERE c.paciente.id = :idPaciente
+      AND cf.funcionario.id = :idFuncionario
+      AND c.data <= CURRENT_DATE
+    ORDER BY c.data DESC, c.horarioInicio DESC
+    """)
+    Page<ConsultaProntuario> findUltimasConsultas(
+            Long idPaciente,
+            Long idFuncionario,
+            Pageable pageable
+    );
 }

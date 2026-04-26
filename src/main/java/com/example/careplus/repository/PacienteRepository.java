@@ -39,4 +39,14 @@ public interface PacienteRepository extends JpaRepository<Paciente,Long> {
 
     @Query("SELECT COUNT(DISTINCT p.id) FROM Paciente p JOIN ConsultaProntuario c ON p.id = c.paciente.id WHERE p.ativo = true AND c.data >= CURRENT_DATE")
     Long countPacientesAtivosComConsultaMarcada();
+
+    @Query("""
+    SELECT DISTINCT p
+    FROM Paciente p
+    JOIN p.consultas c
+    JOIN c.consultaFuncionarios cf
+    WHERE p.ativo = true
+      AND cf.funcionario.id = :idFuncionario
+    """)
+    Page<Paciente> findPacientesByFuncionario(Pageable pageable, Long idFuncionario);
 }
