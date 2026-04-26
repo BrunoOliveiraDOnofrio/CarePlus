@@ -4,6 +4,9 @@ import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.service.ResponsavelService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -33,13 +36,11 @@ public class ResponsavelController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<Responsavel>> listar(){
-        try {
-            return ResponseEntity.status(200).body(responsavelService.listar());
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(404).build();
-        }
-
+    public ResponseEntity<Page<Responsavel>> listar(
+            @RequestParam(defaultValue = "0") Integer pagina){
+        Pageable pageable = PageRequest.of(pagina, 8);
+        Page<Responsavel> responsaveis = responsavelService.listarPaginado(pageable);
+        return ResponseEntity.status(200).body(responsaveis);
     }
 
     @GetMapping("/por-email")
