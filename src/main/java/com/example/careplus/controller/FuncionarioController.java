@@ -121,8 +121,8 @@ public class FuncionarioController {
 
     @GetMapping("/nomesPorEspecialidade")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<FuncionarioResponseDto>> listarNomesPorEspecialidade(@RequestBody FuncionarioResquestDto especialidade){
-        List<FuncionarioResponseDto> nomes = funcionarioService.nomesFuncionariosPorEspecialidade(especialidade.getEspecialidade());
+    public ResponseEntity<List<FuncionarioResponseDto>> listarNomesPorEspecialidade(@RequestParam String especialidade){
+        List<FuncionarioResponseDto> nomes = funcionarioService.nomesFuncionariosPorEspecialidade(especialidade);
         return ResponseEntity.status(200).body(nomes);
     }
 
