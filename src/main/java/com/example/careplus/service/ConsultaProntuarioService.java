@@ -577,7 +577,11 @@ public class ConsultaProntuarioService {
     }
 
     public List<ConsultaProntuarioResponseDto> listarAgendaSemanal(Long id, String tipo, LocalDate dataReferencia) {
-        LocalDate inicioDaSemana = dataReferencia.minusDays(dataReferencia.getDayOfWeek().getValue() - 1);
+        // ISO: segunda=1 … sábado=6, domingo=7. Domingo deve avançar para a próxima segunda.
+        int dow = dataReferencia.getDayOfWeek().getValue();
+        LocalDate inicioDaSemana = (dow == 7)
+                ? dataReferencia.plusDays(1)
+                : dataReferencia.minusDays(dow - 1);
         LocalDate fimDaSemana = inicioDaSemana.plusDays(4);
 
         List<ConsultaProntuario> consultas = new ArrayList<>();
@@ -588,20 +592,12 @@ public class ConsultaProntuarioService {
                     inicioDaSemana,
                     fimDaSemana
             );
-
-            if (consultas.isEmpty()) {
-                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
-            }
         } else if ("paciente".equalsIgnoreCase(tipo)){
             consultas = consultaProntuarioRepository.buscarConsultasPorPacienteEPeriodo(
                     id,
                     inicioDaSemana,
                     fimDaSemana
             );
-
-            if (consultas.isEmpty()) {
-                throw new ResourceNotFoundException("Nenhuma consulta encontrada para este período!");
-            }
         }
 
         return ConsultaProntuarioMapper.toResponseDto(consultas);
