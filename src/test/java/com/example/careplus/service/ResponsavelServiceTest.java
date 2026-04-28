@@ -47,7 +47,6 @@ class ResponsavelServiceTest {
         when(dto.getDtNascimento()).thenReturn(LocalDate.of(1999, 1, 1));
         when(dto.getEndereco()).thenReturn(null);
 
-        when(repository.existsByEmail(anyString())).thenReturn(false);
         when(repository.existsByCpf(anyString())).thenReturn(false);
 
         Responsavel salvo = new Responsavel();
@@ -80,7 +79,6 @@ class ResponsavelServiceTest {
         when(dto.getDtNascimento()).thenReturn(LocalDate.of(1999, 1, 1));
         when(dto.getEndereco()).thenReturn(enderecoDto);
 
-        when(repository.existsByEmail(anyString())).thenReturn(false);
         when(repository.existsByCpf(anyString())).thenReturn(false);
 
         Endereco enderecoSalvo = new Endereco();
@@ -234,22 +232,26 @@ class ResponsavelServiceTest {
     @Test
     @DisplayName("Deletar por id inexistente lança NoSuchElementException")
     void deletarPorIdInexistente() {
-        when(repository.existsById(100L)).thenReturn(false);
+        when(repository.findById(100L)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> service.deletar(100L));
 
-        verify(repository, times(1)).existsById(100L);
-        verify(repository, never()).deleteById(anyLong());
+        verify(repository, times(1)).findById(100L);
+        verify(repository, never()).save(any(Responsavel.class));
     }
 
     @Test
-    @DisplayName("Deletar por id existente remove o prontuario")
+    @DisplayName("Deletar por id existente inativa o responsavel")
     void deletarPorIdExistente() {
-        when(repository.existsById(2L)).thenReturn(true);
+        Responsavel responsavel = new Responsavel();
+        responsavel.setId(2L);
+        responsavel.setAtivo(true);
+        when(repository.findById(2L)).thenReturn(Optional.of(responsavel));
 
         service.deletar(2L);
 
-        verify(repository, times(1)).existsById(2L);
-        verify(repository, times(1)).deleteById(2L);
+        verify(repository, times(1)).findById(2L);
+        verify(repository, times(1)).save(responsavel);
+        assertFalse(responsavel.getAtivo());
     }
 
 }

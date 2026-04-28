@@ -47,7 +47,7 @@ class FuncionarioServiceTest {
         funcionario2.setCargo("Analista");
 
         List<Funcionario> funcionarios = List.of(funcionario1, funcionario2);
-        Mockito.when(funcionarioRepository.findAll()).thenReturn(funcionarios);
+        Mockito.when(funcionarioRepository.findAllByAtivoTrue()).thenReturn(funcionarios);
 
         List<FuncionarioResponseDto> recebido = funcionarioService.listarTodos();
 
@@ -106,7 +106,7 @@ class FuncionarioServiceTest {
         funcionario2.setEmail("maria.oliveira@example.com");
         funcionario2.setCargo("Pscicologa");
 
-        Mockito.when(funcionarioRepository.findByEmailContainingIgnoreCase("joao.silva@example.com")).thenReturn(List.of(funcionario1));
+        Mockito.when(funcionarioRepository.findByEmailContainingIgnoreCaseAndAtivoTrue("joao.silva@example.com")).thenReturn(List.of(funcionario1));
         List<FuncionarioResponseDto> recebido = funcionarioService.buscarPorEmail(funcionario1.getEmail());
 
         Assertions.assertEquals(1, recebido.size());
