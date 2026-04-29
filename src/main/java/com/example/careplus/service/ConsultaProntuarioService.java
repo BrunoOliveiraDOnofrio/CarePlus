@@ -8,6 +8,7 @@ import com.example.careplus.dto.messaging.EventoConsultaCriadaDto;
 import com.example.careplus.dto.messaging.ConsultaCriadaMensagemDto;
 import com.example.careplus.dto.messaging.PacienteMensagemDto;
 import com.example.careplus.dto.messaging.ProfissionalMensagemDto;
+import com.example.careplus.dto.messaging.ResponsavelMensagemDto;
 import com.example.careplus.messaging.ConsultaCriadaRabbitProducer;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.ConsultaProntuario;
@@ -72,30 +73,24 @@ public class ConsultaProntuarioService {
         String dataHora = (consulta.getData() != null && consulta.getHorarioInicio() != null)
                 ? consulta.getData() + " " + consulta.getHorarioInicio()
                 : null;
+        ResponsavelMensagemDto responsavel = cuidadorRepository
+                .findResponsavelNomeTelefoneByPacienteId(consulta.getPaciente().getId())
+                .stream()
+                .findFirst()
+                .map(row -> new ResponsavelMensagemDto((String) row[0], (String) row[1]))
+                .orElse(null);
         PacienteMensagemDto paciente = new PacienteMensagemDto(
-                consulta.getPaciente().getId(),
                 consulta.getPaciente().getNome(),
-                consulta.getPaciente().getEmail(),
-                consulta.getPaciente().getCpf(),
-                consulta.getPaciente().getTelefone(),
-                consulta.getPaciente().getDtNascimento() != null ? consulta.getPaciente().getDtNascimento().toString() : null,
-                consulta.getPaciente().getConvenio(),
-                consulta.getPaciente().getDataInicio() != null ? consulta.getPaciente().getDataInicio().toString() : null
+                responsavel
         );
-        ProfissionalMensagemDto profissional = null;
-        if (consulta.getFuncionarios() != null && !consulta.getFuncionarios().isEmpty()) {
-            var f = consulta.getFuncionarios().get(0);
-            profissional = new ProfissionalMensagemDto(
-                    f.getId(),
-                    f.getNome(),
-                    f.getEspecialidade(),
-                    f.getTipoAtendimento()
-            );
-        }
+        List<ProfissionalMensagemDto> profissionais = consulta.getFuncionarios() != null
+                ? consulta.getFuncionarios().stream()
+                        .map(f -> new ProfissionalMensagemDto(f.getNome(), f.getEspecialidade()))
+                        .toList()
+                : List.of();
         return new ConsultaCriadaMensagemDto(
-                consulta.getId(),
                 paciente,
-                profissional,
+                profissionais,
                 dataHora,
                 consulta.getTipo()
         );
@@ -634,16 +629,15 @@ public class ConsultaProntuarioService {
         return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public List<ConsultaProntuarioResponseDto> notificarResponsavel(Long id, LocalDate dataReferencia) {
+    public EventoConsultaCriadaDto notificarResponsavel(Long id, LocalDate dataReferencia) {
         List<ConsultaProntuarioResponseDto> agenda = listarAgendaSemanal(id, "paciente", dataReferencia);
+        EventoConsultaCriadaDto evento = new EventoConsultaCriadaDto(agenda.stream().map(this::toMensagemDto).toList());
 
         if (!agenda.isEmpty()) {
-            consultaCriadaRabbitProducer.publicarEvento(
-                    new EventoConsultaCriadaDto(agenda.stream().map(this::toMensagemDto).toList())
-            );
+            consultaCriadaRabbitProducer.publicarEvento(evento);
         }
 
-        return agenda;
+        return evento;
     }
 
     public List<ConsultaProntuarioResponseDto> listarConsultasPendentes(Long idFuncionario) {

@@ -3,6 +3,7 @@ package com.example.careplus.controller;
 import com.example.careplus.dto.dtoConsultaProntuario.*;
 import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasResponseDto;
+import com.example.careplus.dto.messaging.EventoConsultaCriadaDto;
 import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.service.ConsultaProntuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -160,12 +161,12 @@ public class ConsultaProntuarioController {
 
     @GetMapping("/notificar-responsavel")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ConsultaProntuarioResponseDto>> notificarResponsavel(
-            @RequestParam Long id,
+    public ResponseEntity<EventoConsultaCriadaDto> notificarResponsavel(
+            @RequestParam Long idPaciente,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataReferencia
     ) {
-        List<ConsultaProntuarioResponseDto> agenda = service.notificarResponsavel(id, dataReferencia);
-        return ResponseEntity.ok(agenda);
+        EventoConsultaCriadaDto evento = service.notificarResponsavel(idPaciente, dataReferencia);
+        return ResponseEntity.ok(evento);
     }
 
 
