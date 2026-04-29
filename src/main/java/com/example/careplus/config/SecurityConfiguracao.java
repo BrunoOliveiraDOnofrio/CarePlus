@@ -70,6 +70,7 @@ public class SecurityConfiguracao {
                                 .requestMatchers("/materiais/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/responsaveis/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/detalhes-pacientes/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/medicacoes/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/**").hasRole("ADMIN")
 
 

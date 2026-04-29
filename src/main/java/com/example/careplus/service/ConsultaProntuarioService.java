@@ -345,13 +345,13 @@ public class ConsultaProntuarioService {
 
             ConsultaProntuario consultaSalva = consultaProntuarioRepository.save(consulta);
 
-            String json = objectMapper.writeValueAsString(consultaSalva);
+             String json = objectMapper.writeValueAsString(consultaSalva);
 
-            s3Service.uploadJson(
-                    "bucket-prontuarios-1",
-                    "prontuarios/pacienteId" + consultaSalva.getPaciente().getId() + "/" + consultaSalva.getData() + "_" + consultaSalva.getHorarioInicio() + ".json",
-                    json
-            );
+             s3Service.uploadJson(
+                     "bucket-prontuarios-1",
+                     "prontuarios/pacienteId" + consultaSalva.getPaciente().getId() + "/" + consultaSalva.getData() + "_" + consultaSalva.getHorarioInicio() + ".json",
+                     json
+             );
 
             return ConsultaProntuarioMapper.toResponseDto(consultaSalva);
         } else {
