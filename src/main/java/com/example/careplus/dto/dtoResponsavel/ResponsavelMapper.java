@@ -67,4 +67,18 @@ public class ResponsavelMapper {
         return entity;
     }
     //SAI DTO
+
+
+    //ENTRA ENTIDADE E DAI DTO DE NOTIFICAÇÃO
+    public static ResponsavelResponseNotificacaoDto toResponseNotificacaoDto(Responsavel entity) {
+        if (entity == null){
+            return null;
+        }
+
+        ResponsavelResponseNotificacaoDto dto = new ResponsavelResponseNotificacaoDto();
+        dto.setNome(entity.getNome());
+        dto.setEmail(entity.getEmail());
+        dto.setTelefone(entity.getTelefone());
+        return dto;
+    }
 }

@@ -1,0 +1,23 @@
+meta {
+  name: Listar Responsáveis por idPaciente
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/responsaveis/por-paciente?idPaciente=1
+  body: none
+  auth: bearer
+}
+
+params:query {
+  idPaciente: 1
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjbGluaWNhLmNvbSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInVzZXJJZCI6Miwibm9tZSI6Ikp1bGlhbmEgQWxtZWlkYSIsImNhcmdvIjoiRnVuY2lvbsOhcmlvIiwiZXNwZWNpYWxpZGFkZSI6IkFkbWluIiwibm9tZVN1cGVydmlzb3IiOiJEcmEuIEhlbGVuYSBDYXN0cm8iLCJkb2N1bWVudG8iOiI0MDAyODkyMiIsImlhdCI6MTc3NzQ5MDA3MCwiZXhwIjoxNzgxMDkwMDcwfQ.C5I0ZQeWQTg2sdTlJgS3oT_LIupV6fO32RLWg9Yy_8sU5MudYMHMBe39a4-EsCJLkUa7s4dxFQZg2E3bfGGIhg
+}
