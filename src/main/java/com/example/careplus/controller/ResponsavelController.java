@@ -1,6 +1,7 @@
 package com.example.careplus.controller;
 
 import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
+import com.example.careplus.dto.dtoResponsavel.ResponsavelResponseNotificacaoDto;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.service.ResponsavelService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,6 +42,19 @@ public class ResponsavelController {
         Pageable pageable = PageRequest.of(pagina, 8);
         Page<Responsavel> responsaveis = responsavelService.listarPaginado(pageable);
         return ResponseEntity.status(200).body(responsaveis);
+    }
+
+    @GetMapping("/por-paciente")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ResponsavelResponseNotificacaoDto> listarPorPaciente(
+            @RequestParam Long idPaciente
+    ){
+        try {
+            ResponsavelResponseNotificacaoDto responsavelResponseNotificacaoDto = responsavelService.buscarPorPaciente(idPaciente);
+            return ResponseEntity.status(200).body(responsavelResponseNotificacaoDto);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).build();
+        }
     }
 
     @GetMapping("/inativos")

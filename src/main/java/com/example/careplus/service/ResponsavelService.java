@@ -3,9 +3,11 @@ package com.example.careplus.service;
 import com.example.careplus.dto.dtoEndereco.EnderecoMapper;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelMapper;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
+import com.example.careplus.dto.dtoResponsavel.ResponsavelResponseNotificacaoDto;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.Endereco;
 import com.example.careplus.model.Responsavel;
+import com.example.careplus.repository.CuidadorRepository;
 import com.example.careplus.repository.EnderecoRepository;
 import com.example.careplus.repository.ResponsavelRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,10 +24,12 @@ public class ResponsavelService {
 
     private final ResponsavelRepository responsavelRepository;
     private final EnderecoRepository enderecoRepository;
+    private final CuidadorRepository cuidadorRepository;
 
-    public ResponsavelService(ResponsavelRepository responsavelRepository, EnderecoRepository enderecoRepository){
+    public ResponsavelService(ResponsavelRepository responsavelRepository, EnderecoRepository enderecoRepository, CuidadorRepository cuidadorRepository){
         this.responsavelRepository = responsavelRepository;
         this.enderecoRepository = enderecoRepository;
+        this.cuidadorRepository = cuidadorRepository;
     }
     public Responsavel buscarOuCadastrar(ResponsavelRequestDto responsavelNew) {
         if (responsavelNew.getCpf() != null) {
@@ -145,6 +149,11 @@ public class ResponsavelService {
                 .orElseThrow(NoSuchElementException::new);
         responsavel.setAtivo(true);
         responsavelRepository.save(responsavel);
+    }
+
+    public ResponsavelResponseNotificacaoDto buscarPorPaciente(Long idPaciente) {
+        return responsavelRepository.findNotificacaoDtoByPacienteId(idPaciente)
+                .orElseThrow(() -> new NoSuchElementException("Responsável não encontrado para o paciente informado"));
     }
     // CRUD SIMPLES
     // "ORDENAÇÃO" DE RESPONSÁVEL
