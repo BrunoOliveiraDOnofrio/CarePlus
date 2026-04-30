@@ -73,7 +73,7 @@ INSERT INTO paciente (id, nome, email, cpf, telefone, dt_nascimento, convenio, d
 
 -- responsavel
 INSERT INTO responsavel (id, nome, email, telefone, dt_nascimento, cpf, id_endereco) VALUES
-(1,'Clara','email2@gmail.com','1140028922','2002-01-16','49927132810',3);
+(1,'Clara','email2@gmail.com','1140028922','2002-01-16','49927132810',3, true);
 
 -- funcionario
 -- funcionario
