@@ -5,11 +5,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class ConsultaProntuarioRequest {
 
     private Long pacienteId;
-    private Long funcionarioId;
+    private List<Long> funcionarioIds;
 
     @Schema(description = "2026-01-20", example = "2026-01-20")
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -27,19 +28,11 @@ public class ConsultaProntuarioRequest {
 
     public ConsultaProntuarioRequest() {}
 
-    public ConsultaProntuarioRequest(Long pacienteId, Long funcionarioId, LocalDate data, LocalTime horarioInicio, LocalTime horarioFim) {
-        this.pacienteId = pacienteId;
-        this.funcionarioId = funcionarioId;
-        this.data = data;
-        this.horarioInicio = horarioInicio;
-        this.horarioFim = horarioFim;
-    }
-
     public Long getPacienteId() { return pacienteId; }
     public void setPacienteId(Long pacienteId) { this.pacienteId = pacienteId; }
 
-    public Long getFuncionarioId() { return funcionarioId; }
-    public void setFuncionarioId(Long funcionarioId) { this.funcionarioId = funcionarioId; }
+    public List<Long> getFuncionarioIds() { return funcionarioIds; }
+    public void setFuncionarioIds(List<Long> funcionarioIds) { this.funcionarioIds = funcionarioIds; }
 
     public LocalDate getData() { return data; }
     public void setData(LocalDate data) { this.data = data; }

@@ -59,6 +59,15 @@ public class ConsultaProntuarioController {
         return ResponseEntity.status(204).build();
     }
 
+    @PutMapping("/recorrencia/{recorrenciaId}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<?> editarRecorrencia(
+            @PathVariable String recorrenciaId,
+            @RequestBody ConsultaProntuarioRequest request) {
+        service.editarRecorrencia(recorrenciaId, request);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<ConsultaProntuarioResponseDto> editarConsulta(

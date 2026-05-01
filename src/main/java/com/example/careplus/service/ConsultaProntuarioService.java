@@ -249,6 +249,36 @@ public class ConsultaProntuarioService {
     }
 
     @Transactional
+    public void editarRecorrencia(String recorrenciaId, ConsultaProntuarioRequest request) {
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.findByRecorrenciaId(recorrenciaId);
+        if (consultas.isEmpty()) {
+            throw new ResourceNotFoundException("Recorrência não encontrada");
+        }
+        Paciente paciente = pacienteRepository.findById(request.getPacienteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+
+        for (ConsultaProntuario consulta : consultas) {
+            consulta.setPaciente(paciente);
+            consulta.setHorarioInicio(request.getHorarioInicio());
+            consulta.setHorarioFim(request.getHorarioFim());
+            consulta.setTipo(request.getTipo() != null ? request.getTipo() : consulta.getTipo());
+            consultaProntuarioRepository.save(consulta);
+
+            List<ConsultaFuncionario> existentes = consultaFuncionarioRepository.findByConsultaId(consulta.getId());
+            consultaFuncionarioRepository.deleteAllInBatch(existentes);
+
+            List<Long> ids = request.getFuncionarioIds();
+            if (ids != null && !ids.isEmpty()) {
+                for (Long funcId : ids) {
+                    Funcionario funcionario = funcionarioRepository.findById(funcId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado: " + funcId));
+                    consultaFuncionarioRepository.save(new ConsultaFuncionario(funcionario, consulta));
+                }
+            }
+        }
+    }
+
+    @Transactional
     public void removerRecorrencia(String recorrenciaId) {
         List<ConsultaProntuario> consultas = consultaProntuarioRepository.findByRecorrenciaId(recorrenciaId);
         if (consultas.isEmpty()) {
@@ -279,13 +309,13 @@ public class ConsultaProntuarioService {
         return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
+    @Transactional
     public ConsultaProntuarioResponseDto editarConsulta(Long consultaId, ConsultaProntuarioRequest request) {
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
-        Funcionario funcionario = funcionarioRepository.findById(request.getFuncionarioId())
-                .orElseThrow(() -> new ResourceNotFoundException("Funcionario não encontrado"));
         ConsultaProntuario consulta = consultaProntuarioRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
+
         consulta.setPaciente(paciente);
         consulta.setData(request.getData());
         consulta.setHorarioInicio(request.getHorarioInicio());
@@ -293,19 +323,25 @@ public class ConsultaProntuarioService {
         consulta.setTipo(request.getTipo() != null ? request.getTipo() : consulta.getTipo());
         consulta.setConfirmada(consulta.getConfirmada() != null ? consulta.getConfirmada() : Boolean.FALSE);
 
-        // atualiza o vínculo com o funcionário
-        ConsultaFuncionario existente = consulta.getConsultaFuncionarios().isEmpty() ? null : consulta.getConsultaFuncionarios().get(0);
-        if (existente != null) {
-            existente.setFuncionario(funcionario);
-            consultaFuncionarioRepository.save(existente);
-        } else {
-            ConsultaFuncionario novo = new ConsultaFuncionario(funcionario, consulta);
-            consultaFuncionarioRepository.save(novo);
-            consulta.getConsultaFuncionarios().add(novo);
+        consultaProntuarioRepository.save(consulta);
+
+        // Substitui todos os vínculos com profissionais diretamente pelo repositório
+        List<ConsultaFuncionario> existentes = consultaFuncionarioRepository.findByConsultaId(consultaId);
+        consultaFuncionarioRepository.deleteAllInBatch(existentes);
+
+        List<Long> ids = request.getFuncionarioIds();
+        if (ids != null && !ids.isEmpty()) {
+            for (Long funcId : ids) {
+                Funcionario funcionario = funcionarioRepository.findById(funcId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado: " + funcId));
+                consultaFuncionarioRepository.save(new ConsultaFuncionario(funcionario, consulta));
+            }
         }
 
-        ConsultaProntuario salva = consultaProntuarioRepository.save(consulta);
-        return ConsultaProntuarioMapper.toResponseDto(salva);
+        // Re-busca para retornar com a coleção atualizada
+        ConsultaProntuario atualizada = consultaProntuarioRepository.findById(consultaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
+        return ConsultaProntuarioMapper.toResponseDto(atualizada);
     }
 
     public ConsultaProntuarioResponseDto confirmarConsulta(Long consultaId){
