@@ -12,13 +12,14 @@ post {
 
 body:json {
   {
-    "email": "admin@clinica.com",
+    "email": "marcos.ribeiro@clinica.com",
     "senha": "123456"
   }
 }
 
 script:post-response {
   if (res.status === 200) {
+    bru.setVar("tokenId", res.body.token);
     bru.setVar("token", res.body.token);
   }
 }

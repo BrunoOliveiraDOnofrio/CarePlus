@@ -1,0 +1,22 @@
+meta {
+  name: 7. Agenda Mensal
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-mensal?id=1&tipo=FUNCIONARIO&dataReferencia=2026-05-01
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 1
+  tipo: FUNCIONARIO
+  dataReferencia: 2026-05-01
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

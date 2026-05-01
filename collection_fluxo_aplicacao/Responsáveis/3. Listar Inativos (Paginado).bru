@@ -1,0 +1,20 @@
+meta {
+  name: 3. Listar Inativos (Paginado)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/responsaveis/inativos?pagina=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  pagina: 0
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

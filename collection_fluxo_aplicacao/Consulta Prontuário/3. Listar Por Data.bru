@@ -1,0 +1,16 @@
+meta {
+  name: 3. Listar Por Data
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/por-data
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

@@ -1,0 +1,27 @@
+meta {
+  name: 11. Editar Consulta
+  type: http
+  seq: 11
+}
+
+put {
+  url: {{baseUrl}}/consultas-prontuario/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "pacienteId": 1,
+    "funcionarioId": 2,
+    "data": "2026-05-15",
+    "horarioInicio": "10:00:00",
+    "horarioFim": "11:00:00",
+    "tipo": "Retorno"
+  }
+}
+

@@ -1,0 +1,21 @@
+
+meta {
+  name: 5. Buscar Por Email
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/responsaveis/por-email?email=ana.paula@email.com
+  body: none
+  auth: bearer
+}
+
+params:query {
+  email: ana.paula@email.com
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

@@ -1,0 +1,30 @@
+meta {
+  name: 9. Atualizar Responsável
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/responsaveis?id=1
+  body: json
+  auth: bearer
+}
+
+params:query {
+  id: 1
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "nome": "Ana Paula Silva Atualizada",
+    "email": "ana.atualizada@email.com",
+    "cpf": "123.456.789-00",
+    "telefone": "(11) 91234-5678",
+    "parentesco": "Mãe"
+  }
+}
+

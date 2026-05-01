@@ -1,0 +1,27 @@
+meta {
+  name: 15. Editar Recorrência
+  type: http
+  seq: 15
+}
+
+put {
+  url: {{baseUrl}}/consultas-prontuario/recorrencia/UUID-DO-GRUPO-AQUI
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "pacienteId": 1,
+    "funcionarioId": 2,
+    "data": "2026-05-15",
+    "horarioInicio": "10:00:00",
+    "horarioFim": "11:00:00",
+    "tipo": "Retorno"
+  }
+}
+

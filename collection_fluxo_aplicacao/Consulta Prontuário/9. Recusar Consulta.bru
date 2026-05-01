@@ -1,0 +1,24 @@
+meta {
+  name: 9. Recusar Consulta
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/consultas-prontuario/recusar?idConsulta=1
+  body: json
+  auth: bearer
+}
+
+params:query {
+  idConsulta: 1
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  "Paciente faltou sem aviso prévio"
+}
+

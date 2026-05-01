@@ -1,0 +1,22 @@
+meta {
+  name: 5. Agenda Diária
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-diaria?id=1&tipo=FUNCIONARIO&dataReferencia=2026-05-01
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 1
+  tipo: FUNCIONARIO
+  dataReferencia: 2026-05-01
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

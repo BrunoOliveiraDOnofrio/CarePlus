@@ -1,0 +1,26 @@
+meta {
+  name: 1. Cadastrar Responsável
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/responsaveis
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "nome": "Ana Paula Silva",
+    "email": "ana.paula@email.com",
+    "cpf": "123.456.789-00",
+    "telefone": "(11) 98765-4321",
+    "parentesco": "Mãe"
+  }
+}
+

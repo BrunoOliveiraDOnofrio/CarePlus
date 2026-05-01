@@ -1,0 +1,22 @@
+meta {
+  name: 8. Buscar (Filtro Nome, Email ou CPF)
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/responsaveis/buscar?nome=Ana
+  body: none
+  auth: bearer
+}
+
+params:query {
+  nome: Ana
+  ~email:
+  ~cpf:
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

@@ -1,0 +1,29 @@
+meta {
+  name: 13. Agendar Consultas Recorrentes
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/consultas-prontuario/recorrentes
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "pacienteId": 1,
+    "funcionarioId": 2,
+    "horarioInicio": "09:00:00",
+    "horarioFim": "10:00:00",
+    "tipo": "Consulta",
+    "dataInicio": "2026-05-05",
+    "dataFim": "2026-06-05",
+    "diasDaSemana": ["MONDAY", "WEDNESDAY"]
+  }
+}
+

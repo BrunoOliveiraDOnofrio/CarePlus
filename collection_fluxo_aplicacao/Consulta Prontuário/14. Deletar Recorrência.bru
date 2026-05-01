@@ -1,0 +1,16 @@
+meta {
+  name: 14. Deletar Recorrência
+  type: http
+  seq: 14
+}
+
+delete {
+  url: {{baseUrl}}/consultas-prontuario/recorrencia/UUID-DO-GRUPO-AQUI
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

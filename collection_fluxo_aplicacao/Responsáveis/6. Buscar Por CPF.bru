@@ -1,0 +1,20 @@
+meta {
+  name: 6. Buscar Por CPF
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/responsaveis/por-cpf?cpf=123.456.789-00
+  body: none
+  auth: bearer
+}
+
+params:query {
+  cpf: 123.456.789-00
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

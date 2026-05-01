@@ -1,0 +1,26 @@
+meta {
+  name: 10. Realizar Observações
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{baseUrl}}/consultas-prontuario/realizarObservacoes?idConsulta=1
+  body: json
+  auth: bearer
+}
+
+params:query {
+  idConsulta: 1
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
+body:json {
+  {
+    "observacao": "Paciente apresentou melhora significativa"
+  }
+}
+

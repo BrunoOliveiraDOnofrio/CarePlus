@@ -1,0 +1,22 @@
+meta {
+  name: 21. Últimas Consultas (Paginado)
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/ultimas-consultas?idPaciente=1&idFuncionario=2&pagina=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  idPaciente: 1
+  idFuncionario: 2
+  pagina: 0
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

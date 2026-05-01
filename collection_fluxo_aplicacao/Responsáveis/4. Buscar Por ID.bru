@@ -1,0 +1,17 @@
+
+meta {
+  name: 4. Buscar Por ID
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/responsaveis/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

@@ -1,0 +1,21 @@
+meta {
+  name: 20. Notificar Responsável
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/notificar-responsavel?idPaciente=1&dataReferencia=2026-05-01
+  body: none
+  auth: bearer
+}
+
+params:query {
+  idPaciente: 1
+  dataReferencia: 2026-05-01
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+

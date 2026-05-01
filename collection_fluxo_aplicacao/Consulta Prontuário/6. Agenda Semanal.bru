@@ -1,0 +1,22 @@
+meta {
+  name: 6. Agenda Semanal
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/consultas-prontuario/agenda-semanal?id=1&tipo=FUNCIONARIO&dataReferencia=2026-05-01
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 1
+  tipo: FUNCIONARIO
+  dataReferencia: 2026-05-01
+}
+
+auth:bearer {
+  token: {{tokenId}}
+}
+
