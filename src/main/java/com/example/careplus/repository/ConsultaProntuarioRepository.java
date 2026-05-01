@@ -84,6 +84,12 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
     @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId AND (c.data > CURRENT_DATE OR (c.data = CURRENT_DATE AND c.horarioInicio > CURRENT_TIME)) AND c.confirmada = true ORDER BY c.data ASC, c.horarioInicio ASC")
     List<ConsultaProntuario> buscarProximaConsultaConfirmadaPorPaciente(@Param("pacienteId") Long pacienteId);
 
+    @Query("SELECT c FROM ConsultaProntuario c WHERE c.paciente.id = :pacienteId " +
+            "AND (c.data > CURRENT_DATE OR (c.data = CURRENT_DATE AND c.horarioInicio > CURRENT_TIME)) " +
+            "AND (c.confirmada IS NULL OR c.confirmada = false) " +
+            "ORDER BY c.data ASC, c.horarioInicio ASC")
+    List<ConsultaProntuario> buscarProximaConsultaNaoConcluidaPorPaciente(@Param("pacienteId") Long pacienteId);
+
     @Query("SELECT c FROM ConsultaProntuario c JOIN c.consultaFuncionarios cf WHERE c.paciente.id = :pacienteId " +
             "AND cf.funcionario.id = :funcionarioId " +
             "AND (c.data > CURRENT_DATE OR (c.data = CURRENT_DATE AND c.horarioInicio > CURRENT_TIME)) " +
@@ -98,12 +104,12 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
     JOIN c.consultaFuncionarios cf
     WHERE c.paciente.id = :idPaciente
       AND cf.funcionario.id = :idFuncionario
-      AND c.data <= CURRENT_DATE
+      AND c.confirmada = true
     ORDER BY c.data DESC, c.horarioInicio DESC
     """)
     Page<ConsultaProntuario> findUltimasConsultas(
-            Long idPaciente,
-            Long idFuncionario,
+            @Param("idPaciente") Long idPaciente,
+            @Param("idFuncionario") Long idFuncionario,
             Pageable pageable
     );
 }

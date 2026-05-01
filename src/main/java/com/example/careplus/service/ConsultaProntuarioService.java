@@ -646,7 +646,7 @@ public class ConsultaProntuarioService {
     }
 
     public ProximaConsultaProntuarioResponseDto buscarProximaConsultaConfirmada(Long pacienteId) {
-        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarProximaConsultaPorPaciente(pacienteId);
+        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarProximaConsultaNaoConcluidaPorPaciente(pacienteId);
 
         if (consultas.isEmpty()) {
             throw new ResourceNotFoundException("Nenhuma consulta confirmada encontrada para este paciente!");
