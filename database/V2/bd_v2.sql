@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS careplus_novo;
+sCREATE DATABASE IF NOT EXISTS careplus_novo;
 USE careplus_novo;
 
 -- =========================
