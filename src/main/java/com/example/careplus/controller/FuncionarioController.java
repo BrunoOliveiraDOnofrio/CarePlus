@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +53,21 @@ public class FuncionarioController {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping("/me")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<FuncionarioResponseDto> buscarPerfil(Authentication auth) {
+        return ResponseEntity.ok(funcionarioService.buscarPerfil(auth.getName()));
+    }
+
+    @PatchMapping(value = "/me", consumes = "multipart/form-data")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<FuncionarioResponseDto> atualizarPerfil(
+            @ModelAttribute @Valid PerfilFuncionarioRequestDto dto,
+            Authentication auth
+    ) {
+        return ResponseEntity.ok(funcionarioService.atualizarPerfil(auth.getName(), dto));
     }
 
     @GetMapping("/foto")

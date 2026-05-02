@@ -2,6 +2,7 @@ package com.example.careplus.config;
 
 import com.example.careplus.service.AutenticacaoService;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,7 +62,13 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
     }
 
     private void addUsernameInContext(HttpServletRequest request, String username, String jwtToken) {
-        UserDetails userDetails = autenticacaoService.loadUserByUsername(username);
+        UserDetails userDetails;
+        try {
+            userDetails = autenticacaoService.loadUserByUsername(username);
+        } catch (UsernameNotFoundException e) {
+            LOGGER.warn("[Falha na autenticação] - Usuário não encontrado: {}", username);
+            return;
+        }
 
         if (jwtTokenManager.validateToken(jwtToken, userDetails)) {
             UsernamePasswordAuthenticationToken authentication =

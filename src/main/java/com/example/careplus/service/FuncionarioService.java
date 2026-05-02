@@ -398,6 +398,35 @@ public class FuncionarioService {
         throw new ResourceNotFoundException("Informe ao menos um parâmetro de busca: nome, email ou documento.");
     }
 
+    public FuncionarioResponseDto buscarPerfil(String email) {
+        Funcionario funcionario = repository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado"));
+        return FuncionarioMapper.toResponseDto(funcionario);
+    }
+
+    public FuncionarioResponseDto atualizarPerfil(String email, com.example.careplus.dto.dtoFuncionario.PerfilFuncionarioRequestDto dto) {
+        Funcionario funcionario = repository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado"));
+
+        funcionario.setNome(dto.getNome());
+        funcionario.setEmail(dto.getEmail());
+        if (dto.getTelefone() != null) funcionario.setTelefone(dto.getTelefone());
+        if (dto.getTipoAtendimento() != null) funcionario.setTipoAtendimento(dto.getTipoAtendimento());
+        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+            funcionario.setSenha(passwordEncoder.encode(dto.getSenha()));
+        }
+        if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+            try {
+                String nomeArquivo = s3Service.uploadImagem(dto.getFoto(), funcionario.getDocumento());
+                funcionario.setFoto(nomeArquivo);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage(), e);
+            }
+        }
+
+        return FuncionarioMapper.toResponseDto(repository.save(funcionario));
+    }
+
     private String resolverRole(String cargo) {
         if (cargo == null) return "USER";
         return switch (cargo.toLowerCase()) {
