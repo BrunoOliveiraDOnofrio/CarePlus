@@ -15,6 +15,7 @@ public class DetalhePacienteDTO {
     // Informações do Paciente
     private Long pacienteId;
     private String nome;
+    private String cpf;
     private String fotoPerfil;
 
     // Ficha Clínica

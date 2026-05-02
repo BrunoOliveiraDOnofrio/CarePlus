@@ -10,6 +10,7 @@ import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.FuncionarioRepository;
+import com.example.careplus.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,12 +45,14 @@ public class FuncionarioService {
     private final FuncionarioRepository repository;
     private final ConsultaProntuarioRepository consultaProntuarioRepository;
     private final S3Service s3Service;
+    private final RoleRepository roleRepository;
 
-    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder, ConsultaProntuarioRepository consultaProntuarioRepository, S3Service s3Service) {
+    public FuncionarioService(FuncionarioRepository repository, PasswordEncoder encoder, ConsultaProntuarioRepository consultaProntuarioRepository, S3Service s3Service, RoleRepository roleRepository) {
         this.repository = repository;
         this.passwordEncoder = encoder;
         this.consultaProntuarioRepository = consultaProntuarioRepository;
         this.s3Service = s3Service;
+        this.roleRepository = roleRepository;
     }
 
     public FuncionarioResponseDto salvar(FuncionarioResquestDto dto) {
@@ -75,6 +78,9 @@ public class FuncionarioService {
                 throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage(), e);
             }
         }
+
+        String nomeRole = resolverRole(dto.getCargo());
+        roleRepository.findByNome(nomeRole).ifPresent(role -> novoFuncionario.getRoles().add(role));
 
         Funcionario salvo = repository.save(novoFuncionario);
 
@@ -390,6 +396,15 @@ public class FuncionarioService {
             return FuncionarioMapper.toResponseDto(funcionarios.getContent());
         }
         throw new ResourceNotFoundException("Informe ao menos um parâmetro de busca: nome, email ou documento.");
+    }
+
+    private String resolverRole(String cargo) {
+        if (cargo == null) return "USER";
+        return switch (cargo.toLowerCase()) {
+            case "supervisor(a)" -> "MANAGER";
+            case "agendamento"   -> "SCHEDULER";
+            default              -> "USER";
+        };
     }
 
 }

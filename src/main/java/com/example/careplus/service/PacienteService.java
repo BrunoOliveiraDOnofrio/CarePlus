@@ -184,6 +184,14 @@ public class PacienteService {
         return s3Service.buscarUltimaFotoPaciente(cpf);
     }
 
+    public void atualizarFoto(String cpf, org.springframework.web.multipart.MultipartFile foto) throws IOException {
+        Paciente paciente = repositoryPaciente.findByCpfAndAtivoTrue(cpf)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+        String nomeArquivo = s3Service.uploadImagemPaciente(foto, cpf);
+        paciente.setFoto(nomeArquivo);
+        repositoryPaciente.save(paciente);
+    }
+
     public List<PacienteResponseDto> listarPorEmail(String email){
         List<Paciente> existeEmail = repositoryPaciente.findByEmailContainsIgnoreCaseAndAtivoTrue(email);
 

@@ -60,17 +60,17 @@ public class SecurityConfiguracao {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(URLS_PERMITIDAS).permitAll()
                                 // URLs protegidas por ROLE
-                                .requestMatchers("/funcionarios/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
-                                .requestMatchers("/pacientes/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
-                                .requestMatchers("/classificacao-doencas/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/cuidadores/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/consultas-prontuario/**").hasAnyRole("USER", "ADMIN" ,"SCHEDULER")
-                                .requestMatchers("/enderecos/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
-                                .requestMatchers("/fichas-clinicas/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/materiais/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/responsaveis/**").hasAnyRole("USER", "ADMIN", "SCHEDULER")
-                                .requestMatchers("/detalhes-pacientes/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/medicacoes/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/funcionarios/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
+                                .requestMatchers("/pacientes/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
+                                .requestMatchers("/classificacao-doencas/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/cuidadores/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/consultas-prontuario/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
+                                .requestMatchers("/enderecos/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
+                                .requestMatchers("/fichas-clinicas/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/materiais/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/responsaveis/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
+                                .requestMatchers("/detalhes-pacientes/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/medicacoes/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/**").hasRole("ADMIN")
 
 

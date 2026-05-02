@@ -46,6 +46,7 @@ public class DetalhePacienteService {
         DetalhePacienteDTO dto = new DetalhePacienteDTO();
         dto.setPacienteId(paciente.getId());
         dto.setNome(paciente.getNome());
+        dto.setCpf(paciente.getCpf());
 
         // Ficha Clínica
         FichaClinica fichaClinica = resolverFichaClinica(paciente);

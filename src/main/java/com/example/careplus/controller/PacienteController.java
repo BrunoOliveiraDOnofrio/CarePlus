@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -76,6 +77,17 @@ public class PacienteController {
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @PatchMapping(value = "/foto", consumes = "multipart/form-data")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> atualizarFoto(@RequestParam String cpf, @RequestParam MultipartFile foto) {
+        try {
+            service.atualizarFoto(cpf, foto);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

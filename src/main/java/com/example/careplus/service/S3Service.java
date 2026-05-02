@@ -19,7 +19,7 @@ import java.util.UUID;
 public class S3Service {
 
     private final S3Client s3Client;
-    private final String bucketName = "bucket-prontuarios-1";
+    private final String bucketName = "bucket-prontuarios-4";
 
     public S3Service() {
         this.s3Client = S3Client.builder()
