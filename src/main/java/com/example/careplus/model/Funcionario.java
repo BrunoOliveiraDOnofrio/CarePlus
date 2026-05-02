@@ -1,5 +1,6 @@
 package com.example.careplus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -27,12 +28,15 @@ public class Funcionario {
 
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
+    @JsonIgnore
     private Funcionario supervisor;
 
     @OneToMany(mappedBy = "supervisor")
+    @JsonIgnore
     private List<Funcionario> subordinados = new ArrayList<>();
 
     @OneToMany(mappedBy = "funcionario")
+    @JsonIgnore
     private List<ConsultaFuncionario> consultaFuncionarios = new ArrayList<>();
 
     @Schema(description = "Supervisora")

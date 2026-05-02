@@ -79,9 +79,9 @@ INSERT INTO responsavel (id, nome, email, telefone, dt_nascimento, cpf, id_ender
 -- funcionario
 INSERT INTO funcionario (id, nome, email, senha, supervisor_id, cargo, especialidade, tipo_atendimento, telefone, documento, foto, ativo) VALUES
 (1,'Dra. Helena Castro','helena.castro@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',NULL,'Supervisor(a)','Fonoaudiologia', 'TO', '11940028922', '40028922', 'fotoPerfil.png', 1),
-(2,'Juliana Almeida','admin@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Funcionário','Admin', 'TO', '11940028922', '40028922', 'fotoPerfil.png', 1),
+(2,'Juliana Almeida','admin@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Funcionário',NULL, 'TO', '11940028922', '40028922', 'fotoPerfil.png', 1),
 (3,'Marcos Ribeiro','marcos.ribeiro@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',2,'Estagiário','Fonoaudiologia', 'ABA', '11940028922', '40028922', 'fotoPerfil.png', 1),
-(4,'Vitor Almeida','vitor.almeida@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',2,'Funcionário','Agendamento', 'ABA', '11940028922', '40028922', 'fotoPerfil.png', 1),
+(4,'Vitor Almeida','vitor.almeida@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',2,'Funcionário',NULL, 'ABA', '11940028922', '40028922', 'fotoPerfil.png', 1),
 (5,'Ana Paula Ferreira','ana.ferreira@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Funcionário','Psicologia', 'ABA', '11941100001', '50001001', NULL, 1),
 (6,'Beatriz Souza','beatriz.souza@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Funcionário','Terapia Ocupacional', 'TO', '11941100002', '50001002', NULL, 1),
 (7,'Camila Rocha','camila.rocha@clinica.com','$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC',1,'Funcionário','Psicopedagogia', 'ABA', '11941100003', '50001003', NULL, 1),
@@ -99,7 +99,7 @@ INSERT INTO role (id, nome) VALUES
 
 -- funcionario_roles
 INSERT INTO funcionario_roles (funcionario_id, role_id) VALUES
-(2,1),(3,2),(1,4),(4, 4),
+(2,1),(3,2),(1,2),(4, 4),
 (5,2),(6,2),(7,2),(8,2),(9,2),(10,2),(11,2);
 
 -- fichaClinica

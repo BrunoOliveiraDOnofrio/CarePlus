@@ -681,8 +681,10 @@ public class ConsultaProntuarioService {
         return ConsultaProntuarioMapper.toResponseDto(consultas);
     }
 
-    public ProximaConsultaProntuarioResponseDto buscarProximaConsultaConfirmada(Long pacienteId) {
-        List<ConsultaProntuario> consultas = consultaProntuarioRepository.buscarProximaConsultaNaoConcluidaPorPaciente(pacienteId);
+    public ProximaConsultaProntuarioResponseDto buscarProximaConsultaConfirmada(Long pacienteId, Long funcionarioId) {
+        List<ConsultaProntuario> consultas = (funcionarioId != null)
+                ? consultaProntuarioRepository.buscarProximaConsultaPorPacienteEFuncionario(pacienteId, funcionarioId)
+                : consultaProntuarioRepository.buscarProximaConsultaNaoConcluidaPorPaciente(pacienteId);
 
         if (consultas.isEmpty()) {
             throw new ResourceNotFoundException("Nenhuma consulta confirmada encontrada para este paciente!");
@@ -855,6 +857,57 @@ public class ConsultaProntuarioService {
             // para cada data, cria a consulta e vincula todos os funcionários do item
             for (LocalDate data : datas) {
                 try {
+                    // valida se a data não é anterior ao dia atual
+                    if (data.isBefore(LocalDate.now())) {
+                        throw new RuntimeException(
+                                "Não é possível agendar consultas em datas passadas. Data inválida: " + data + ".");
+                    }
+
+                    // valida se o horário já passou quando a consulta é para hoje
+                    if (data.isEqual(LocalDate.now())) {
+                        LocalDateTime agora = LocalDateTime.now();
+                        LocalDateTime inicioSolicitado = LocalDateTime.of(data, item.getHorarioInicio());
+                        if (inicioSolicitado.isBefore(agora)) {
+                            throw new RuntimeException(
+                                    "Não é possível agendar consultas em horários que já passaram. Horário inválido: " + item.getHorarioInicio() + ".");
+                        }
+                    }
+
+                    LocalDateTime novoInicio = LocalDateTime.of(data, item.getHorarioInicio());
+                    LocalDateTime novoFim = item.getHorarioFim() != null
+                            ? LocalDateTime.of(data, item.getHorarioFim())
+                            : novoInicio.plusHours(1);
+
+                    // valida conflito de horário do paciente
+                    List<ConsultaProntuario> consultasPaciente =
+                            consultaProntuarioRepository.buscarConsultasDiariaPorPaciente(paciente.getId(), data);
+                    for (ConsultaProntuario cp : consultasPaciente) {
+                        LocalDateTime inicioExist = LocalDateTime.of(cp.getData(), cp.getHorarioInicio());
+                        LocalDateTime fimExist = cp.getHorarioFim() != null
+                                ? LocalDateTime.of(cp.getData(), cp.getHorarioFim())
+                                : inicioExist.plusHours(1);
+                        if (novoInicio.isBefore(fimExist) && novoFim.isAfter(inicioExist)) {
+                            throw new RuntimeException(
+                                    "Paciente já possui uma consulta neste horário (" + item.getHorarioInicio() + ").");
+                        }
+                    }
+
+                    // valida conflito de horário de cada funcionário
+                    for (Funcionario func : funcionariosDoItem) {
+                        List<ConsultaProntuario> consultasFunc =
+                                consultaProntuarioRepository.buscarConsultasPorFuncionarioEData(func.getId(), data);
+                        for (ConsultaProntuario cf : consultasFunc) {
+                            LocalDateTime inicioExist = LocalDateTime.of(cf.getData(), cf.getHorarioInicio());
+                            LocalDateTime fimExist = cf.getHorarioFim() != null
+                                    ? LocalDateTime.of(cf.getData(), cf.getHorarioFim())
+                                    : inicioExist.plusHours(1);
+                            if (novoInicio.isBefore(fimExist) && novoFim.isAfter(inicioExist)) {
+                                throw new RuntimeException(
+                                        "Funcionário " + func.getNome() + " já possui uma consulta neste horário (" + item.getHorarioInicio() + ").");
+                            }
+                        }
+                    }
+
                     ConsultaProntuario consulta = new ConsultaProntuario();
                     consulta.setPaciente(paciente);
                     consulta.setData(data);

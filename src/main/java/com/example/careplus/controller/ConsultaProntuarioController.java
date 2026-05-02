@@ -200,8 +200,10 @@ public class ConsultaProntuarioController {
 
     @GetMapping("/proxima")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ProximaConsultaProntuarioResponseDto> buscarProximaConsultaConfirmada(@RequestParam Long idPaciente) {
-        ProximaConsultaProntuarioResponseDto proximaConsulta = service.buscarProximaConsultaConfirmada(idPaciente);
+    public ResponseEntity<ProximaConsultaProntuarioResponseDto> buscarProximaConsultaConfirmada(
+            @RequestParam Long idPaciente,
+            @RequestParam(required = false) Long idFuncionario) {
+        ProximaConsultaProntuarioResponseDto proximaConsulta = service.buscarProximaConsultaConfirmada(idPaciente, idFuncionario);
         return ResponseEntity.ok(proximaConsulta);
     }
 

@@ -1,5 +1,6 @@
 package com.example.careplus.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +24,7 @@ public class ConsultaProntuario {
 
     @ManyToOne
     @JoinColumn(name = "paciente_id")
+    @JsonBackReference("paciente-consulta")
     private Paciente paciente;
 
     @Schema(description = "2026-01-15", example = "2026-01-15")

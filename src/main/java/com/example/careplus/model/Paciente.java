@@ -1,5 +1,6 @@
 package com.example.careplus.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -41,6 +42,7 @@ public class Paciente {
     private Boolean ativo = true;
 
     @OneToMany(mappedBy = "paciente")
+    @JsonManagedReference("paciente-consulta")
     private List<ConsultaProntuario> consultas = new ArrayList<>();
 
     public Paciente() {
