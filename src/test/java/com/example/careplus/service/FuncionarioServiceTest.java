@@ -3,7 +3,9 @@ package com.example.careplus.service;
 import com.example.careplus.dto.dtoFuncionario.FuncionarioResponseDto;
 import com.example.careplus.dto.dtoFuncionario.FuncionarioResquestDto;
 import com.example.careplus.model.Funcionario;
+import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.FuncionarioRepository;
+import com.example.careplus.repository.RoleRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,15 @@ class FuncionarioServiceTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Mock
+    ConsultaProntuarioRepository consultaProntuarioRepository;
+
+    @Mock
+    S3Service s3Service;
+
+    @Mock
+    RoleRepository roleRepository;
 
 
     @Test
@@ -79,6 +90,9 @@ class FuncionarioServiceTest {
 
         Mockito.when(passwordEncoder.encode("123"))
                 .thenReturn("senhaCriptografada");
+
+        Mockito.when(roleRepository.findByNome(Mockito.anyString()))
+                .thenReturn(Optional.empty());
 
         Mockito.when(funcionarioRepository.save(Mockito.any(Funcionario.class)))
                 .thenReturn(funcionarioSalvo);
@@ -167,6 +181,9 @@ class FuncionarioServiceTest {
         // Mocks
         Mockito.when(funcionarioRepository.findById(funcionarioId))
                 .thenReturn(Optional.of(funcionarioExistente));
+
+        Mockito.when(passwordEncoder.encode(Mockito.anyString()))
+                .thenReturn("senhaCriptografada");
 
         Mockito.when(funcionarioRepository.save(Mockito.any(Funcionario.class)))
                 .thenReturn(funcionarioAtualizado);
