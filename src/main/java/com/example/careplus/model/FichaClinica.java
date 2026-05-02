@@ -43,10 +43,6 @@ public class FichaClinica {
 
     @OneToMany(mappedBy = "fichaClinica", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Tratamento> tratamentos;
-
-    @OneToMany(mappedBy = "fichaClinica", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Medicacao> medicacoes;
 
     public FichaClinica() {
@@ -90,9 +86,6 @@ public class FichaClinica {
 
     public List<ClassificacaoDoencas> getCid() { return cid; }
     public void setCid(List<ClassificacaoDoencas> cid) { this.cid = cid; }
-
-    public List<Tratamento> getTratamentos() { return tratamentos; }
-    public void setTratamentos(List<Tratamento> tratamentos) { this.tratamentos = tratamentos; }
 
     public List<Medicacao> getMedicacoes() {
         return medicacoes;

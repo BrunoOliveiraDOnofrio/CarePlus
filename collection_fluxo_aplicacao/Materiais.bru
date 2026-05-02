@@ -1,12 +1,12 @@
 meta {
-  name: Responsaveis
+  name: Materiais
   type: http
   seq: 11
 }
 
-get {
-  url: http://localhost:8080/responsaveis
-  body: none
+post {
+  url: http://localhost:8080/materiais
+  body: json
   auth: bearer
 }
 
@@ -17,6 +17,14 @@ headers {
 
 auth:bearer {
   token: {{tokenId}}
+}
+
+body:json {
+  {
+    "idConsulta": 6,
+    "item": "Tesoura",
+    "dataImplementacao": "2026-05-01"
+  }
 }
 
 settings {

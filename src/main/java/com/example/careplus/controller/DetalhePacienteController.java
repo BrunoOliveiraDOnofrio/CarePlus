@@ -2,7 +2,6 @@ package com.example.careplus.controller;
 
 import com.example.careplus.dto.dtoDetalhes.AtualizarFichaClinicaDTO;
 import com.example.careplus.dto.dtoDetalhes.AtualizarObservacoesComportamentaisDTO;
-import com.example.careplus.dto.dtoDetalhes.AtualizarTratamentoDTO;
 import com.example.careplus.dto.dtoPaciente.DetalhePacienteDTO;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.repository.FuncionarioRepository;
@@ -53,11 +52,4 @@ public class DetalhePacienteController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/tratamento")
-    public ResponseEntity<Void> atualizarTratamento(
-            @RequestParam Long id,
-            @RequestBody AtualizarTratamentoDTO dto) {
-        detalhePacienteService.atualizarTratamento(id, dto);
-        return ResponseEntity.noContent().build();
-    }
 }

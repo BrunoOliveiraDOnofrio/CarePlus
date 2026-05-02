@@ -107,4 +107,5 @@ public class ConsultaProntuario {
 
     public List<Material> getMateriais() { return materiais; }
     public void setMateriais(List<Material> materiais) { this.materiais = materiais; }
+
 }

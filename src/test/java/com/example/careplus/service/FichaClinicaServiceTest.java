@@ -33,9 +33,6 @@ class FichaClinicaServiceTest {
     private ClassificacaoDoencasRepository cidRepository;
 
     @Mock
-    private TratamentoRepository tratamentoRepository;
-
-    @Mock
     private MedicacaoRepository medicacaoRepository;
 
     @InjectMocks
@@ -62,7 +59,6 @@ class FichaClinicaServiceTest {
 
         when(fichaClinicaRepository.findAll()).thenReturn(esperado);
         when(cidRepository.findByFichaClinica_Id(1L)).thenReturn(new ArrayList<>());
-        when(tratamentoRepository.findByFichaClinica_Id(1L)).thenReturn(new ArrayList<>());
         when(medicacaoRepository.findByFichaClinica_Id(1L)).thenReturn(new ArrayList<>());
 
         List<FichaClinica> recebido = service.listarFichasClinicas();

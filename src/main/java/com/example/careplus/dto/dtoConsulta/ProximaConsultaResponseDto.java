@@ -10,19 +10,17 @@ public class ProximaConsultaResponseDto {
     private LocalTime horarioFim;
     private String tipo;
     private String nomeProfissional;
-    private String tratamento;
 
     public ProximaConsultaResponseDto() {
     }
 
-    public ProximaConsultaResponseDto(Long consultaId, LocalDate data, LocalTime horarioInicio, LocalTime horarioFim, String tipo, String nomeProfissional, String tratamento) {
+    public ProximaConsultaResponseDto(Long consultaId, LocalDate data, LocalTime horarioInicio, LocalTime horarioFim, String tipo, String nomeProfissional) {
         this.consultaId = consultaId;
         this.data = data;
         this.horarioInicio = horarioInicio;
         this.horarioFim = horarioFim;
         this.tipo = tipo;
         this.nomeProfissional = nomeProfissional;
-        this.tratamento = tratamento;
     }
 
     public Long getConsultaId() {
@@ -73,12 +71,5 @@ public class ProximaConsultaResponseDto {
         this.nomeProfissional = nomeProfissional;
     }
 
-    public String getTratamento() {
-        return tratamento;
-    }
-
-    public void setTratamento(String tratamento) {
-        this.tratamento = tratamento;
-    }
 }
 

@@ -17,7 +17,6 @@ import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Material;
 import com.example.careplus.model.Paciente;
 import com.example.careplus.model.FichaClinica;
-import com.example.careplus.model.Tratamento;
 import com.example.careplus.model.ConsultaFuncionario;
 import com.example.careplus.repository.ConsultaFuncionarioRepository;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
@@ -692,24 +691,13 @@ public class ConsultaProntuarioService {
 
         ConsultaProntuario proximaConsulta = consultas.get(0);
 
-        String tratamento = null;
-        FichaClinica fichaClinica = fichaClinicaRepository.findByPacienteId(pacienteId).orElse(null);
-        if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
-            tratamento = fichaClinica.getTratamentos().stream()
-                    .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
-                    .map(Tratamento::getTipoDeTratamento)
-                    .findFirst()
-                    .orElse(null);
-        }
-
         return new ProximaConsultaProntuarioResponseDto(
                 proximaConsulta.getId(),
                 proximaConsulta.getData(),
                 proximaConsulta.getHorarioInicio(),
                 proximaConsulta.getHorarioFim(),
                 proximaConsulta.getTipo(),
-                proximaConsulta.getFuncionario().getNome(),
-                tratamento
+                proximaConsulta.getFuncionario().getNome()
         );
     }
 
@@ -767,10 +755,19 @@ public class ConsultaProntuarioService {
             ultimaConsulta.setConsultaId(ultimaConsultaEntity.getId());
             ultimaConsulta.setData(ultimaConsultaEntity.getData());
             ultimaConsulta.setNomeFuncionarioUltimaConsulta(ultimaConsultaEntity.getFuncionario().getNome());
-
-
             response.setUltimaConsulta(ultimaConsulta);
         }
+
+        List<ConsultaProntuarioAtualResponseDto.MaterialInfo> materiaisDto = new ArrayList<>();
+        if (consulta.getMateriais() != null) {
+            for (Material m : consulta.getMateriais()) {
+                ConsultaProntuarioAtualResponseDto.MaterialInfo info = new ConsultaProntuarioAtualResponseDto.MaterialInfo();
+                info.setId(m.getId());
+                info.setItem(m.getItem());
+                materiaisDto.add(info);
+            }
+        }
+        response.setMateriais(materiaisDto);
 
         return response;
     }
@@ -794,15 +791,6 @@ public class ConsultaProntuarioService {
         response.setNomeProfissional(funcionario.getNome());
         response.setTipo(consulta.getTipo());
         response.setObservacoesComportamentais(consulta.getObservacoesComportamentais());
-
-        if (fichaClinica != null && fichaClinica.getTratamentos() != null) {
-            String tratamentoAtual = fichaClinica.getTratamentos().stream()
-                    .filter(t -> t.getFinalizado() == null || !t.getFinalizado())
-                    .map(Tratamento::getTipoDeTratamento)
-                    .findFirst()
-                    .orElse(null);
-            response.setTratamentoAtual(tratamentoAtual);
-        }
 
         if (consulta.getMateriais() != null && !consulta.getMateriais().isEmpty()) {
             List<String> materiais = consulta.getMateriais().stream()

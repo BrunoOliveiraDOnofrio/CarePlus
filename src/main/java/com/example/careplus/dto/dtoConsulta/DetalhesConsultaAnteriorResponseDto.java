@@ -13,7 +13,6 @@ public class DetalhesConsultaAnteriorResponseDto {
     private String especialidade;
     private String nomeProfissional;
     private String tipo;
-    private String tratamentoAtual;
     private List<String> materiaisUtilizados;
     private String observacoesComportamentais;
 
@@ -74,14 +73,6 @@ public class DetalhesConsultaAnteriorResponseDto {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    public String getTratamentoAtual() {
-        return tratamentoAtual;
-    }
-
-    public void setTratamentoAtual(String tratamentoAtual) {
-        this.tratamentoAtual = tratamentoAtual;
     }
 
     public List<String> getMateriaisUtilizados() {

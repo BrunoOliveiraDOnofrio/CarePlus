@@ -139,13 +139,6 @@ INSERT INTO medicacao (id_medicacao, nome_medicacao, data_inicio, data_fim, ativ
 (2, 'Melatonina', '2025-11-10', '2026-01-10', 0, NOW(), 2),
 (3, 'Metilfenidato', '2026-01-05', NULL, 1, NOW(), 3);
 
--- tratamento
-INSERT INTO tratamento (id, tipo_de_tratamento, finalizado, data_modificacao, prontuario_id) VALUES
-(1, 'Terapia Fonoaudiológica', 0, NOW(), 1),
-(2, 'Terapia Cognitiva', 1, NOW(), 2),
-(3, 'Estimulação Sensorial', 0, NOW(), 3),
-(4, 'Acompanhamento Psicológico', 0, NOW(), 4);
-
 -- cuidador
 INSERT INTO cuidador (id, paciente_id, responsavel_id, parentesco) VALUES
 (1, 1, 1, 'Mãe'),

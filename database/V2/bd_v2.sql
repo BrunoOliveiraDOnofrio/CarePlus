@@ -197,22 +197,6 @@ CREATE TABLE medicacao (
 );
 
 -- =========================
--- TABELA TRATAMENTO
--- =========================
-DROP TABLE IF EXISTS tratamento;
-
-CREATE TABLE tratamento (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    tipo_de_tratamento VARCHAR(255),
-    finalizado TINYINT,
-    data_modificacao DATETIME,
-    prontuario_id BIGINT,
-    CONSTRAINT fk_tratamento_prontuario
-        FOREIGN KEY (prontuario_id)
-        REFERENCES fichaClinica(id)
-);
-
--- =========================
 -- TABELA CUIDADOR
 -- =========================
 DROP TABLE IF EXISTS cuidador;

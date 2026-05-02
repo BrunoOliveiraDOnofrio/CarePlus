@@ -2,6 +2,7 @@ package com.example.careplus.dto.dtoConsultaProntuario;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class ConsultaProntuarioAtualResponseDto {
 
@@ -17,6 +18,8 @@ public class ConsultaProntuarioAtualResponseDto {
     private DadosPaciente dadosPaciente;
 
     private UltimaConsulta ultimaConsulta;
+
+    private List<MaterialInfo> materiais;
 
     public ConsultaProntuarioAtualResponseDto() {
     }
@@ -99,6 +102,25 @@ public class ConsultaProntuarioAtualResponseDto {
 
     public void setUltimaConsulta(UltimaConsulta ultimaConsulta) {
         this.ultimaConsulta = ultimaConsulta;
+    }
+
+    public List<MaterialInfo> getMateriais() {
+        return materiais;
+    }
+
+    public void setMateriais(List<MaterialInfo> materiais) {
+        this.materiais = materiais;
+    }
+
+    public static class MaterialInfo {
+        private Long id;
+        private String item;
+
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+
+        public String getItem() { return item; }
+        public void setItem(String item) { this.item = item; }
     }
 
     public static class DadosPaciente {

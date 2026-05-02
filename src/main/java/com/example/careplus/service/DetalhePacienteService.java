@@ -2,19 +2,16 @@ package com.example.careplus.service;
 
 import com.example.careplus.dto.dtoDetalhes.AtualizarFichaClinicaDTO;
 import com.example.careplus.dto.dtoDetalhes.AtualizarObservacoesComportamentaisDTO;
-import com.example.careplus.dto.dtoDetalhes.AtualizarTratamentoDTO;
 import com.example.careplus.dto.dtoPaciente.DetalhePacienteDTO;
 import com.example.careplus.exception.ResourceNotFoundException;
 import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.model.FichaClinica;
 import com.example.careplus.model.Medicacao;
 import com.example.careplus.model.Paciente;
-import com.example.careplus.model.Tratamento;
 import com.example.careplus.model.ClassificacaoDoencas;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.repository.FichaClinicaRepository;
 import com.example.careplus.repository.PacienteRepository;
-import com.example.careplus.repository.TratamentoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +31,6 @@ public class DetalhePacienteService {
     private final ConsultaProntuarioRepository consultaProntuarioRepository;
     private final FichaClinicaRepository fichaClinicaRepository;
     private final FichaClinicaService fichaClinicaService;
-    private final TratamentoRepository tratamentoRepository;
 
     public DetalhePacienteDTO buscarDetalhesCompletoPaciente(Long pacienteId, Long funcionarioId) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
@@ -170,25 +166,4 @@ public class DetalhePacienteService {
         pacienteRepository.save(paciente);
     }
 
-    @Transactional
-    public void atualizarTratamento(Long pacienteId, AtualizarTratamentoDTO dto) {
-        // busca a ficha clínica do paciente pra ter certeza que existe
-        FichaClinica fichaClinica = fichaClinicaRepository.findById(dto.getIdFichaClinica())
-                .orElseThrow(() -> new RuntimeException("Ficha clínica não encontrada"));
-
-        // busca o tratamento específico pelo tipo de tratamento e pela ficha clínica
-        Tratamento tratamento = tratamentoRepository
-                .findByTipoDeTratamentoAndFichaClinica_Id(dto.getTipoDeTratamento(), dto.getIdFichaClinica())
-                .orElseThrow(() -> new RuntimeException(
-                        String.format("Tratamento '%s' não encontrado para a ficha clínica %d",
-                                dto.getTipoDeTratamento(), dto.getIdFichaClinica())));
-
-        // atualiza apenas o status de finalizado
-        tratamento.setFinalizado(dto.getFinalizado());
-        // atualiza a data de modificação
-        tratamento.setDataModificacao(LocalDateTime.now());
-
-        // salva as alterações
-        tratamentoRepository.save(tratamento);
-    }
 }

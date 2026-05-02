@@ -17,14 +17,12 @@ public class FichaClinicaService {
     private final FichaClinicaRepository fichaClinicaRepository;
     private final PacienteRepository pacienteRepository;
     private final ClassificacaoDoencasRepository cidRepository;
-    private final TratamentoRepository tratamentoRepository;
     private final MedicacaoRepository medicacaoRepository;
 
-    public FichaClinicaService(FichaClinicaRepository repository, PacienteRepository pacienteRepository, ClassificacaoDoencasRepository cidRepository, TratamentoRepository tratamentoRepository, MedicacaoRepository medicacaoRepository) {
+    public FichaClinicaService(FichaClinicaRepository repository, PacienteRepository pacienteRepository, ClassificacaoDoencasRepository cidRepository, MedicacaoRepository medicacaoRepository) {
         this.fichaClinicaRepository = repository;
         this.pacienteRepository = pacienteRepository;
         this.cidRepository = cidRepository;
-        this.tratamentoRepository = tratamentoRepository;
         this.medicacaoRepository = medicacaoRepository;
     }
 
@@ -57,7 +55,6 @@ public class FichaClinicaService {
 
         for (FichaClinica f : fichasClinicas){
             f.setCid(cidRepository.findByFichaClinica_Id(f.getId()));
-            f.setTratamentos(tratamentoRepository.findByFichaClinica_Id(f.getId()));
             f.setMedicacoes(medicacaoRepository.findByFichaClinica_Id(f.getId()));
         }
 
