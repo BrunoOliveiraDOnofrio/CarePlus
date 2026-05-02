@@ -1,5 +1,6 @@
 package com.example.careplus.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
@@ -19,9 +20,10 @@ import java.util.UUID;
 public class S3Service {
 
     private final S3Client s3Client;
-    private final String bucketName = "bucket-prontuarios-4";
+    private final String bucketName;
 
-    public S3Service() {
+    public S3Service(@Value("${aws.s3.bucket-name}") String bucketName) {
+        this.bucketName = bucketName;
         this.s3Client = S3Client.builder()
                 .region(Region.US_EAST_1) // coloque sua região
                 .credentialsProvider(DefaultCredentialsProvider.create())
