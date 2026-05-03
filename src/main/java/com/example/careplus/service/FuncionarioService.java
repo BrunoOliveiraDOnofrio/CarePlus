@@ -118,9 +118,9 @@ public class FuncionarioService {
             funcExistente.setTipoAtendimento(dto.getTipoAtendimento());
             funcExistente.setSupervisor(supervisor);
 
-            // Atualiza a senha criptografada
-            String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
-            funcExistente.setSenha(senhaCriptografada);
+            if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+                funcExistente.setSenha(passwordEncoder.encode(dto.getSenha()));
+            }
 
             // UPLOAD DA IMAGEM
             if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {

@@ -27,6 +27,7 @@ import com.example.careplus.repository.FichaClinicaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,9 @@ public class ConsultaProntuarioService {
     private final ObjectMapper objectMapper;
     private final ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer;
     private final ConsultaFuncionarioRepository consultaFuncionarioRepository;
+
+    @Value("${aws.s3.bucket-name}")
+    private String bucket;
 
     public ConsultaProntuarioService(ConsultaProntuarioRepository consultaProntuarioRepository, PacienteRepository pacienteRepository, FuncionarioRepository funcionarioRepository, FichaClinicaRepository fichaClinicaRepository, CuidadorRepository cuidadorRepository, S3Service s3Service, ObjectMapper objectMapper, ConsultaCriadaRabbitProducer consultaCriadaRabbitProducer, ConsultaFuncionarioRepository consultaFuncionarioRepository) {
         this.consultaProntuarioRepository = consultaProntuarioRepository;
@@ -383,7 +387,7 @@ public class ConsultaProntuarioService {
              String json = objectMapper.writeValueAsString(consultaSalva);
 
              s3Service.uploadJson(
-                     "bucket-prontuarios-1",
+                     bucket,
                      "prontuarios/pacienteId" + consultaSalva.getPaciente().getId() + "/" + consultaSalva.getData() + "_" + consultaSalva.getHorarioInicio() + ".json",
                      json
              );
