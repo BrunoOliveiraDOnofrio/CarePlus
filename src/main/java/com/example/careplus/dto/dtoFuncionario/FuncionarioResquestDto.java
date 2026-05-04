@@ -20,7 +20,6 @@ public class FuncionarioResquestDto {
     @Schema(description = "iago_benedito_barbosa@navescorat.com.br")
     private String email;
 
-    @NotBlank(message = "Senha é obrigatória")
     @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
     @Schema(description = "olgyT0E7nH")
     private String senha;

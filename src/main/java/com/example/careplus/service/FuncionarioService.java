@@ -64,10 +64,12 @@ public class FuncionarioService {
                     .orElseThrow(() -> new RuntimeException("Supervisor não encontrado"));
         }
 
-        String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
+        if (dto.getSenha() == null || dto.getSenha().isBlank()) {
+            throw new IllegalArgumentException("Senha é obrigatória");
+        }
 
         Funcionario novoFuncionario = FuncionarioMapper.toEntity(dto, supervisor);
-        novoFuncionario.setSenha(senhaCriptografada);
+        novoFuncionario.setSenha(passwordEncoder.encode(dto.getSenha()));
 
         // UPLOAD DA IMAGEM
         if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
