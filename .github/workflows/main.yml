@@ -1,0 +1,100 @@
+name: CI/CD Backend CarePlus
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch para executar o workflow'
+        required: true
+        default: 'main'
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    environment: ci-cd
+
+    steps:
+      # 1. Checkout do repositório do backend
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      # 2. Configurar JDK 21 (mesmo da EC2)
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      # 3. Cache do Maven para acelerar builds futuros
+      - name: Cache do Maven
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # 4. Executar testes automatizados
+      - name: Executar Testes Automatizados
+        run: mvn clean test
+
+      # 5. Gerar o JAR final (pulando testes pois já rodaram acima)
+      - name: Gerar Artefato .JAR
+        run: mvn -B package -DskipTests=true
+
+      # 6. Renomear para nome fixo (ignora o .original do Spring Boot)
+      - name: Renomear JAR para careplus.jar
+        run: |
+          JAR_NAME=$(ls target/*.jar | grep -v '\.original$' | head -1)
+          mv "$JAR_NAME" target/careplus.jar
+          echo "Artefato pronto: target/careplus.jar ($(du -sh target/careplus.jar | cut -f1))"
+
+      # 7. Configurar credenciais AWS (AWS Academy usa session token temporário)
+      - name: Configurar Credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      # 8. Enviar JAR para o bucket S3 de deploy
+      - name: Enviar JAR para S3
+        run: |
+          aws s3 cp target/careplus.jar s3://${{ secrets.DEPLOY_BUCKET }}/careplus.jar
+          echo "Enviado: s3://${{ secrets.DEPLOY_BUCKET }}/careplus.jar"
+
+      # 9. SSH na EC2 do backend → baixar novo JAR do S3 → reiniciar container
+      - name: Deploy na EC2 (atualizar JAR e reiniciar)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.BACKEND_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            echo "==> Baixando novo careplus.jar do S3..."
+            # A EC2 usa o LabInstanceProfile, sem necessidade de credenciais explícitas
+            aws s3 cp s3://${{ secrets.DEPLOY_BUCKET }}/careplus.jar /opt/careplus/careplus.jar
+            echo "JAR atualizado: $(ls -lh /opt/careplus/careplus.jar)"
+
+            echo "==> Reiniciando container careplus-app..."
+            docker restart careplus-app
+            echo "Container reiniciado"
+
+            echo "==> Aguardando aplicação subir (30s)..."
+            sleep 30
+
+            if docker ps --filter "name=careplus-app" --filter "status=running" | grep -q careplus-app; then
+              echo "✓ Backend CarePlus rodando com sucesso"
+              docker logs careplus-app --tail 30
+            else
+              echo "✗ ERRO: Container não está em execução"
+              docker logs careplus-app --tail 50
+              exit 1
+            fi
