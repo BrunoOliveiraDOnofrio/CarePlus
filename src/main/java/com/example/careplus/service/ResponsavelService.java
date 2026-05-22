@@ -11,6 +11,8 @@ import com.example.careplus.repository.CuidadorRepository;
 import com.example.careplus.repository.EnderecoRepository;
 import com.example.careplus.repository.ResponsavelRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,7 @@ public class ResponsavelService {
         return cadastrar(responsavelNew);
     }
 
-    // CRUD SIMPLES
+    @CacheEvict(value = "responsaveis", allEntries = true)
     public Responsavel cadastrar(ResponsavelRequestDto responsavelNew){
         Responsavel paraRegistrar = ResponsavelMapper.toEntity(responsavelNew);
 
@@ -68,6 +70,7 @@ public class ResponsavelService {
         return responsaveis;
     }
 
+    @Cacheable(value = "responsaveis", key = "'pagina_0'", condition = "#pageable.pageNumber == 0")
     public Page<Responsavel> listarPaginado(Pageable pageable){
         return responsavelRepository.findAllByAtivoTrue(pageable);
     }
@@ -97,6 +100,7 @@ public class ResponsavelService {
         return responsavelEncontrado;
     }
 
+    @CacheEvict(value = "responsaveis", allEntries = true)
     public Responsavel atualizar(Long id, ResponsavelRequestDto responsavelAtt){
         Optional<Responsavel> selecionar = responsavelRepository.findById(id);
         if(selecionar.isEmpty()){
@@ -137,6 +141,7 @@ public class ResponsavelService {
         return List.of();
     }
 
+    @CacheEvict(value = "responsaveis", allEntries = true)
     public void deletar(Long id){
         Responsavel responsavel = responsavelRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);

@@ -12,6 +12,8 @@ import com.example.careplus.exception.UserAlreadyExistsException;
 import com.example.careplus.model.Funcionario;
 import com.example.careplus.model.Responsavel;
 import com.example.careplus.repository.FuncionarioRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.careplus.exception.MissingFieldException;
@@ -53,6 +55,7 @@ public class PacienteService {
         return dtos;
     }
 
+    @Cacheable(value = "pacientes", key = "'pagina_0'", condition = "#pageable.pageNumber == 0")
     public Page<PacienteResponseDto> listarTodosPaginado(Pageable pageable) {
         return repositoryPaciente.findAllByAtivoTrue(pageable)
                 .map(PacienteMapper::toResponseDto);
@@ -102,7 +105,7 @@ public class PacienteService {
 
     }
 
-    // OK
+    @CacheEvict(value = "pacientes", allEntries = true)
     public PacienteResponseDto salvar(PacienteRequestDto paciente){
 
         if(paciente.getEmail() == null){
@@ -142,7 +145,7 @@ public class PacienteService {
         fichaClinicaRepository.save(fichaClinica);
     }
 
-    // OK
+    @CacheEvict(value = "pacientes", allEntries = true)
     public void deletar(Long id){
         Paciente paciente = repositoryPaciente.findByIdAndAtivoTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
@@ -151,7 +154,7 @@ public class PacienteService {
         repositoryPaciente.save(paciente);
     }
 
-    // OK
+    @CacheEvict(value = "pacientes", allEntries = true)
     public PacienteResponseDto atualizar(PacienteRequestDto paciente, Long id){
         Optional<Paciente> existe = repositoryPaciente.findByIdAndAtivoTrue(id);
 
