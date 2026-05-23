@@ -28,10 +28,6 @@ public class ConsultaProntuarioResponseDto {
     private String tipo;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String observacoesComportamentais;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean presenca;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean confirmada;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String recorrenciaId;
@@ -40,8 +36,7 @@ public class ConsultaProntuarioResponseDto {
 
     public ConsultaProntuarioResponseDto(Long id, PacienteResponseDto paciente, List<FuncionarioResponseDto> funcionarios,
                                          LocalDate data, LocalTime horarioInicio, LocalTime horarioFim,
-                                         String tipo, String observacoesComportamentais,
-                                         Boolean presenca, Boolean confirmada) {
+                                         String tipo, String observacoesComportamentais) {
         this.id = id;
         this.paciente = paciente;
         this.funcionarios = funcionarios;
@@ -50,8 +45,6 @@ public class ConsultaProntuarioResponseDto {
         this.horarioFim = horarioFim;
         this.tipo = tipo;
         this.observacoesComportamentais = observacoesComportamentais;
-        this.presenca = presenca;
-        this.confirmada = confirmada;
     }
 
     public Long getId() { return id; }
@@ -77,12 +70,6 @@ public class ConsultaProntuarioResponseDto {
 
     public String getObservacoesComportamentais() { return observacoesComportamentais; }
     public void setObservacoesComportamentais(String obs) { this.observacoesComportamentais = obs; }
-
-    public Boolean getPresenca() { return presenca; }
-    public void setPresenca(Boolean presenca) { this.presenca = presenca; }
-
-    public Boolean getConfirmada() { return confirmada; }
-    public void setConfirmada(Boolean confirmada) { this.confirmada = confirmada; }
 
     public String getRecorrenciaId() { return recorrenciaId; }
     public void setRecorrenciaId(String recorrenciaId) { this.recorrenciaId = recorrenciaId; }

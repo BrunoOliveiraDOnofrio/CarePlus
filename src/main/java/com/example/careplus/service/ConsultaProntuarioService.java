@@ -290,8 +290,8 @@ public class ConsultaProntuarioService {
         consultaProntuarioRepository.deleteAll(consultas);
     }
 
-    public List<ConsultaProntuario> listarConsultas(){
-        return consultaProntuarioRepository.findAll();
+    public List<ConsultaProntuarioResponseDto> listarConsultas(){
+        return ConsultaProntuarioMapper.toResponseDto(consultaProntuarioRepository.findAll());
     }
 
     public List<ConsultaProntuarioResponseDto> listarPorData(){
@@ -727,7 +727,6 @@ public class ConsultaProntuarioService {
 
 
         ConsultaProntuarioAtualResponseDto.DadosPaciente dadosPaciente = new ConsultaProntuarioAtualResponseDto.DadosPaciente();
-        dadosPaciente.setPacienteId(paciente.getId());
         dadosPaciente.setNome(paciente.getNome());
 
         List<Cuidador> cuidadores = cuidadorRepository.findByPacienteId(paciente.getId());

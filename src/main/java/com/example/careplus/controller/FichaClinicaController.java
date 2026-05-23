@@ -1,6 +1,8 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.dto.dtoFichaClinica.FichaClinicaMapper;
 import com.example.careplus.dto.dtoFichaClinica.FichaClinicaRequestDto;
+import com.example.careplus.dto.dtoFichaClinica.FichaClinicaResponseDto;
 import com.example.careplus.model.FichaClinica;
 import com.example.careplus.service.FichaClinicaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,17 +23,17 @@ public class FichaClinicaController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> cadastrarFichaClinica(@RequestBody FichaClinicaRequestDto fichaClinica){
+    public ResponseEntity<FichaClinicaResponseDto> cadastrarFichaClinica(@RequestBody FichaClinicaRequestDto fichaClinica){
         FichaClinica fichaClinicaCriada = fichaClinicaService.criarFichaClinica(fichaClinica);
-        return ResponseEntity.status(201).body(fichaClinicaCriada);
+        return ResponseEntity.status(201).body(FichaClinicaMapper.toResponseDto(fichaClinicaCriada));
     }
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<FichaClinica>> listarTodasFichasClinicas(){
+    public ResponseEntity<List<FichaClinicaResponseDto>> listarTodasFichasClinicas(){
         try {
             List<FichaClinica> fichasClinicas = fichaClinicaService.listarFichasClinicas();
-            return ResponseEntity.status(200).body(fichasClinicas);
+            return ResponseEntity.status(200).body(FichaClinicaMapper.toResponseDto(fichasClinicas));
         } catch (Exception e){
             return ResponseEntity.status(404).build();
         }
@@ -39,10 +41,10 @@ public class FichaClinicaController {
 
     @GetMapping("/id")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> buscarFichaClinicaPorId(@RequestParam Long id){
+    public ResponseEntity<FichaClinicaResponseDto> buscarFichaClinicaPorId(@RequestParam Long id){
         try {
             FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorId(id);
-            return ResponseEntity.status(200).body(fichaClinica);
+            return ResponseEntity.status(200).body(FichaClinicaMapper.toResponseDto(fichaClinica));
         } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
@@ -50,10 +52,10 @@ public class FichaClinicaController {
 
     @GetMapping("/nome")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> buscarFichaClinicaPorNome(@RequestParam String nome){
+    public ResponseEntity<FichaClinicaResponseDto> buscarFichaClinicaPorNome(@RequestParam String nome){
         try {
             FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorNome(nome);
-            return ResponseEntity.status(200).body(fichaClinica);
+            return ResponseEntity.status(200).body(FichaClinicaMapper.toResponseDto(fichaClinica));
         } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
@@ -61,10 +63,10 @@ public class FichaClinicaController {
 
     @GetMapping("/cpf")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> buscarFichaClinicaPorCpf(@RequestParam String cpf){
+    public ResponseEntity<FichaClinicaResponseDto> buscarFichaClinicaPorCpf(@RequestParam String cpf){
         try {
             FichaClinica fichaClinica = fichaClinicaService.buscarFichaClinicaPorCpf(cpf);
-            return ResponseEntity.status(200).body(fichaClinica);
+            return ResponseEntity.status(200).body(FichaClinicaMapper.toResponseDto(fichaClinica));
         } catch (Exception e){
             return ResponseEntity.status(404).build();
         }
@@ -72,10 +74,10 @@ public class FichaClinicaController {
 
     @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<FichaClinica> atualizarFichaClinica(@RequestBody FichaClinicaRequestDto fichaClinica, @RequestParam Long id){
+    public ResponseEntity<FichaClinicaResponseDto> atualizarFichaClinica(@RequestBody FichaClinicaRequestDto fichaClinica, @RequestParam Long id){
         try {
             FichaClinica fichaClinicaAtualizada = fichaClinicaService.atualizarFichaClinica(fichaClinica, id);
-            return ResponseEntity.status(201).body(fichaClinicaAtualizada);
+            return ResponseEntity.status(201).body(FichaClinicaMapper.toResponseDto(fichaClinicaAtualizada));
         } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
@@ -92,4 +94,3 @@ public class FichaClinicaController {
         }
     }
 }
-

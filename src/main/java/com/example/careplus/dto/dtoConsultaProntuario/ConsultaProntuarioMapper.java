@@ -41,9 +41,7 @@ public class ConsultaProntuarioMapper {
                 entity.getHorarioInicio(),
                 entity.getHorarioFim(),
                 entity.getTipo(),
-                entity.getObservacoesComportamentais(),
-                entity.getPresenca(),
-                entity.getConfirmada()
+                entity.getObservacoesComportamentais()
         );
         dto.setRecorrenciaId(entity.getRecorrenciaId());
         return dto;

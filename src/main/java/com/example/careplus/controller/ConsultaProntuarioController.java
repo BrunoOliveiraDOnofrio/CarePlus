@@ -4,7 +4,6 @@ import com.example.careplus.dto.dtoConsultaProntuario.*;
 import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasRequestDto;
 import com.example.careplus.dto.dtoConsultaRecorrente.AgendarConsultasResponseDto;
 import com.example.careplus.dto.messaging.EventoConsultaCriadaDto;
-import com.example.careplus.model.ConsultaProntuario;
 import com.example.careplus.service.ConsultaProntuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -79,8 +78,8 @@ public class ConsultaProntuarioController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ConsultaProntuario>> listarConsultas(){
-        List<ConsultaProntuario> consultas = service.listarConsultas();
+    public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarConsultas(){
+        List<ConsultaProntuarioResponseDto> consultas = service.listarConsultas();
         if (consultas.isEmpty()){
             return ResponseEntity.status(404).build();
         } else {

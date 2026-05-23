@@ -1,8 +1,9 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.dto.dtoResponsavel.ResponsavelMapper;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelRequestDto;
+import com.example.careplus.dto.dtoResponsavel.ResponsavelResponseDto;
 import com.example.careplus.dto.dtoResponsavel.ResponsavelResponseNotificacaoDto;
-import com.example.careplus.model.Responsavel;
 import com.example.careplus.service.ResponsavelService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Page;
@@ -27,9 +28,9 @@ public class ResponsavelController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Responsavel> cadastrar(@Valid @RequestBody ResponsavelRequestDto responsavel){
+    public ResponseEntity<ResponsavelResponseDto> cadastrar(@Valid @RequestBody ResponsavelRequestDto responsavel){
         try {
-            return ResponseEntity.status(201).body(responsavelService.cadastrar(responsavel));
+            return ResponseEntity.status(201).body(ResponsavelMapper.toResponseDto(responsavelService.cadastrar(responsavel)));
         } catch (Exception e){
             return ResponseEntity.status(409).build();
         }
@@ -37,10 +38,11 @@ public class ResponsavelController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Page<Responsavel>> listar(
+    public ResponseEntity<Page<ResponsavelResponseDto>> listar(
             @RequestParam(defaultValue = "0") Integer pagina){
         Pageable pageable = PageRequest.of(pagina, 8);
-        Page<Responsavel> responsaveis = responsavelService.listarPaginado(pageable);
+        Page<ResponsavelResponseDto> responsaveis = responsavelService.listarPaginado(pageable)
+                .map(ResponsavelMapper::toResponseDto);
         return ResponseEntity.status(200).body(responsaveis);
     }
 
@@ -59,10 +61,11 @@ public class ResponsavelController {
 
     @GetMapping("/inativos")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Page<Responsavel>> listarInativos(
+    public ResponseEntity<Page<ResponsavelResponseDto>> listarInativos(
             @RequestParam(defaultValue = "0") Integer pagina){
         Pageable pageable = PageRequest.of(pagina, 8);
-        return ResponseEntity.ok(responsavelService.listarInativosPaginado(pageable));
+        return ResponseEntity.ok(responsavelService.listarInativosPaginado(pageable)
+                .map(ResponsavelMapper::toResponseDto));
     }
 
     @PatchMapping("/reativar")
@@ -78,18 +81,18 @@ public class ResponsavelController {
 
     @GetMapping("/buscar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<Responsavel>> buscar(
+    public ResponseEntity<List<ResponsavelResponseDto>> buscar(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String cpf) {
-        return ResponseEntity.ok(responsavelService.buscar(nome, email, cpf));
+        return ResponseEntity.ok(ResponsavelMapper.toResponseDto(responsavelService.buscar(nome, email, cpf)));
     }
 
     @GetMapping("/por-email")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Responsavel> buscarPorEmail(@RequestParam String email){
+    public ResponseEntity<ResponsavelResponseDto> buscarPorEmail(@RequestParam String email){
         try {
-            return ResponseEntity.status(200).body(responsavelService.buscarPorEmail(email));
+            return ResponseEntity.status(200).body(ResponsavelMapper.toResponseDto(responsavelService.buscarPorEmail(email)));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404).build();
         }
@@ -97,9 +100,9 @@ public class ResponsavelController {
 
     @GetMapping("/por-cpf")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Responsavel> buscarPorCpf(@RequestParam String cpf){
+    public ResponseEntity<ResponsavelResponseDto> buscarPorCpf(@RequestParam String cpf){
         try {
-            return ResponseEntity.status(200).body(responsavelService.buscarPorCpf(cpf));
+            return ResponseEntity.status(200).body(ResponsavelMapper.toResponseDto(responsavelService.buscarPorCpf(cpf)));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404).build();
         }
@@ -107,9 +110,9 @@ public class ResponsavelController {
 
     @GetMapping("/{id}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Responsavel> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<ResponsavelResponseDto> buscarPorId(@PathVariable Long id){
         try {
-            return ResponseEntity.status(200).body(responsavelService.buscarPorId(id));
+            return ResponseEntity.status(200).body(ResponsavelMapper.toResponseDto(responsavelService.buscarPorId(id)));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404).build();
         }
@@ -117,9 +120,9 @@ public class ResponsavelController {
 
     @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Responsavel> atualizar(@RequestParam Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
+    public ResponseEntity<ResponsavelResponseDto> atualizar(@RequestParam Long id, @Valid @RequestBody ResponsavelRequestDto responsavelAtt){
         try {
-            return ResponseEntity.status(200).body(responsavelService.atualizar(id, responsavelAtt));
+            return ResponseEntity.status(200).body(ResponsavelMapper.toResponseDto(responsavelService.atualizar(id, responsavelAtt)));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404).build();
         } catch (IllegalArgumentException e) {

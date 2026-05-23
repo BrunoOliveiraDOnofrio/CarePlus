@@ -20,15 +20,9 @@ public class FuncionarioMapper {
         return funcionario;
     }
 
-    // Usuario para o UsuarioTokenDto, além de também colocar o valor do token no dto
     public static FuncionarioTokenDto of(Funcionario funcionario, String token){
         FuncionarioTokenDto funcionarioTokenDto = new FuncionarioTokenDto();
-
-        funcionarioTokenDto.setUserId(funcionario.getId());
-        funcionarioTokenDto.setEmail(funcionario.getEmail());
-        funcionarioTokenDto.setNome(funcionario.getNome());
         funcionarioTokenDto.setToken(token);
-
         return funcionarioTokenDto;
     }
 

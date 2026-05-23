@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 
 public class ResponsavelResponseDto {
+    private Long id;
     @Schema(description = "Ana Josefa")
     private String nome;
     @Schema(description = "vitor_ribeiro@performa.com.br")
@@ -18,6 +19,14 @@ public class ResponsavelResponseDto {
     private String cpf;
     @Schema(description = "Endereco do responsavel")
     private EnderecoResponseDto endereco;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
@@ -36,10 +45,7 @@ public class ResponsavelResponseDto {
     }
 
     public String getTelefone() {
-        if (this.telefone == null || this.telefone.length() != 11) {
-            return null;
-        }
-        return "(" + telefone.substring(0, 2) + ")" + " " + telefone.substring(2, 7) + "-" + telefone.substring(7, 11);
+        return telefone;
     }
 
     public void setTelefone(String telefone) {
@@ -55,10 +61,7 @@ public class ResponsavelResponseDto {
     }
 
     public String getCpf() {
-        if (cpf == null || cpf.length() != 11) {
-            return null;
-        }
-        return cpf.substring(0, 3) + ".***.***-" + cpf.substring(9);
+        return cpf;
     }
 
     public void setCpf(String cpf) {

@@ -124,26 +124,15 @@ public class ConsultaProntuarioAtualResponseDto {
     }
 
     public static class DadosPaciente {
-        private Long pacienteId;
         private String nome;
         private String contato;
         private Integer idade;
-        private String cid;
         private Boolean desfraldado;
         private String hiperfocoAtual;
-        private String medicacoes;
         private String diagnostico;
         private String atendimentoEspecial;
 
         public DadosPaciente() {
-        }
-
-        public Long getPacienteId() {
-            return pacienteId;
-        }
-
-        public void setPacienteId(Long pacienteId) {
-            this.pacienteId = pacienteId;
         }
 
         public String getNome() {
@@ -170,14 +159,6 @@ public class ConsultaProntuarioAtualResponseDto {
             this.idade = idade;
         }
 
-        public String getCid() {
-            return cid;
-        }
-
-        public void setCid(String cid) {
-            this.cid = cid;
-        }
-
         public Boolean getDesfraldado() {
             return desfraldado;
         }
@@ -192,14 +173,6 @@ public class ConsultaProntuarioAtualResponseDto {
 
         public void setHiperfocoAtual(String hiperfocoAtual) {
             this.hiperfocoAtual = hiperfocoAtual;
-        }
-
-        public String getMedicacoes() {
-            return medicacoes;
-        }
-
-        public void setMedicacoes(String medicacoes) {
-            this.medicacoes = medicacoes;
         }
 
         public String getDiagnostico() {

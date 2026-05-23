@@ -16,7 +16,6 @@ public class MaterialMapper {
         MaterialResponseDto dto = new MaterialResponseDto();
         dto.setId(entity.getId());
         dto.setItem(entity.getItem());
-        dto.setDataImplementacao(entity.getDataImplementacao());
         return dto;
     }
 

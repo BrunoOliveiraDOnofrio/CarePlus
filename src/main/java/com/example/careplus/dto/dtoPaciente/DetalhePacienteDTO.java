@@ -5,32 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetalhePacienteDTO {
-    // Informações do Paciente
     private Long pacienteId;
     private String nome;
     private String cpf;
-    private String fotoPerfil;
 
-    // Ficha Clínica
     private FichaClinicaDTO fichaClinica;
 
-    // CIDs
     private List<CidDTO> cids;
 
-    // Medicações
     private List<MedicacaoDTO> medicacoes;
 
-    // Última Consulta
     private UltimaConsultaDTO ultimaConsulta;
 
-    // Próxima Consulta
     private LocalDate proximaConsulta;
 
     @Data
@@ -67,7 +59,6 @@ public class DetalhePacienteDTO {
         private LocalDate dataInicio;
         private LocalDate dataFim;
         private Boolean ativo;
-        private LocalDateTime dataModificacao;
     }
 
     @Data
@@ -76,6 +67,5 @@ public class DetalhePacienteDTO {
     public static class CidDTO {
         private Long id;
         private String cid;
-        private LocalDate dtModificacao;
     }
 }

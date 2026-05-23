@@ -19,8 +19,7 @@ public class PacienteMapper {
         entity.setTelefone(dto.getTelefone());
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setConvenio(dto.getConvenio());
-        entity.setDataInicio(LocalDate.now()); // define data de início automaticamente
-
+        entity.setDataInicio(LocalDate.now());
 
         return entity;
     }
@@ -37,8 +36,6 @@ public class PacienteMapper {
         entity.setTelefone(dto.getTelefone());
         entity.setDtNascimento(dto.getDtNascimento());
         entity.setConvenio(dto.getConvenio());
-        entity.setDataInicio(dto.getDataInicio());
-        entity.setFoto(dto.getFoto());
 
         return entity;
     }
@@ -48,19 +45,15 @@ public class PacienteMapper {
             return null;
         }
 
-        PacienteResponseDto dto = new PacienteResponseDto(
+        return new PacienteResponseDto(
             entity.getId(),
             entity.getNome(),
             entity.getEmail(),
             entity.getCpf(),
             entity.getTelefone(),
             entity.getDtNascimento(),
-            entity.getConvenio(),
-            entity.getDataInicio(),
-            entity.getFoto()
+            entity.getConvenio()
         );
-
-        return dto;
     }
 
     public static List<PacienteResponseDto> toResponseDto(List<Paciente> entity){

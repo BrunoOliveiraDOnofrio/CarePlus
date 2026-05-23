@@ -32,6 +32,7 @@ public class ResponsavelMapper {
         }
 
         ResponsavelResponseDto dto = new ResponsavelResponseDto();
+        dto.setId(entity.getId());
         dto.setNome(entity.getNome());
         dto.setEmail(entity.getEmail());
         dto.setTelefone(entity.getTelefone());

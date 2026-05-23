@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,8 +100,7 @@ public class DetalhePacienteService {
                         medicacao.getNomeMedicacao(),
                         medicacao.getDataInicio(),
                         medicacao.getDataFim(),
-                        medicacao.getAtivo(),
-                        medicacao.getDataModificacao()
+                        medicacao.getAtivo()
                 ));
             }
         }
@@ -115,8 +113,7 @@ public class DetalhePacienteService {
             for (ClassificacaoDoencas cid : cids) {
                 cidsDTO.add(new DetalhePacienteDTO.CidDTO(
                         cid.getId(),
-                        cid.getCid(),
-                        cid.getDtModificacao()
+                        cid.getCid()
                 ));
             }
         }

@@ -1,7 +1,8 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.dto.dtoMedicacao.MedicacaoMapper;
 import com.example.careplus.dto.dtoMedicacao.MedicacaoRequestDto;
-import com.example.careplus.model.Medicacao;
+import com.example.careplus.dto.dtoMedicacao.MedicacaoResponseDto;
 import com.example.careplus.service.MedicacaoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -21,23 +22,19 @@ public class MedicacaoController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Medicacao> adicionar(@RequestBody MedicacaoRequestDto dto) {
+    public ResponseEntity<MedicacaoResponseDto> adicionar(@RequestBody MedicacaoRequestDto dto) {
         try {
-            Medicacao novaMedicacao = service.adicionar(dto);
-            return ResponseEntity.status(201).body(novaMedicacao);
+            return ResponseEntity.status(201).body(MedicacaoMapper.toResponseDto(service.adicionar(dto)));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).build();
         }
     }
 
-
     @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Medicacao> atualizar(@RequestParam Long id, @RequestBody MedicacaoRequestDto dto) {
-
+    public ResponseEntity<MedicacaoResponseDto> atualizar(@RequestParam Long id, @RequestBody MedicacaoRequestDto dto) {
         try {
-            Medicacao medicacaoAtualizada = service.atualizar(id, dto);
-            return ResponseEntity.status(200).body(medicacaoAtualizada);
+            return ResponseEntity.status(200).body(MedicacaoMapper.toResponseDto(service.atualizar(id, dto)));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).build();
         }
@@ -56,37 +53,31 @@ public class MedicacaoController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<Medicacao>> listarOrdenadasPorNome() {
-        List<Medicacao> lista = service.listarOrdenadasPorNome();
-
+    public ResponseEntity<List<MedicacaoResponseDto>> listarOrdenadasPorNome() {
+        List<MedicacaoResponseDto> lista = MedicacaoMapper.toResponseDto(service.listarOrdenadasPorNome());
         if (lista.isEmpty()) {
             return ResponseEntity.status(204).build();
-        } else {
-            return ResponseEntity.status(200).body(lista);
         }
+        return ResponseEntity.status(200).body(lista);
     }
 
     @GetMapping("/ordenadas-tempo")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<Medicacao>> listarPorTempoMedicando() {
-        List<Medicacao> lista = service.ordenarPorTempoMedicando();
-
+    public ResponseEntity<List<MedicacaoResponseDto>> listarPorTempoMedicando() {
+        List<MedicacaoResponseDto> lista = MedicacaoMapper.toResponseDto(service.ordenarPorTempoMedicando());
         if (lista.isEmpty()) {
             return ResponseEntity.status(204).build();
-        } else {
-            return ResponseEntity.status(200).body(lista);
         }
+        return ResponseEntity.status(200).body(lista);
     }
 
     @GetMapping("/ativas")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Long> contarAtivas() {
         long qtd = service.contarAtivas();
-
         if (qtd == 0) {
             return ResponseEntity.status(204).build();
-        } else {
-            return ResponseEntity.status(200).body(qtd);
         }
+        return ResponseEntity.status(200).body(qtd);
     }
 }

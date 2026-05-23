@@ -1,9 +1,9 @@
 package com.example.careplus.controller;
 
 import com.example.careplus.dto.dtoCuidador.CuidadorContatoResponseDto;
+import com.example.careplus.dto.dtoCuidador.CuidadorMapper;
 import com.example.careplus.dto.dtoCuidador.CuidadorRequestDto;
 import com.example.careplus.dto.dtoCuidador.CuidadorResponseDto;
-import com.example.careplus.model.Cuidador;
 import com.example.careplus.service.CuidadorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +23,9 @@ public class CuidadorController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Cuidador> cadastrar(@RequestBody CuidadorRequestDto cuidador){
+    public ResponseEntity<CuidadorResponseDto> cadastrar(@RequestBody CuidadorRequestDto cuidador){
         try {
-            return ResponseEntity.status(201).body(cuidadorService.cadastrar(cuidador));
+            return ResponseEntity.status(201).body(CuidadorMapper.toResponseDto(cuidadorService.cadastrar(cuidador)));
         } catch (Exception e){
             return ResponseEntity.status(400).build();
         }
@@ -33,11 +33,12 @@ public class CuidadorController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<Cuidador>> listar(){
-        if (cuidadorService.listar().isEmpty()){
+    public ResponseEntity<List<CuidadorResponseDto>> listar(){
+        List<CuidadorResponseDto> cuidadores = CuidadorMapper.toResponseDto(cuidadorService.listar());
+        if (cuidadores.isEmpty()){
             return ResponseEntity.status(204).build();
         }
-            return ResponseEntity.status(200).body(cuidadorService.listar());
+        return ResponseEntity.status(200).body(cuidadores);
     }
 
     @GetMapping("/por-id")
@@ -62,9 +63,9 @@ public class CuidadorController {
 
     @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Cuidador> atualizar(@RequestParam Long id , @RequestBody CuidadorRequestDto cuidadorAtt){
+    public ResponseEntity<CuidadorResponseDto> atualizar(@RequestParam Long id , @RequestBody CuidadorRequestDto cuidadorAtt){
         try {
-            return ResponseEntity.status(200).body(cuidadorService.atualizar(id, cuidadorAtt));
+            return ResponseEntity.status(200).body(CuidadorMapper.toResponseDto(cuidadorService.atualizar(id, cuidadorAtt)));
         } catch (Exception e){
             return ResponseEntity.status(404).build();
         }

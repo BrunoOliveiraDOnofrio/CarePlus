@@ -1,7 +1,8 @@
 package com.example.careplus.controller;
 
+import com.example.careplus.dto.dtoCid.ClassificacaoDoencasMapper;
 import com.example.careplus.dto.dtoCid.ClassificacaoDoencasRequestDto;
-import com.example.careplus.model.ClassificacaoDoencas;
+import com.example.careplus.dto.dtoCid.ClassificacaoDoencasResponseDto;
 import com.example.careplus.service.ClassificacaoDoencasService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -21,47 +22,43 @@ public class ClassificacaoDoencasController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ClassificacaoDoencas> cadastrar(@RequestBody ClassificacaoDoencasRequestDto doencaNew) {
-        ClassificacaoDoencas criada = classificacaoDoencasService.cadastrar(doencaNew);
-        return ResponseEntity.status(201).body(criada);
+    public ResponseEntity<ClassificacaoDoencasResponseDto> cadastrar(@RequestBody ClassificacaoDoencasRequestDto doencaNew) {
+        return ResponseEntity.status(201).body(
+                ClassificacaoDoencasMapper.toResponseDto(classificacaoDoencasService.cadastrar(doencaNew))
+        );
     }
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ClassificacaoDoencas>> listar() {
-        List<ClassificacaoDoencas> doencas = classificacaoDoencasService.listar();
-        if (!doencas.isEmpty()){
-
-            return ResponseEntity.status(200).body(classificacaoDoencasService.listar());
+    public ResponseEntity<List<ClassificacaoDoencasResponseDto>> listar() {
+        List<ClassificacaoDoencasResponseDto> doencas = ClassificacaoDoencasMapper.toResponseDto(classificacaoDoencasService.listar());
+        if (!doencas.isEmpty()) {
+            return ResponseEntity.status(200).body(doencas);
         } else {
             return ResponseEntity.status(204).build();
         }
-
     }
 
     @GetMapping("/buscar")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ClassificacaoDoencas> buscarPorId(@RequestParam Long id) {
-        ClassificacaoDoencas achado = classificacaoDoencasService.buscarPorId(id);
-        if (achado != null) {
-            return ResponseEntity.ok(achado);
-        } else {
+    public ResponseEntity<ClassificacaoDoencasResponseDto> buscarPorId(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(ClassificacaoDoencasMapper.toResponseDto(classificacaoDoencasService.buscarPorId(id)));
+        } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
     }
 
     @PutMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<ClassificacaoDoencas> atualizar(@RequestParam Long id,
-                                                          @RequestBody ClassificacaoDoencasRequestDto dadosAtualizados) {
-        ClassificacaoDoencas atualizada = classificacaoDoencasService.atualizar(id, dadosAtualizados);
-        if (atualizada != null) {
-            return ResponseEntity.ok(atualizada);
-        } else {
+    public ResponseEntity<ClassificacaoDoencasResponseDto> atualizar(@RequestParam Long id,
+                                                                     @RequestBody ClassificacaoDoencasRequestDto dadosAtualizados) {
+        try {
+            return ResponseEntity.ok(ClassificacaoDoencasMapper.toResponseDto(classificacaoDoencasService.atualizar(id, dadosAtualizados)));
+        } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
     }
-
 
     @DeleteMapping
     @SecurityRequirement(name = "Bearer")
@@ -73,5 +70,4 @@ public class ClassificacaoDoencasController {
             return ResponseEntity.status(404).build();
         }
     }
-
 }
