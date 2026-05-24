@@ -53,48 +53,62 @@ jobs:
           mv "$JAR_NAME" target/careplus.jar
           echo "Artefato pronto: target/careplus.jar ($(du -sh target/careplus.jar | cut -f1))"
 
-      # 7. Configurar credenciais AWS (AWS Academy usa session token temporário)
-      - name: Configurar Credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4
+      # 7. Enviar JAR para a EC2 pública (frontend atua como jump host)
+      - name: Copiar JAR para o jump host (EC2 Frontend)
+        uses: easingthemes/ssh-deploy@main
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: us-east-1
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.FRONTEND_HOST }}
+          REMOTE_USER: ubuntu
+          TARGET: /home/ubuntu/
+          ARGS: "-rltgoDzvO"
+          SOURCE: "target/careplus.jar"
 
-      # 8. Enviar JAR para o bucket S3 de deploy
-      - name: Enviar JAR para S3
-        run: |
-          aws s3 cp target/careplus.jar s3://${{ secrets.DEPLOY_BUCKET }}/careplus.jar
-          echo "Enviado: s3://${{ secrets.DEPLOY_BUCKET }}/careplus.jar"
-
-      # 9. SSH na EC2 do backend → baixar novo JAR do S3 → reiniciar container
-      - name: Deploy na EC2 (atualizar JAR e reiniciar)
+      # 8. Do jump host, envia o JAR para a EC2 privada do backend e reinicia o container
+      - name: Deploy na EC2 Backend via jump host
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.BACKEND_HOST }}
+          host: ${{ secrets.FRONTEND_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
 
-            echo "==> Baixando novo careplus.jar do S3..."
-            # A EC2 usa o LabInstanceProfile, sem necessidade de credenciais explícitas
-            aws s3 cp s3://${{ secrets.DEPLOY_BUCKET }}/careplus.jar /opt/careplus/careplus.jar
-            echo "JAR atualizado: $(ls -lh /opt/careplus/careplus.jar)"
+            # Cria PEM temporário a partir do secret para alcançar a EC2 privada
+            ARQUIVO_PEM="/home/ubuntu/chavetmp.pem"
+            rm -f $ARQUIVO_PEM
+            echo "${{ secrets.EC2_SSH_KEY }}" > $ARQUIVO_PEM
+            chmod 400 $ARQUIVO_PEM
+
+            BACKEND_IP=${{ secrets.BACKEND_PRIVATE_IP }}
+
+            echo "==> Enviando careplus.jar para a EC2 privada ($BACKEND_IP)..."
+            scp -o StrictHostKeyChecking=no -i $ARQUIVO_PEM \
+              /home/ubuntu/careplus.jar \
+              ubuntu@$BACKEND_IP:/opt/careplus/careplus.jar
+            echo "JAR enviado"
 
             echo "==> Reiniciando container careplus-app..."
-            docker restart careplus-app
+            ssh -o StrictHostKeyChecking=no -i $ARQUIVO_PEM ubuntu@$BACKEND_IP \
+              'docker restart careplus-app'
             echo "Container reiniciado"
 
             echo "==> Aguardando aplicação subir (30s)..."
             sleep 30
 
-            if docker ps --filter "name=careplus-app" --filter "status=running" | grep -q careplus-app; then
+            STATUS=$(ssh -o StrictHostKeyChecking=no -i $ARQUIVO_PEM ubuntu@$BACKEND_IP \
+              'docker inspect --format="{{.State.Running}}" careplus-app 2>/dev/null || echo false')
+
+            if [ "$STATUS" = "true" ]; then
               echo "✓ Backend CarePlus rodando com sucesso"
-              docker logs careplus-app --tail 30
+              ssh -o StrictHostKeyChecking=no -i $ARQUIVO_PEM ubuntu@$BACKEND_IP \
+                'docker logs careplus-app --tail 30'
             else
               echo "✗ ERRO: Container não está em execução"
-              docker logs careplus-app --tail 50
+              ssh -o StrictHostKeyChecking=no -i $ARQUIVO_PEM ubuntu@$BACKEND_IP \
+                'docker logs careplus-app --tail 50'
+              rm -f $ARQUIVO_PEM
               exit 1
             fi
+
+            rm -f $ARQUIVO_PEM
