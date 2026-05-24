@@ -82,6 +82,10 @@ jobs:
 
             BACKEND_IP=${{ secrets.BACKEND_PRIVATE_IP }}
 
+            echo "==> Garantindo que /opt/careplus existe na EC2 privada..."
+            ssh -o StrictHostKeyChecking=no -i $ARQUIVO_PEM ubuntu@$BACKEND_IP \
+              'mkdir -p /opt/careplus'
+
             echo "==> Enviando careplus.jar para a EC2 privada ($BACKEND_IP)..."
             scp -o StrictHostKeyChecking=no -i $ARQUIVO_PEM \
               /home/ubuntu/careplus.jar \
