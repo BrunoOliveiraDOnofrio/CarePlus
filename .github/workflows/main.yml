@@ -82,9 +82,9 @@ jobs:
 
             BACKEND_IP=${{ secrets.BACKEND_PRIVATE_IP }}
 
-            echo "==> Garantindo que /opt/careplus existe e tem permissão de escrita..."
+            echo "==> Garantindo permissões em /opt/careplus..."
             ssh -o StrictHostKeyChecking=no -i $ARQUIVO_PEM ubuntu@$BACKEND_IP \
-              'sudo mkdir -p /opt/careplus && sudo chown ubuntu:ubuntu /opt/careplus'
+              'sudo mkdir -p /opt/careplus && sudo chown -R ubuntu:ubuntu /opt/careplus'
 
             echo "==> Enviando careplus.jar para a EC2 privada ($BACKEND_IP)..."
             scp -o StrictHostKeyChecking=no -i $ARQUIVO_PEM \
