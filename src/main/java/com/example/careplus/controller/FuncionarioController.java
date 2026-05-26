@@ -128,6 +128,15 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionarios);
     }
 
+    @GetMapping("/subordinados/paginado")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Page<FuncionarioResponseDto>> listarSubordinadosPaginado(
+            @RequestParam Long id,
+            @RequestParam(defaultValue = "0") Integer pagina) {
+        Pageable pageable = PageRequest.of(pagina, 8);
+        return ResponseEntity.ok(funcionarioService.listarSubordinadosPaginado(id, pageable));
+    }
+
     @GetMapping("/especialidades")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<String>> listarEspecialidades(){

@@ -193,6 +193,19 @@ public class FuncionarioService {
         }
     }
 
+    public Page<FuncionarioResponseDto> listarSubordinadosPaginado(Long id, Pageable pageable) {
+        List<Funcionario> todos = repository.findAllByAtivoTrue();
+        List<FuncionarioResponseDto> subordinados = listarSubordinados(id, todos);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), subordinados.size());
+        List<FuncionarioResponseDto> pagina = start >= subordinados.size()
+                ? new ArrayList<>()
+                : subordinados.subList(start, end);
+
+        return new org.springframework.data.domain.PageImpl<>(pagina, pageable, subordinados.size());
+    }
+
     public List<Funcionario> buscarTodos(){
         return repository.findAllByAtivoTrue();
     }
