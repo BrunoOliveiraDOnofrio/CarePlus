@@ -3,6 +3,7 @@ package com.example.careplus.scheduler;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
 import com.example.careplus.service.S3Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +17,12 @@ import java.util.Map;
 @Component
 public class RecorrenciaScheduler {
 
-    private static final String BUCKET = "renovar-agenda-careplus";
-
     private final ConsultaProntuarioRepository consultaProntuarioRepository;
     private final S3Service s3Service;
     private final ObjectMapper objectMapper;
+
+    @Value("${aws.s3.bucket-renovar-agenda-name}")
+    private String bucket;
 
     public RecorrenciaScheduler(ConsultaProntuarioRepository consultaProntuarioRepository,
                                 S3Service s3Service,
@@ -57,7 +59,7 @@ public class RecorrenciaScheduler {
                 String json = objectMapper.writeValueAsString(payload);
                 String key  = "recorrencias/paciente_" + pacienteId + "_" + dataFinal + ".json";
 
-                s3Service.uploadJson(BUCKET, key, json);
+                s3Service.uploadJson(bucket, key, json);
             } catch (Exception e) {
                 throw new RuntimeException(
                         "Erro ao enviar JSON de renovação para paciente " + pacienteId, e);
