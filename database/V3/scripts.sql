@@ -110,7 +110,7 @@ CREATE TABLE consulta_prontuario (
     observacoes_comportamentais VARCHAR(2000),
     presenca TINYINT,
     confirmada TINYINT,
-    recorrencia_id VARCHAR(36),
+    recorrencia_id VARCHAR(55),
     CONSTRAINT fk_consulta_paciente FOREIGN KEY (paciente_id) REFERENCES paciente(id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

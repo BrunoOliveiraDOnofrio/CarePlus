@@ -114,4 +114,18 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
             @Param("idFuncionario") Long idFuncionario,
             Pageable pageable
     );
+
+    @Query("""
+    SELECT DISTINCT c.paciente.id, c.paciente.nome,
+           SUBSTRING(c.recorrenciaId, LENGTH(c.recorrenciaId) - 9, 10),
+           cf.funcionario.especialidade
+    FROM ConsultaProntuario c
+    JOIN c.consultaFuncionarios cf
+    WHERE c.recorrenciaId IS NOT NULL
+      AND SUBSTRING(c.recorrenciaId, LENGTH(c.recorrenciaId) - 9, 10) BETWEEN :inicio AND :fim
+    """)
+    List<Object[]> buscarRecorrenciasEncerrando(
+            @Param("inicio") String inicio,
+            @Param("fim") String fim
+    );
 }

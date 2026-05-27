@@ -835,7 +835,8 @@ public class ConsultaProntuarioService {
             List<LocalDate> datas = gerarDatasSemanais(item.getDataInicio(), item.getDataFim());
 
             // atribui um ID de recorrência único para este bloco quando há mais de uma data
-            String recorrenciaId = datas.size() > 1 ? UUID.randomUUID().toString() : null;
+            String uuid = datas.size() > 1 ? UUID.randomUUID().toString() : null;
+            String recorrenciaId = uuid + item.getDataFim();
 
             // carrega os funcionários do item
             List<Funcionario> funcionariosDoItem = new ArrayList<>();
