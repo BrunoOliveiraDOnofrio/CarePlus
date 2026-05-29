@@ -116,16 +116,19 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
     );
 
     @Query("""
-    SELECT DISTINCT c.paciente.id, c.paciente.nome,
-           SUBSTRING(c.recorrenciaId, LENGTH(c.recorrenciaId) - 9, 10),
+    SELECT c.paciente.id, c.paciente.nome, c.data, c.horarioInicio, c.horarioFim,
            cf.funcionario.especialidade
     FROM ConsultaProntuario c
     JOIN c.consultaFuncionarios cf
     WHERE c.recorrenciaId IS NOT NULL
       AND SUBSTRING(c.recorrenciaId, LENGTH(c.recorrenciaId) - 9, 10) BETWEEN :inicio AND :fim
+      AND c.data BETWEEN :dataInicio AND :dataFim
+    ORDER BY c.paciente.id ASC, c.data ASC, c.horarioInicio ASC
     """)
     List<Object[]> buscarRecorrenciasEncerrando(
             @Param("inicio") String inicio,
-            @Param("fim") String fim
+            @Param("fim") String fim,
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim
     );
 }

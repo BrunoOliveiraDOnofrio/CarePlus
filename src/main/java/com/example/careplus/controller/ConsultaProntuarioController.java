@@ -185,6 +185,7 @@ public class ConsultaProntuarioController {
         AgendarConsultasResponseDto response = service.agendarConsultas(request);
         return ResponseEntity.status(207).body(response);
     }
+
     @GetMapping("/pendentes")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<ConsultaProntuarioResponseDto>> listarConsultasPendentes(@RequestParam Long idFuncionario) {
@@ -193,7 +194,6 @@ public class ConsultaProntuarioController {
         if (consultasPendentes.isEmpty()) {
             return ResponseEntity.status(404).build();
         }
-
         return ResponseEntity.status(200).body(consultasPendentes);
     }
 
