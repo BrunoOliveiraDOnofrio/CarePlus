@@ -131,4 +131,10 @@ public interface ConsultaProntuarioRepository extends JpaRepository<ConsultaPron
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim
     );
+
+    @Query("SELECT c FROM ConsultaProntuario c WHERE c.recorrenciaId IS NOT NULL AND c.data BETWEEN :inicio AND :fim ORDER BY c.recorrenciaId, c.data")
+    List<ConsultaProntuario> findByRecorrenciaIdNotNullAndDataBetween(
+            @Param("inicio") LocalDate inicio,
+            @Param("fim") LocalDate fim
+    );
 }

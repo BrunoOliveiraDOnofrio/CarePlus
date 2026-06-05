@@ -835,8 +835,12 @@ public class ConsultaProntuarioService {
             List<LocalDate> datas = gerarDatasSemanais(item.getDataInicio(), item.getDataFim());
 
             // atribui um ID de recorrência único para este bloco quando há mais de uma data
-            String uuid = datas.size() > 1 ? UUID.randomUUID().toString() : null;
-            String recorrenciaId = uuid + item.getDataFim();
+            // formato: {UUID}-{DD-MM-YYYY}
+            String recorrenciaId = null;
+            if (datas.size() > 1) {
+                java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                recorrenciaId = UUID.randomUUID().toString() + "-" + item.getDataFim().format(dtf);
+            }
 
             // carrega os funcionários do item
             List<Funcionario> funcionariosDoItem = new ArrayList<>();

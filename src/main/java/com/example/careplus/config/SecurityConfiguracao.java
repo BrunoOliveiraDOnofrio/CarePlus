@@ -67,6 +67,7 @@ public class SecurityConfiguracao {
                                 .requestMatchers("/pacientes/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/classificacao-doencas/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/cuidadores/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/notificacoes/**").hasAnyRole("MANAGER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/consultas-prontuario/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/enderecos/**").hasAnyRole("USER", "MANAGER", "ADMIN", "SCHEDULER")
                                 .requestMatchers("/fichas-clinicas/**").hasAnyRole("USER", "MANAGER", "ADMIN")

@@ -1,118 +1,109 @@
 package com.example.careplus.scheduler;
 
+import com.example.careplus.model.ConsultaProntuario;
+import com.example.careplus.model.Funcionario;
+import com.example.careplus.model.Notificacao;
+import com.example.careplus.model.Paciente;
 import com.example.careplus.repository.ConsultaProntuarioRepository;
-import com.example.careplus.service.S3Service;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
+import com.example.careplus.repository.NotificacaoRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class RecorrenciaScheduler {
 
-    private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DATA_FIM_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private final ConsultaProntuarioRepository consultaProntuarioRepository;
-    private final S3Service s3Service;
-    private final ObjectMapper objectMapper;
-
-    @Value("${aws.s3.bucket-renovar-agenda-name}")
-    private String bucket;
+    private final NotificacaoRepository notificacaoRepository;
 
     public RecorrenciaScheduler(ConsultaProntuarioRepository consultaProntuarioRepository,
-                                S3Service s3Service,
-                                ObjectMapper objectMapper) {
+                                NotificacaoRepository notificacaoRepository) {
         this.consultaProntuarioRepository = consultaProntuarioRepository;
-        this.s3Service = s3Service;
-        this.objectMapper = objectMapper;
+        this.notificacaoRepository = notificacaoRepository;
     }
 
-    @Scheduled(cron = "0 0 23 * * SUN")
+    @Transactional
+    @Scheduled(cron = "0 * * * * *")
     public void verificarRecorrenciasEncerrando() {
         LocalDate proximaSegunda = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY));
         LocalDate proximoSabado  = proximaSegunda.plusDays(5);
-        String    inicioStr      = proximaSegunda.toString();
-        String    fimStr         = proximoSabado.toString();
 
-        List<Object[]> rows = consultaProntuarioRepository.buscarRecorrenciasEncerrando(
-                inicioStr, fimStr, proximaSegunda, proximoSabado
-        );
+        // Remove notificações de recorrências já vencidas
+        notificacaoRepository.deleteByDataFimBefore(LocalDate.now());
 
-        // agrupa: pacienteId → { nomePaciente, dia → lista de consultas }
-        Map<Long, PacienteAgenda> agendaPorPaciente = new LinkedHashMap<>();
+        // Busca consultas da próxima semana que pertencem a recorrências
+        List<ConsultaProntuario> consultasSemana = consultaProntuarioRepository
+                .findByRecorrenciaIdNotNullAndDataBetween(proximaSegunda, proximoSabado);
 
-        for (Object[] row : rows) {
-            Long      pacienteId    = ((Number) row[0]).longValue();
-            String    nomePaciente  = (String) row[1];
-            LocalDate data          = (LocalDate) row[2];
-            LocalTime horarioInicio = (LocalTime) row[3];
-            LocalTime horarioFim    = (LocalTime) row[4];
-            String    especialidade = (String) row[5];
+        // Agrupa por recorrenciaId
+        Map<String, List<ConsultaProntuario>> porRecorrencia = consultasSemana.stream()
+                .collect(Collectors.groupingBy(ConsultaProntuario::getRecorrenciaId,
+                        LinkedHashMap::new, Collectors.toList()));
 
-            agendaPorPaciente
-                    .computeIfAbsent(pacienteId, id -> new PacienteAgenda(id, nomePaciente))
-                    .adicionarConsulta(data, horarioInicio, horarioFim, especialidade);
-        }
+        for (Map.Entry<String, List<ConsultaProntuario>> entry : porRecorrencia.entrySet()) {
+            String recorrenciaId = entry.getKey();
+            List<ConsultaProntuario> grupo = entry.getValue();
 
-        for (PacienteAgenda agenda : agendaPorPaciente.values()) {
-            try {
-                String json = objectMapper.writeValueAsString(agenda.toPayload());
-                String key  = "recorrencias/paciente_" + agenda.pacienteId + ".json";
-                s3Service.uploadJson(bucket, key, json);
-            } catch (Exception e) {
-                throw new RuntimeException(
-                        "Erro ao enviar JSON de renovação para paciente " + agenda.pacienteId, e);
+            // Extrai dataFim do recorrenciaId (formato: {UUID}-DD-MM-YYYY)
+            LocalDate dataFim = extrairDataFim(recorrenciaId);
+            if (dataFim == null) continue;
+
+            // Só cria notificação se o vencimento cair na próxima semana
+            if (dataFim.isBefore(proximaSegunda) || dataFim.isAfter(proximoSabado)) continue;
+
+            // Evita duplicatas
+            if (notificacaoRepository.existsByRecorrenciaId(recorrenciaId)) continue;
+
+            ConsultaProntuario template = grupo.get(0);
+            Paciente paciente = template.getPaciente();
+
+            String profissionalNome = null;
+            String especialidade = null;
+            if (!template.getConsultaFuncionarios().isEmpty()) {
+                Funcionario func = template.getConsultaFuncionarios().get(0).getFuncionario();
+                profissionalNome = func.getNome();
+                especialidade = func.getEspecialidade();
             }
+
+            // Coleta os dias da semana das consultas do grupo (1=Seg, 5=Sex)
+            Set<Integer> diasSet = grupo.stream()
+                    .map(c -> c.getData().getDayOfWeek().getValue())
+                    .collect(Collectors.toCollection(TreeSet::new));
+            String diasSemana = diasSet.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","));
+
+            Notificacao notificacao = new Notificacao();
+            notificacao.setPaciente(paciente);
+            notificacao.setRecorrenciaId(recorrenciaId);
+            notificacao.setProfissionalNome(profissionalNome);
+            notificacao.setEspecialidade(especialidade);
+            notificacao.setHorarioInicio(template.getHorarioInicio());
+            notificacao.setHorarioFim(template.getHorarioFim());
+            notificacao.setTipo(template.getTipo());
+            notificacao.setDiasSemana(diasSemana);
+            notificacao.setDataFim(dataFim);
+
+            notificacaoRepository.save(notificacao);
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Estrutura auxiliar de agrupamento (uso interno do scheduler)
-    // -------------------------------------------------------------------------
-
-    private class PacienteAgenda {
-
-        final Long   pacienteId;
-        final String nomePaciente;
-        final Map<LocalDate, List<Map<String, String>>> consultasPorDia = new LinkedHashMap<>();
-
-        PacienteAgenda(Long pacienteId, String nomePaciente) {
-            this.pacienteId   = pacienteId;
-            this.nomePaciente = nomePaciente;
-        }
-
-        void adicionarConsulta(LocalDate data, LocalTime inicio, LocalTime fim, String especialidade) {
-            Map<String, String> consulta = new LinkedHashMap<>();
-            consulta.put("horarioInicio",   inicio != null ? inicio.format(HORA) : null);
-            consulta.put("horarioTermino",  fim    != null ? fim.format(HORA)    : null);
-            consulta.put("especialidade",   especialidade);
-            consultasPorDia.computeIfAbsent(data, d -> new ArrayList<>()).add(consulta);
-        }
-
-        Map<String, Object> toPayload() {
-            List<Map<String, Object>> agendamentos = new ArrayList<>();
-            for (Map.Entry<LocalDate, List<Map<String, String>>> entry : consultasPorDia.entrySet()) {
-                Map<String, Object> dia = new LinkedHashMap<>();
-                dia.put("diaSemana", entry.getKey().toString());
-                dia.put("consultas", entry.getValue());
-                agendamentos.add(dia);
-            }
-
-            Map<String, Object> payload = new LinkedHashMap<>();
-            payload.put("pacienteId",   pacienteId);
-            payload.put("nomePaciente", nomePaciente);
-            payload.put("agendamentos", agendamentos);
-            return payload;
+    private LocalDate extrairDataFim(String recorrenciaId) {
+        if (recorrenciaId == null || recorrenciaId.length() < 10) return null;
+        try {
+            String datePart = recorrenciaId.substring(recorrenciaId.length() - 10);
+            return LocalDate.parse(datePart, DATA_FIM_FORMAT);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

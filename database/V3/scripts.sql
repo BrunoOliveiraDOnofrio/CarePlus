@@ -21,6 +21,7 @@ SET collation_connection = utf8mb4_unicode_ci;
 
 -- ===== SCHEMA =====
 
+DROP TABLE IF EXISTS notificacao;
 DROP TABLE IF EXISTS classificacao_doencas;
 DROP TABLE IF EXISTS material;
 DROP TABLE IF EXISTS medicacao;
@@ -169,6 +170,22 @@ CREATE TABLE material (
     data_implementacao DATE,
     fk_consulta BIGINT,
     CONSTRAINT fk_material_consulta FOREIGN KEY (fk_consulta) REFERENCES consulta_prontuario(id)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE notificacao (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    paciente_id BIGINT NOT NULL,
+    recorrencia_id VARCHAR(60) NOT NULL,
+    profissional_nome VARCHAR(255),
+    especialidade VARCHAR(255),
+    horario_inicio TIME,
+    horario_fim TIME,
+    tipo VARCHAR(255),
+    dias_semana VARCHAR(20),
+    data_fim DATE NOT NULL,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_notificacao_recorrencia_id (recorrencia_id),
+    CONSTRAINT fk_notificacao_paciente FOREIGN KEY (paciente_id) REFERENCES paciente(id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- ===== USERS E ROLES =====
@@ -1135,3 +1152,34 @@ INSERT INTO consulta_funcionario (id, consulta_id, funcionario_id) VALUES
 (721,721,3),(722,722,3),(723,723,3),(724,724,3),(725,725,3),(726,726,3),(727,727,3),(728,728,3),(729,729,3),(730,730,3),(731,731,3),(732,732,3),(733,733,3),(734,734,3),(735,735,3),(736,736,3),(737,737,3),(738,738,3),(739,739,3),(740,740,3),(741,741,3),(742,742,3),(743,743,3),(744,744,3),(745,745,3),
 -- 11:00 Mariana (ids 746–770) → func 10 Gabriel Costa
 (746,746,10),(747,747,10),(748,748,10),(749,749,10),(750,750,10),(751,751,10),(752,752,10),(753,753,10),(754,754,10),(755,755,10),(756,756,10),(757,757,10),(758,758,10),(759,759,10),(760,760,10),(761,761,10),(762,762,10),(763,763,10),(764,764,10),(765,765,10),(766,766,10),(767,767,10),(768,768,10),(769,769,10),(770,770,10);
+
+-- ===================================================
+-- RECORRÊNCIAS DE TESTE — Vencendo semana 08–13/06/2026
+-- Formato recorrencia_id: {UUID}-DD-MM-YYYY
+-- Cron roda e detecta: dataFim extrai últimos 10 chars
+-- ===================================================
+
+-- Recorrência A — URGENTE (vence seg 08/06) | Paciente: Pedro (3) | Psicopedagogia (func 7)
+INSERT INTO consulta_prontuario (id, paciente_id, data, horario_inicio, horario_fim, tipo, observacoes_comportamentais, presenca, confirmada, recorrencia_id) VALUES
+(2001,3,'2026-06-08','10:00:00','11:00:00','Psicopedagogia',NULL,NULL,0,'cc000000-0000-0000-0000-000000000001-08-06-2026');
+
+INSERT INTO consulta_funcionario (id, consulta_id, funcionario_id) VALUES
+(2001,2001,7);
+
+-- Recorrência B — ATENÇÃO (vence qua 10/06) | Paciente: Mariana (2) | Fisioterapia (func 9)
+INSERT INTO consulta_prontuario (id, paciente_id, data, horario_inicio, horario_fim, tipo, observacoes_comportamentais, presenca, confirmada, recorrencia_id) VALUES
+(2002,2,'2026-06-08','14:00:00','15:00:00','Fisioterapia',NULL,NULL,0,'cc000000-0000-0000-0000-000000000002-10-06-2026'),
+(2003,2,'2026-06-09','14:00:00','15:00:00','Fisioterapia',NULL,NULL,0,'cc000000-0000-0000-0000-000000000002-10-06-2026'),
+(2004,2,'2026-06-10','14:00:00','15:00:00','Fisioterapia',NULL,NULL,0,'cc000000-0000-0000-0000-000000000002-10-06-2026');
+
+INSERT INTO consulta_funcionario (id, consulta_id, funcionario_id) VALUES
+(2002,2002,9),(2003,2003,9),(2004,2004,9);
+
+-- Recorrência C — ESTA SEMANA (vence sex 13/06) | Paciente: Maria Santos (7) | Musicoterapia (func 11)
+INSERT INTO consulta_prontuario (id, paciente_id, data, horario_inicio, horario_fim, tipo, observacoes_comportamentais, presenca, confirmada, recorrencia_id) VALUES
+(2005,7,'2026-06-08','09:00:00','10:00:00','Musicoterapia',NULL,NULL,0,'cc000000-0000-0000-0000-000000000003-13-06-2026'),
+(2006,7,'2026-06-10','09:00:00','10:00:00','Musicoterapia',NULL,NULL,0,'cc000000-0000-0000-0000-000000000003-13-06-2026'),
+(2007,7,'2026-06-12','09:00:00','10:00:00','Musicoterapia',NULL,NULL,0,'cc000000-0000-0000-0000-000000000003-13-06-2026');
+
+INSERT INTO consulta_funcionario (id, consulta_id, funcionario_id) VALUES
+(2005,2005,11),(2006,2006,11),(2007,2007,11);
