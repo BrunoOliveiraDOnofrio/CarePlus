@@ -32,7 +32,7 @@ public class RecorrenciaScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */2 * * * *")
     public void verificarRecorrenciasEncerrando() {
         LocalDate proximaSegunda = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY));
         LocalDate proximoSabado  = proximaSegunda.plusDays(5);
