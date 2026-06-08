@@ -20,6 +20,7 @@ public class FuncionarioResponseDto {
     private String cargo;
 
     @Schema(description = "Fonoaudiologa")
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private String especialidade;
 
     @Schema(description = "(11)94002-8922")
